@@ -9,7 +9,7 @@ A lightweight, browser-based implementation of the classic lane defense game, Pl
   * Sun collection and resource management ☀️
   * An arsenal of plants with special powers 💥
   * Responsive design for desktop and mobile 📱
-  * Iconic cartoon graphics and sound effects 🎨
+  * Iconic cartoon graphics 🎨
 
 ## 🏡 Getting Started
 
@@ -18,7 +18,7 @@ A lightweight, browser-based implementation of the classic lane defense game, Pl
 1.  Clone this repository:
 
     ```bash
-    git clone https://github.com/plantsvszombiesjs/plantsvszombiesjs.github.io)
+    git clone https://github.com/plantsvszombiesjs/plantsvszombiesjs.github.io
     ```
 
 2.  Navigate to the project folder:
