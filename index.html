@@ -6,6 +6,7 @@ Copyright (c) 2025 Valentyn Kolesnikov <0009-0003-9608-3364@orcid.org>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description" content="Plants vs Zombies">
     <link rel="icon" type="image/x-icon" href="favicon.ico"/>
     <title>Plants vs Zombies</title>
     <style>
@@ -948,6 +949,10 @@ Copyright (c) 2025 Valentyn Kolesnikov <0009-0003-9608-3364@orcid.org>
             lastUpdate: Date.now(),
             zombieDamageMultiplier: 1.0,
             waveTimer: null,
+            waveStartTime: Date.now(),
+            waveTimeElapsed: 0,
+            waveDuration: 30000,
+            pauseTime: null,
             wasFullscreen: false,
             sunInterval: null,
             gameLoopId: null
@@ -1101,6 +1106,10 @@ Copyright (c) 2025 Valentyn Kolesnikov <0009-0003-9608-3364@orcid.org>
                 lastUpdate: Date.now(),
                 zombieDamageMultiplier: 1.0,
                 waveTimer: null,
+                waveStartTime: Date.now(),
+                waveTimeElapsed: 0,
+                waveDuration: 30000,
+                pauseTime: null,
                 wasFullscreen: document.fullscreenElement !== null,
                 sunInterval: null,
                 gameLoopId: gameState.gameLoopId // Keep the game loop running
@@ -1878,28 +1887,62 @@ Copyright (c) 2025 Valentyn Kolesnikov <0009-0003-9608-3364@orcid.org>
             }
         }
 
-        // Spawn Zombie Wave - LIMITED TO 20 WAVES
+        // Spawn Zombie Wave - FIXED WITH PROPER TIMING
         function spawnZombieWave() {
             if (gameState.isGameOver || gameState.isVictory) return;
             
             const zombieCount = Math.min(3 + Math.floor(gameState.wave / 2), 15);
             const spawnDelay = Math.max(3000 - gameState.wave * 100, 1000);
             
-            for (let i = 0; i < zombieCount; i++) {
-                setTimeout(() => {
-                    if (!gameState.isPaused && !gameState.isGameOver && !gameState.isVictory) {
-                        spawnZombie();
+            let spawnedCount = 0;
+            const spawnInterval = setInterval(() => {
+                if (gameState.isPaused) {
+                    // Don't spawn while paused
+                    return;
+                }
+                
+                if (!gameState.isGameOver && !gameState.isVictory) {
+                    spawnZombie();
+                    spawnedCount++;
+                    
+                    if (spawnedCount >= zombieCount) {
+                        clearInterval(spawnInterval);
                     }
-                }, i * spawnDelay);
-            }
+                }
+            }, spawnDelay);
             
-            // Clear any existing timer
+            // Reset wave timing
+            gameState.waveStartTime = Date.now();
+            gameState.waveTimeElapsed = 0;
+            
+            // Schedule next wave
+            scheduleNextWave();
+        }
+
+        // Schedule next wave with proper pause handling - FIXED
+        function scheduleNextWave() {
             if (gameState.waveTimer) {
                 clearTimeout(gameState.waveTimer);
             }
             
-            gameState.waveTimer = setTimeout(() => {
-                if (!gameState.isGameOver && !gameState.isVictory) {
+            function checkWaveProgress() {
+                if (gameState.isGameOver || gameState.isVictory) return;
+                
+                if (gameState.isPaused) {
+                    // Store elapsed time when paused
+                    gameState.waveTimeElapsed = Date.now() - gameState.waveStartTime;
+                    // Check again in 100ms if paused
+                    gameState.waveTimer = setTimeout(checkWaveProgress, 100);
+                    return;
+                }
+                
+                // Calculate remaining time accounting for pause
+                const currentTime = Date.now();
+                const timeSinceStart = currentTime - gameState.waveStartTime;
+                const remaining = gameState.waveDuration - timeSinceStart;
+                
+                if (remaining <= 0) {
+                    // Time to spawn next wave
                     if (gameState.wave < gameState.maxWaves) {
                         gameState.wave++;
                         gameState.zombieDamageMultiplier = 1 + (gameState.wave - 1) * 0.02;
@@ -1912,8 +1955,13 @@ Copyright (c) 2025 Valentyn Kolesnikov <0009-0003-9608-3364@orcid.org>
                         // Victory - survived all 20 waves!
                         victory();
                     }
+                } else {
+                    // Check again later
+                    gameState.waveTimer = setTimeout(checkWaveProgress, Math.min(remaining, 1000));
                 }
-            }, 30000);
+            }
+            
+            gameState.waveTimer = setTimeout(checkWaveProgress, 1000);
         }
 
         // Victory function
@@ -2090,16 +2138,39 @@ Copyright (c) 2025 Valentyn Kolesnikov <0009-0003-9608-3364@orcid.org>
             gameState.gameLoopId = requestAnimationFrame(gameLoop);
         }
 
-        // Toggle Pause
+        // Toggle Pause - FIXED WITH PROPER TIMING
         function togglePause() {
             gameState.isPaused = !gameState.isPaused;
             document.getElementById('pauseMenu').style.display = 
                 gameState.isPaused ? 'block' : 'none';
             document.getElementById('pauseBtn').textContent = gameState.isPaused ? '▶️ Play' : '⏸️ Pause';
+            
+            if (gameState.isPaused) {
+                // Store pause time
+                gameState.pauseTime = Date.now();
+            } else {
+                // Resume: adjust wave start time to account for pause duration
+                if (gameState.pauseTime) {
+                    const pauseDuration = Date.now() - gameState.pauseTime;
+                    gameState.waveStartTime += pauseDuration;
+                    gameState.pauseTime = null;
+                }
+                // Reset timing when unpausing
+                gameState.lastUpdate = Date.now();
+            }
         }
 
         // Resume Game
         function resumeGame() {
+            if (gameState.isPaused) {
+                // Resume: adjust wave start time to account for pause duration
+                if (gameState.pauseTime) {
+                    const pauseDuration = Date.now() - gameState.pauseTime;
+                    gameState.waveStartTime += pauseDuration;
+                    gameState.pauseTime = null;
+                }
+            }
+            
             gameState.isPaused = false;
             document.getElementById('pauseMenu').style.display = 'none';
             document.getElementById('pauseBtn').textContent = '⏸️ Pause';
