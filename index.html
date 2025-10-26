@@ -267,9 +267,12 @@ Copyright (c) 2025 Olexandr_43
             100% { transform: scaleX(-1) translateX(5px); }
         }
 
-        .zombie.zomboni-emoji {
-            font-size: 3.5em;
+        .zombie.zomboni {
+            font-size: 3.35em;
         }
+		.zombie.gargantuar {
+			font-size: 3.5em;
+		}
         
         .zombie.frozen {
             filter: drop-shadow(2px 2px 8px rgba(173, 216, 230, 0.9)) brightness(1.4) saturate(0);
@@ -803,7 +806,7 @@ Copyright (c) 2025 Olexandr_43
             50% { transform: scale(1.05); }
         }
 
-        .damage-effect {
+        .zombie.damage-effect {
             animation: damage calc(0.3s / var(--game-speed)) ease;
         }
 
@@ -3744,7 +3747,8 @@ Copyright (c) 2025 Olexandr_43
 
                         // Zomboni Ice Trail Logic
                         if (zombieTypes[zombie.type].leavesIceTrail) {
-                            const zomboniCol = Math.floor(zombie.x / gameState.cellSize.width);
+							const zomboniCenter = zombie.x + (gameState.cellSize.width / 2);
+							const zomboniCol = Math.floor(zomboniCenter / gameState.cellSize.width);
                             if (zomboniCol >= 0 && zomboniCol < 9) {
                                 createIceTrail(zombie.row, zomboniCol);
                             }
@@ -3884,7 +3888,8 @@ Copyright (c) 2025 Olexandr_43
             
             // Add classes for specific zombie styles
             if (typeKey === 'dancing') zombie.classList.add('dancing');
-            if (typeKey === 'zomboni') zombie.classList.add('zomboni-emoji');
+            if (typeKey === 'zomboni') zombie.classList.add('zomboni');
+			if (typeKey === 'gargantuar' || typeKey === 'giga') zombie.classList.add('gargantuar');
             
             const healthBar = document.createElement('div');
             healthBar.className = 'zombie-health-bar';
@@ -3985,7 +3990,8 @@ Copyright (c) 2025 Olexandr_43
             
             // Add classes for specific zombie styles
             if (typeKey === 'dancing') zombie.classList.add('dancing');
-            if (typeKey === 'zomboni') zombie.classList.add('zomboni-emoji');
+            if (typeKey === 'zomboni') zombie.classList.add('zomboni');
+			if (typeKey === 'gargantuar' || typeKey === 'giga') zombie.classList.add('gargantuar');
 
             
             const healthBar = document.createElement('div');
