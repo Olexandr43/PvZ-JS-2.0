@@ -13,7 +13,7 @@ A lightweight, browser-based implementation of the classic lane defense game, Pl
 *   An arsenal of plants with special powers 💥
 *   Responsive design for desktop and mobile 📱
 *   Iconic cartoon graphics 🎨
-
+*   Local Top 10 leaderboard with date/time badges 🏆
 
 ## 🏡 What This Mod Adds
 
@@ -25,6 +25,7 @@ A lightweight, browser-based implementation of the classic lane defense game, Pl
 *   **Shovel Functionality:** Players can now remove misplaced or unwanted plants using a Shovel (`⛏️`). This is selectable from the plant bar in-game.
 *   **Victory Condition:** There is a final wave (Wave 20), and defeating all zombies in that wave now triggers a **Victory sequence**, complete with a collectible trophy (`🏆`) and a victory screen.
 *   **Debug/Sandbox Mode:** A hidden zombie spawner has been added, which can be toggled with the 'Z' key. This allows players to manually spawn any type of zombie on any tile for testing or fun.
+*   **Custom Dialog System:** Replaces browser alerts/confirms with themed modals for a smoother UX.
 
 ---
 
@@ -72,9 +73,11 @@ The arsenal of plants has more than doubled, adding significant strategic variet
 *   **Blover (🍀):** Costs 125 sun. An instant-use plant that creates a strong gust of wind, blowing away all flying Balloon Zombies from the screen instantly.
 *   **Garlic (🧄):** Costs 50 sun. A defensive plant that doesn't attack but diverts any zombie that bites it into an adjacent lane.
 *   **Marigold (🌼):** Costs 50 sun. An economic plant that produces coins instead of sun (though the game describes this feature as "useless" for gameplay).
+*   **Melon-pult (🍉):** Costs 300 sun. Lobs melons that deal solid damage and splash to nearby zombies on impact.
 *   **Imitater (🎭):** Cost varies. A strategic plant that transforms into a copy of the previously selected plant card, allowing you to bring two of the same plant into a level with separate cooldowns.
 *   **Gatling Pea (🔫):** Costs 250 sun. An upgrade plant that must be planted on an existing Repeater. It fires a burst of four peas at a time.
 *   **Twin Sunflower (🌻🌻):** Costs 150 sun. An upgrade plant that must be planted on an existing Sunflower. It produces 100 sun at a time, doubling the normal rate.
+*   **Winter Melon (🥶):** Costs 200 sun. Upgrade for Melon-pult; adds a slowing effect to its splash damage.
 
 ---
 
