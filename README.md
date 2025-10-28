@@ -23,7 +23,7 @@ A lightweight, browser-based implementation of the classic lane defense game, Pl
 *   **Pre-Game Plant Selection:** Players no longer start with a fixed set of plants. A new **Plant Selection Screen** appears before the game starts, where players must choose a limited deck of plants from a larger library to use in the upcoming match. This adds a significant layer of strategy.
 *   **Lawnmowers:** The iconic last line of defense has been added. Each lane is protected by a lawnmower (`🚜`) that will activate upon the first zombie reaching the house, clearing the entire lane once.
 *   **Shovel Functionality:** Players can now remove misplaced or unwanted plants using a Shovel (`⛏️`). This is selectable from the plant bar in-game.
-*   **Victory Condition:** The game is no longer an endless survival mode. There is a final wave (Wave 20), and defeating all zombies in that wave now triggers a **Victory sequence**, complete with a collectible trophy (`🏆`) and a victory screen.
+*   **Victory Condition:** There is a final wave (Wave 20), and defeating all zombies in that wave now triggers a **Victory sequence**, complete with a collectible trophy (`🏆`) and a victory screen.
 *   **Debug/Sandbox Mode:** A hidden zombie spawner has been added, which can be toggled with the 'Z' key. This allows players to manually spawn any type of zombie on any tile for testing or fun.
 
 ---
@@ -37,15 +37,13 @@ A lightweight, browser-based implementation of the classic lane defense game, Pl
         *   **Anti-Boss Attack:** It cannot eat Gargantuars, but it will bite them for heavy damage at a regular interval.
     *   **Sunflower (🌻):**
         *   **Sun Production Buff:** Sun production has been increased from 40 back to the original **50 sun**.
-    *   **Wall-nut (🥥):**
-        *   **No Longer Shoots:** The Wall-nut's ranged attack has been removed, making it a purely defensive barrier as intended.
 
 2.  **Zombie Rebalancing & Toughening**
     *   The health and speed of all original zombies have been significantly increased to make the game more challenging.
     *   **Conehead Zombie (🧟‍♂️):** Health increased from 20 to 32. Speed increased.
     *   **Buckethead Zombie (🧟‍♀️):** Health increased from 40 to 68. Speed increased.
     *   **Pole Vaulting Zombie (💀) (formerly "Fast"):** Health massively increased from 6 to 25. Speed increased.
-    *   **Football Zombie (👹) (formerly "Strong"):** Health massively increased from 60 to 84. Speed increased.
+    *   **Football Zombie (👹) (formerly "Strong"):** Health increased from 60 to 84. Speed increased.
 
 3.  **Core Gameplay Mechanic Changes**
     *   **Plant Cooldowns:** Every plant now has a cooldown period after being planted. You cannot select that plant again until the timer is up, preventing players from spamming powerful units and requiring more forward planning.
@@ -56,7 +54,6 @@ A lightweight, browser-based implementation of the classic lane defense game, Pl
 4.  **UI and UX Enhancements**
     *   **Wave Counter Position:** The wave counter has been moved from the top-right corner to the **bottom-right** for better visibility and to declutter the top UI.
     *   **Sun Collection Animation:** When sun is clicked, it no longer vanishes instantly. It now visually **flies across the screen** and into the sun counter, providing better feedback.
-    *   **Cooldown Visuals:** Plant cards in the selection bar now have a dark overlay that visibly drains to show the remaining cooldown time before they can be used again.
 
 ---
 
@@ -72,8 +69,6 @@ The arsenal of plants has more than doubled, adding significant strategic variet
 *   **Jalapeno (🌶️):** Costs 125 sun. An instant-use plant that creates a wall of fire, dealing massive damage (90) to and destroying all zombies in an entire lane. It also melts any ice trails left by Zombonis.
 *   **Ice-shroom (🧊):** Costs 75 sun. An instant-use plant that freezes every zombie on the entire screen, stopping them in their tracks for 4 seconds and dealing minor damage.
 *   **Doom-shroom (🍄):** Costs 125 sun. A highly destructive instant-use plant that explodes in a massive 7x5 area, dealing huge damage (90) to all zombies caught in the blast. It leaves a temporary, unplantable crater at its location.
-*   **Threepeater (🎋):** Costs 325 sun. A versatile offensive plant that shoots peas in three lanes simultaneously: its own lane, the lane above, and the lane below.
-*   **Cactus (🌵):** Costs 125 sun. A special offensive plant that fires piercing spikes. These spikes can hit multiple zombies in a row and are the primary way to pop the balloons of Balloon Zombies.
 *   **Blover (🍀):** Costs 125 sun. An instant-use plant that creates a strong gust of wind, blowing away all flying Balloon Zombies from the screen instantly.
 *   **Garlic (🧄):** Costs 50 sun. A defensive plant that doesn't attack but diverts any zombie that bites it into an adjacent lane.
 *   **Marigold (🌼):** Costs 50 sun. An economic plant that produces coins instead of sun (though the game describes this feature as "useless" for gameplay).
@@ -87,7 +82,6 @@ The arsenal of plants has more than doubled, adding significant strategic variet
 
 The horde has grown much more dangerous and unpredictable.
 
-*   **Pole Vaulting Zombie (💀):** A fast-moving zombie with 25 health. Its key ability is to jump over the first plant it encounters in a lane, bypassing your initial line of defense.
 *   **Football Zombie (👹):** An extremely fast and durable zombie with 84 health. It acts as a battering ram, capable of absorbing a large amount of damage while quickly closing the distance to your house.
 *   **Dancing Zombie (🕺):** A tricky zombie with 25 health. It moves forward with a unique dancing animation and periodically summons four Backup Dancers in the tiles surrounding it, quickly overwhelming a lane.
 *   **Backup Dancer (💃):** A standard zombie with 14 health that is only spawned by the Dancing Zombie. They appear in groups and can be very dangerous if the main dancer isn't dealt with quickly.
@@ -104,7 +98,7 @@ The horde has grown much more dangerous and unpredictable.
 *   **Instant-Use Plants:** New plants like Cherry Bomb have an immediate, one-time effect.
 *   **Special Terrain:** **Graves (`⚰️`), Craters,** and **Ice Trails** now appear on the lawn, blocking planting and affecting strategy.
 *   **Flying Zombies:** Balloon Zombies fly over most plants and must be countered specifically.
-*   **Zombie Special Abilities:** Zombies can now **crush plants, summon other zombies, and be diverted** into other lanes.
+*   **Zombie Special Abilities:** Zombies can now **crush plants, summon other zombies**.
 
 ---
 
