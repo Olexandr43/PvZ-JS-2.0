@@ -644,7 +644,7 @@ Copyright (c) 2025 Olexandr_43
         /* Make leaderboard highest z-index */
         #leaderboard {
             z-index: 1000;
-            max-height: 80vh;
+            max-height: 70vh;
             overflow-y: auto;
         }
 
@@ -764,6 +764,10 @@ Copyright (c) 2025 Olexandr_43
 
         .btn.secondary {
             background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .btn.restart {
+            background: linear-gradient(135deg, #FF9800, #FB8C00);
         }
 
         .btn.gold {
@@ -1096,14 +1100,12 @@ Copyright (c) 2025 Olexandr_43
         }
         
         #plantLibrary {
-            width: 100%;
             max-width: 950px;
             background: rgba(255,255,255,0.1);
             border-radius: 15px;
             padding: 20px;
             margin: 15px 0;
             flex-grow: 1;
-            max-height: calc(100vh - 300px);
             overflow-y: auto;
         }
 
@@ -1134,11 +1136,62 @@ Copyright (c) 2025 Olexandr_43
 
         #plantSelectionFooter {
             text-align: center;
+            width: 100%;
+            position: relative;
+        }
+
+        #plantSelectionFooter > div:first-child {
+            position: absolute;
+            left: 25px;
         }
 
         #selectedPlantCount {
             font-size: 1.2em;
             font-weight: bold;
+        }
+
+                /* Custom Dialog Styles */
+                .dialog-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.3);
+            z-index: 2000;
+            display: none; /* Hidden by default */
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .dialog-box {
+            background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(240,240,240,0.98));
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 450px;
+            width: 100%;
+            animation: dialogAppear calc(0.3s / var(--game-speed)) ease-out;
+        }
+
+        @keyframes dialogAppear {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .dialog-box h2 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .dialog-box p {
+            font-size: 1.1em;
+            margin-bottom: 25px;
+            color: #555;
+            line-height: 1.6;
         }
 		
 		/* Landscape mode optimizations */
@@ -1298,9 +1351,8 @@ Copyright (c) 2025 Olexandr_43
         
         <div id="pauseMenu">
             <h2>Game Paused</h2>
-            <button class="btn" onclick="resumeGame()">Resume</button>
-            <button class="btn secondary" onclick="showLeaderboard()">Top 10 Scores</button>
-            <button class="btn" onclick="restartGame()">Restart</button>
+            <button class="btn" onclick="resumeGame()">▶️ Resume</button>
+            <button class="btn restart" onclick="confirmRestart()">🔄 Restart</button>            
         </div>
         
         <div id="leaderboard">
@@ -1338,6 +1390,17 @@ Copyright (c) 2025 Olexandr_43
 
         <div id="zombieSpawner">
             <!-- Zombie cards will be added here by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Custom Dialog Box -->
+    <div id="customDialog" class="dialog-overlay">
+        <div class="dialog-box">
+            <h2 id="dialogTitle"></h2>
+            <p id="dialogMessage"></p>
+            <div id="dialogButtons">
+                <!-- Buttons are injected here -->
+            </div>
         </div>
     </div>
     
@@ -1456,6 +1519,12 @@ Copyright (c) 2025 Olexandr_43
             <div class="cost">50</div>
             <div class="name">Marigold</div>
         </div>
+		<div class="plantCard" data-plant="melonpult" data-cost="300">
+            <div class="cooldown-overlay"></div>
+            <div class="emoji">🍉</div>
+            <div class="cost">300</div>
+            <div class="name">Melon-pult</div>
+        </div>
 		<div class="plantCard" data-plant="firepea" data-cost="250">
             <div class="cooldown-overlay"></div>
             <div class="emoji">🔥</div>
@@ -1473,6 +1542,12 @@ Copyright (c) 2025 Olexandr_43
             <div class="emoji">🌻🌻</div>
             <div class="cost">150</div>
             <div class="name">Twin Sunflower</div>
+        </div>
+        <div class="plantCard" data-plant="wintermelon" data-cost="200" data-upgrade="true" data-upgrades-from="melonpult">
+            <div class="cooldown-overlay"></div>
+            <div class="emoji">🥶</div>
+            <div class="cost">200</div>
+            <div class="name">Winter Melon</div>
         </div>
         <div class="plantCard" data-plant="imitater" data-cost="">
             <div class="cooldown-overlay"></div>
@@ -1535,7 +1610,7 @@ Copyright (c) 2025 Olexandr_43
         };
 
         // Plant Types
-        const plantTypes = {
+        const plantTypes = { // 🌴Umbrella Leaf \ 🧲Magnet-shroom
             sunflower: { 
                 emoji: '🌻', 
                 health: 3.6,
@@ -1546,6 +1621,35 @@ Copyright (c) 2025 Olexandr_43
                 shoots: false,
                 description: 'Produces sun',
                 cooldown: 7500 // Fast
+            },
+			melonpult: {
+                emoji: '🍉',
+                health: 3.6,
+                maxHealth: 3.6,
+                shoots: true,
+                damage: 4, // High direct damage
+                splashDamage: 1.5, // Lower splash damage
+                splashRadiusY: 1, // 3 rows total (target row +/- 1)
+                shootInterval: 3000,
+                projectile: '🍈',
+                description: 'Splash damage',
+                cooldown: 7500 // Fast
+            },
+            wintermelon: {
+                emoji: '🥶',
+                health: 4.8,
+                maxHealth: 4.8,
+                shoots: true,
+                damage: 4, 
+                splashDamage: 1.5,
+                splashRadiusY: 1,
+                slow: true, 
+                shootInterval: 3000,
+                projectile: '🧊',
+                description: 'Upgrade: Freezes and damages zombies.',
+                isUpgrade: true,
+                upgradesFrom: 'melonpult',
+                cooldown: 50000 // Very Slow
             },
 			suncheat: { 
                 emoji: '☀️', 
@@ -1677,10 +1781,12 @@ Copyright (c) 2025 Olexandr_43
                 maxHealth: 3.6,
                 shoots: true,
                 damage: 2,
+                splashDamage: 0.65,
+                splashRadiusY: 0, // 3x1 radius
                 fire: true,
                 shootInterval: 1500,
                 projectile: '🔥',
-                description: 'Fire damage',
+                description: 'Splash fire damage',
                 cooldown: 7500 // Fast
             },
             cactus: {
@@ -2146,7 +2252,7 @@ Copyright (c) 2025 Olexandr_43
         });
     }
 
-    // --- [BUG FIX] This new function sets up the plant selection listeners ONCE ---
+    // Sets up the plant selection listeners ONCE
     function setupPlantSelectionListeners() {
         const libraryGrid = document.getElementById('plantLibraryGrid');
         const deckBar = document.getElementById('deckBar');
@@ -2162,12 +2268,20 @@ Copyright (c) 2025 Olexandr_43
             if (plantInfo.isImitater) {
                 // --- IMITATER LOGIC ---
                 if (!lastSelectedPlantForImitater) {
-                    alert("Select a plant to imitate first!");
-                    return; // Stop execution
+                    showCustomDialog(
+                        'Imitater Plant',
+                        'Please select a regular plant from the library first, which the Imitater will copy.',
+                        [{ text: 'OK', class: 'secondary' }]
+                    );
+                    return;
                 }
                 if (plantTypes[lastSelectedPlantForImitater.type].isUpgrade) {
-                    alert("Cannot imitate an upgrade plant!");
-                    return; // Stop execution
+                    showCustomDialog(
+                        'Imitater Plant',
+                        'The Imitater cannot copy upgrade plants like Gatling Pea or Twin Sunflower.',
+                        [{ text: 'OK', class: 'secondary' }]
+                    );
+                    return;
                 }
 
                 const targetInfo = plantTypes[lastSelectedPlantForImitater.type];
@@ -2215,7 +2329,7 @@ Copyright (c) 2025 Olexandr_43
         loadGameState();
         setupGameBoardListeners();
         setupUIEventListeners();
-        setupPlantSelectionListeners(); // <-- [BUG FIX] Call the new function here
+        setupPlantSelectionListeners();
         setupZombieSpawner();
         showPlantSelectionScreen();
         togglePause();
@@ -2268,7 +2382,6 @@ Copyright (c) 2025 Olexandr_43
             libraryGrid.appendChild(libraryCard);
         });
 
-        // --- [BUG FIX] Event listeners have been moved to setupPlantSelectionListeners ---
     }
 
 
@@ -2300,7 +2413,11 @@ Copyright (c) 2025 Olexandr_43
 
         function confirmAndStartGame() {
             if (selectedPlantDeck.length === 0) {
-                alert("Please select at least one plant to start!");
+                showCustomDialog(
+                    'Choose Your Plants',
+                    'Please select at least one plant for your deck before starting the game.',
+                    [{ text: 'OK', class: 'secondary' }]
+                );
                 return;
             }
 
@@ -2361,7 +2478,7 @@ Copyright (c) 2025 Olexandr_43
                 mower.textContent = '🚜';
                 
                 const yPosition = gameState.boardRect.top + i * gameState.cellSize.height + gameState.cellSize.height / 2 - 20;
-                const xPosition = gameState.boardRect.left - gameState.cellSize.width * 0.8;
+                const xPosition = gameState.boardRect.left - gameState.cellSize.width * 0.4;
 
                 mower.style.position = 'fixed';
                 mower.style.top = yPosition + 'px';
@@ -2417,7 +2534,7 @@ Copyright (c) 2025 Olexandr_43
                 gameState.lawnmowers.forEach(mower => {
                     if (mower.element && !mower.moving) {
                         const yPosition = gameState.boardRect.top + mower.row * gameState.cellSize.height + gameState.cellSize.height / 2 - 20;
-                        const xPosition = gameState.boardRect.left - gameState.cellSize.width * 0.8;
+                        const xPosition = gameState.boardRect.left - gameState.cellSize.width * 0.4;
                         mower.element.style.top = yPosition + 'px';
                         mower.element.style.left = xPosition + 'px';
                         mower.x = xPosition - gameState.boardRect.left;
@@ -3369,6 +3486,8 @@ Copyright (c) 2025 Olexandr_43
                     element: projectile,
                     row: targetRow,
                     damage: projectileDamage,
+                    splashDamage: plantType.splashDamage,
+                    splashRadiusY: plantType.splashRadiusY,
                     slow: plantType.slow,
                     fire: plantType.fire,
                     pierce: plantType.pierce,
@@ -3441,13 +3560,15 @@ Copyright (c) 2025 Olexandr_43
                             });
                         }
 
-                        if (proj.element.textContent === '❄️') {
+                        if (proj.element.textContent === '❄️' || proj.element.textContent === '🧊') {
                             proj.element.textContent = '🟢';
                             proj.slow = false;
                         } else if (proj.element.textContent === '🟢') {
                             proj.damage *= 2;
                             proj.element.textContent = '🔥';
                             proj.element.classList.add('fire');
+							proj.splashDamage = 0.65; // Add splash damage
+                            proj.splashRadiusY = 0;   // 3x1 radius
 							proj.fire = true;
                         }
                     }
@@ -3459,16 +3580,16 @@ Copyright (c) 2025 Olexandr_43
                 const projRect = proj.element.getBoundingClientRect();
                 let hit = false;
                 
-                gameState.zombies.forEach(zombie => {
-                    if (!zombie.element || zombie.row !== proj.row) return;
-                    if (proj.hitZombies.includes(zombie)) return;
+                for (const zombie of gameState.zombies) {
+                    if (hit) break; // If projectile has already hit, stop checking
+                    if (!zombie.element || zombie.row !== proj.row || proj.hitZombies.includes(zombie)) continue;
                     
                     const zombieRect = zombie.element.getBoundingClientRect();
                     
-                    if (projRect.left < zombieRect.right && projRect.right > zombieRect.left) {
-                        
+                    if (projRect.left < zombieRect.right && projRect.right > zombieRect.left) {                        
+                        // Flying zombies can only be hit by piercing projectiles (e.g., Cactus)
                         if (zombie.isFlying && !proj.pierce) {
-                            return;
+                            continue;
                         }
 
                         // Balloon Zombie Logic: popping the balloon
@@ -3490,50 +3611,95 @@ Copyright (c) 2025 Olexandr_43
                             });
                         }
 
+                        // --- SPLASH DAMAGE LOGIC (Melon-pult & Winter Melon) ---
+                        if (proj.splashDamage) {
+                            hit = true; // Splash projectiles are consumed on first hit
 
-                        zombie.health -= proj.damage;
-                        updateZombieHealth(zombie);
-                        zombie.element.classList.add('damage-effect');
-                        
-                        if (proj.slow) {
-                            zombie.slowed = true;
-                            zombie.slowTimer = 3000;
-                            zombie.element.classList.add('slowed');
-                        }
-                        
-                        if (proj.fire && zombie.element) {
-                            if (zombie.isFrozen) { // Check for frozen first
-                                zombie.isFrozen = false;
-                                zombie.freezeTimer = 0;
-                                zombie.element.classList.remove('frozen');
-                                createParticleEffect(zombie.element, '💨'); // Melt effect
-                            } else if (zombie.slowed) {
-                                zombie.slowed = false;
-                                zombie.slowTimer = 0;
-                                zombie.element.classList.remove('slowed');
-                                createParticleEffect(zombie.element, '💨');
+                            // Use existing particle mechanic for splash effect
+                            createParticleEffect(zombie.element, proj.slow ? '❄️' : (proj.fire ? '🔥' : '💧'));
+                            
+                            // Damage primary target
+                            zombie.health -= proj.damage;
+                            updateZombieHealth(zombie);
+                            if (zombie.element) zombie.element.classList.add('damage-effect');
+                            createTimer(300, () => { if (zombie.element) zombie.element.classList.remove('damage-effect'); });
+                            
+                            if (proj.slow) {
+                                zombie.slowed = true;
+                                zombie.slowTimer = 3000;
+                                if(zombie.element) zombie.element.classList.add('slowed');
+                            }
+                            
+                            if (zombie.health <= 0) handleZombieDefeat(zombie);
+
+                            const impactX = zombie.x;
+                            const splashRadiusX = gameState.cellSize.width * 0.75; // Splash width
+
+                            // Find and damage/slow splash targets based on proximity
+                            gameState.zombies.forEach(splashTarget => {
+                                if (splashTarget === zombie || !splashTarget.element || splashTarget.isFlying) return;
+                                
+                                // Check if the target is within the horizontal and vertical splash radius
+                                const isHorizontallyClose = Math.abs(splashTarget.x - impactX) <= splashRadiusX;
+                                const isVerticallyClose = Math.abs(splashTarget.row - proj.row) <= proj.splashRadiusY;
+
+                                if (isHorizontallyClose && isVerticallyClose) {
+                                    // Apply splash damage
+                                    splashTarget.health -= proj.splashDamage;
+                                    updateZombieHealth(splashTarget);
+                                    if(splashTarget.element) splashTarget.element.classList.add('damage-effect');
+                                    createTimer(300, () => { if (splashTarget.element) splashTarget.element.classList.remove('damage-effect'); });
+                                    
+                                    // Apply slow effect if projectile has it
+                                    if (proj.slow) {
+                                        splashTarget.slowed = true;
+                                        splashTarget.slowTimer = 3000; // Standard slow duration
+                                        if (splashTarget.element) splashTarget.element.classList.add('slowed');
+                                    }
+
+                                    if (splashTarget.health <= 0) handleZombieDefeat(splashTarget);
+                                }
+                            });
+
+                        } else { // --- STANDARD/PIERCING DAMAGE LOGIC ---
+                            zombie.health -= proj.damage;
+                            updateZombieHealth(zombie);
+                            zombie.element.classList.add('damage-effect');
+                            
+                            if (proj.slow) {
+                                zombie.slowed = true;
+                                zombie.slowTimer = 3000;
+                                zombie.element.classList.add('slowed');
+                            }
+                            
+                            if (proj.fire && zombie.element) {
+                                if (zombie.isFrozen) {
+                                    zombie.isFrozen = false;
+                                    zombie.freezeTimer = 0;
+                                    zombie.element.classList.remove('frozen');
+                                    createParticleEffect(zombie.element, '💨');
+                                } else if (zombie.slowed) {
+                                    zombie.slowed = false;
+                                    zombie.slowTimer = 0;
+                                    zombie.element.classList.remove('slowed');
+                                    createParticleEffect(zombie.element, '💨');
+                                } else {
+                                    createParticleEffect(zombie.element, '🔥');
+                                }
+                            }
+                            
+                            createTimer(300, () => { if (zombie.element) zombie.element.classList.remove('damage-effect'); });
+                            
+                            if (zombie.health <= 0) handleZombieDefeat(zombie);
+                            
+                            if (!proj.pierce) {
+                                hit = true;
                             } else {
-                                createParticleEffect(zombie.element, '🔥');
+                                proj.hitZombies.push(zombie);
                             }
-                        }
-                        
-                        createTimer(300, () => {
-                            if (zombie.element) {
-                                zombie.element.classList.remove('damage-effect');
-                            }
-                        });
-                        
-                        if (zombie.health <= 0) {
-                            handleZombieDefeat(zombie);
-                        }
-                        
-                        if (!proj.pierce) {
-                            hit = true;
-                        } else {
-                            proj.hitZombies.push(zombie);
                         }
                     }
-                });
+                }
                 
                 if (hit || proj.x > window.innerWidth) {
                     proj.element.remove();
@@ -4297,6 +4463,7 @@ Copyright (c) 2025 Olexandr_43
         function updatePlantCardAvailability() {
             const repeaterOnBoard = gameState.plants.some(p => p.type === 'repeater');
             const sunflowerOnBoard = gameState.plants.some(p => p.type === 'sunflower');
+            const melonpultOnBoard = gameState.plants.some(p => p.type === 'melonpult');
             const gravesOnBoard = gameState.graves.length > 0;
 
             document.querySelectorAll('#plantSelection .plantCard').forEach(card => {
@@ -4316,6 +4483,8 @@ Copyright (c) 2025 Olexandr_43
                         hasBasePlant = repeaterOnBoard;
                     } else if (upgradesFrom === 'sunflower') {
                         hasBasePlant = sunflowerOnBoard;
+                    } else if (upgradesFrom === 'melonpult') {
+                        hasBasePlant = melonpultOnBoard;
                     }
                 }
                 
@@ -4665,8 +4834,10 @@ Copyright (c) 2025 Olexandr_43
                             Graves: ${gameState.graves.length}<br>
                             Ice: ${gameState.iceTrails.length}<br>
                             Timers: ${Object.keys(gameState.timers).length}<br>
+							Score: ${gameState.score}<br>
                             Wave: ${gameState.wave}/${gameState.maxWaves}<br>
                             Speed: x${gameState.gameSpeed}<br>
+							Damage Mult: ${gameState.zombieDamageMultiplier.toFixed(2)}x<br>
                             FPS: ${Math.round(1000 / deltaTime)}
                         `;
                     }
@@ -4719,6 +4890,53 @@ Copyright (c) 2025 Olexandr_43
             document.getElementById('finalScore').textContent = gameState.score.toLocaleString();
             document.getElementById('finalWave').textContent = gameState.wave;
             document.getElementById('finalZombies').textContent = gameState.zombiesDefeated;
+        }
+
+        // Custom Dialog System
+        function showCustomDialog(title, message, buttons) {
+            const dialog = document.getElementById('customDialog');
+            const titleEl = document.getElementById('dialogTitle');
+            const messageEl = document.getElementById('dialogMessage');
+            const buttonsEl = document.getElementById('dialogButtons');
+
+            titleEl.textContent = title;
+            messageEl.textContent = message;
+            buttonsEl.innerHTML = '';
+
+            buttons.forEach(buttonInfo => {
+                const button = document.createElement('button');
+                button.textContent = buttonInfo.text;
+                button.className = 'btn';
+                if (buttonInfo.class) {
+                    button.classList.add(buttonInfo.class);
+                }
+
+                button.addEventListener('click', () => {
+                    hideCustomDialog();
+                    if (buttonInfo.callback) {
+                        buttonInfo.callback();
+                    }
+                });
+
+                buttonsEl.appendChild(button);
+            });
+
+            dialog.style.display = 'flex';
+        }
+
+        function hideCustomDialog() {
+            document.getElementById('customDialog').style.display = 'none';
+        }
+
+        function confirmRestart() {
+            showCustomDialog(
+                'Confirm Restart',
+                'Are you sure you want to start a new game? Your current progress will be lost.',
+                [
+                    { text: 'Yes, Restart', class: 'secondary', callback: restartGame },
+                    { text: 'No, Cancel' }
+                ]
+            );
         }
 
         // Restart Game
