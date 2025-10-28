@@ -4377,19 +4377,27 @@ Copyright (c) 2025 Olexandr_43
             }
         }
         
-        function updateCooldownVisuals() {
-            document.querySelectorAll('.plantCard.on-cooldown').forEach(card => {
-                const timerId = card.dataset.cooldownTimerId;
-                const overlay = card.querySelector('.cooldown-overlay');
-                if (timerId && gameState.timers[timerId] && overlay) {
-                    const timer = gameState.timers[timerId];
-                    const percent = Math.max(0, timer.remaining / timer.delay);
-                    overlay.style.height = `${percent * 100}%`;
-                } else if (overlay) {
-                    overlay.style.height = '0%';
-                }
-            });
-        }
+		function updateCooldownVisuals() {
+			document.querySelectorAll('#plantSelection .plantCard').forEach(card => {
+				const overlay = card.querySelector('.cooldown-overlay');
+				if (!overlay) return;
+
+				// If the card IS on cooldown...
+				if (card.classList.contains('on-cooldown')) {
+					const timerId = card.dataset.cooldownTimerId;
+					if (timerId && gameState.timers[timerId]) {
+						const timer = gameState.timers[timerId];
+						const percent = Math.max(0, timer.remaining / timer.delay);
+						overlay.style.height = `${percent * 100}%`;
+					} else {
+						overlay.style.height = '0%';
+					}
+				} else {
+					// Force reset if the card is NOT on cooldown.
+					overlay.style.height = '0%';
+				}
+			});
+		}
 
         // --- Centralized function for handling zombie defeat ---
         function handleZombieDefeat(zombie, particleEmoji = '💀') {
