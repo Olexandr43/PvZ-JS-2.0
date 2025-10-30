@@ -88,12 +88,13 @@ The arsenal of plants has more than doubled, adding significant strategic variet
 The horde has grown much more dangerous and unpredictable.
 
 *   **Football Zombie (👹):** An extremely fast and durable zombie with 84 health. It acts as a battering ram, capable of absorbing a large amount of damage while quickly closing the distance to your house.
+*   **Jack-in-the-Box Zombie (🤡):** It moves quickly and has a chance to explode, destroying plants in a 3x3 area around it.
 *   **Dancing Zombie (🕺):** A tricky zombie with 25 health. It moves forward with a unique dancing animation and periodically summons four Backup Dancers in the tiles surrounding it, quickly overwhelming a lane.
 *   **Backup Dancer (💃):** A standard zombie with 14 health that is only spawned by the Dancing Zombie. They appear in groups and can be very dangerous if the main dancer isn't dealt with quickly.
 *   **Zomboni (🚚):** A vehicle-based zombie with 58 health. It moves at a steady pace, instantly crushing any plant it drives over. It also leaves a trail of ice behind it, preventing you from planting on those tiles for a long time.
 *   **Balloon Zombie (🎈):** A special zombie with 15 health that floats over all of your plants, making it immune to most attacks. It can only be defeated by the Cactus, Blover, or area-of-effect explosions.
 *   **Gargantuar (🗿):** A massive zombie with 180 health that deals devastating damage (99), allowing it to smash plants in a single hit. It is so large that it cannot be eaten by the Chomper.
-*   **Giga-Gargantuar (👺):** An even stronger, red-eyed version of the Gargantuar with an immense 600 health, capable of instantly destroying most plants. It is also uneatable.
+*   **Giga-Gargantuar (👺):** An even stronger, red-eyed version of the Gargantuar with an immense 600 health, capable of instantly destroying most plants.
 
 ---
 
