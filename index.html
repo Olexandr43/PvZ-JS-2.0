@@ -3,11 +3,12 @@
 Copyright (c) 2025 Olexandr_43
 -->
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-	<meta name="description" content="Plants vs Zombies">
-    <link rel="icon" type="image/x-icon" href="favicon.ico"/>
+    <meta name="description" content="Plants vs Zombies">
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
     <title>Plants vs Zombies</title>
     <style>
         * {
@@ -18,11 +19,11 @@ Copyright (c) 2025 Olexandr_43
             -webkit-user-select: none;
             -webkit-touch-callout: none;
         }
-		
-		:root {
-			--game-speed: 1;
-		}
-		
+
+        :root {
+            --game-speed: 1;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -41,7 +42,7 @@ Copyright (c) 2025 Olexandr_43
             max-height: 700px;
             position: relative;
             background: linear-gradient(to bottom, #87CEEB 0%, #87CEEB 40%, #90EE90 40%, #228B22 100%);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             border-radius: 15px;
             overflow: hidden;
         }
@@ -66,7 +67,7 @@ Copyright (c) 2025 Olexandr_43
             grid-template-columns: repeat(9, 1fr);
             grid-template-rows: repeat(5, 1fr);
             gap: 2px;
-            background: rgba(0,0,0,0.1);
+            background: rgba(0, 0, 0, 0.1);
             padding: 10px;
             border-radius: 10px;
         }
@@ -83,7 +84,7 @@ Copyright (c) 2025 Olexandr_43
             justify-content: center;
             overflow: visible;
         }
-        
+
         .cell.crater {
             background: radial-gradient(circle, #3b2a1a 0%, #5c422a 50%, #2e1e10 100%);
             border: 2px solid #1a1a1a;
@@ -100,8 +101,13 @@ Copyright (c) 2025 Olexandr_43
         }
 
         @keyframes iceGlimmer {
-            from { box-shadow: 0 0 2px rgba(255,255,255,0); }
-            to { box-shadow: 0 0 8px rgba(255,255,255,0.7); }
+            from {
+                box-shadow: 0 0 2px rgba(255, 255, 255, 0);
+            }
+
+            to {
+                box-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
+            }
         }
 
 
@@ -117,6 +123,7 @@ Copyright (c) 2025 Olexandr_43
             cursor: not-allowed;
             position: relative;
         }
+
         .cell.grave::before {
             content: '⚰️';
             font-size: 2.5em;
@@ -136,34 +143,43 @@ Copyright (c) 2025 Olexandr_43
                 transform: translate(-50%, -30%) scale(0.8);
                 opacity: 0;
             }
+
             100% {
                 transform: translate(-50%, -50%) scale(1);
                 opacity: 0.8;
             }
         }
-		
+
         #gameBoard:not(.shovel-mode) .cell.grave {
             cursor: pointer;
         }
+
         #gameBoard:not(.shovel-mode) .cell.grave:hover {
             background: rgba(144, 238, 144, 0.5);
         }
-        
+
         @keyframes smoke {
-            from { transform: translateY(0) scale(1); opacity: 0.3; }
-            to { transform: translateY(-10px) scale(1.2); opacity: 0.1; }
+            from {
+                transform: translateY(0) scale(1);
+                opacity: 0.3;
+            }
+
+            to {
+                transform: translateY(-10px) scale(1.2);
+                opacity: 0.1;
+            }
         }
 
         .cell:hover {
             background: rgba(144, 238, 144, 0.5);
             transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         .plant {
             font-size: 2.5em;
             animation: plantGrow calc(0.5s / var(--game-speed)) ease;
-            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
             z-index: 2;
             position: absolute;
             top: 50%;
@@ -172,7 +188,7 @@ Copyright (c) 2025 Olexandr_43
         }
 
         .plant.imitated {
-            filter: grayscale(100%) drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+            filter: grayscale(100%) drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
         }
 
         .plant.arming {
@@ -186,16 +202,24 @@ Copyright (c) 2025 Olexandr_43
         }
 
         @keyframes mineArm {
-            0% { transform: translate(-50%, -50%) scale(0.6); }
-            50% { transform: translate(-50%, -60%) scale(1.2); }
-            100% { transform: translate(-50%, -50%) scale(1); }
+            0% {
+                transform: translate(-50%, -50%) scale(0.6);
+            }
+
+            50% {
+                transform: translate(-50%, -60%) scale(1.2);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
         }
 
         .plant-health-bar {
             position: absolute;
             width: 40px;
             height: 3px;
-            background: rgba(0,0,0,0.3);
+            background: rgba(0, 0, 0, 0.3);
             bottom: -8px;
             left: 50%;
             transform: translateX(-50%);
@@ -207,7 +231,7 @@ Copyright (c) 2025 Olexandr_43
             height: 100%;
             background: linear-gradient(90deg, #4CAF50, #8BC34A);
             transition: width calc(0.3s / var(--game-speed)) ease;
-            box-shadow: 0 0 3px rgba(76,175,80,0.5);
+            box-shadow: 0 0 3px rgba(76, 175, 80, 0.5);
         }
 
         .plant.shooting {
@@ -223,32 +247,62 @@ Copyright (c) 2025 Olexandr_43
         }
 
         @keyframes eatGraveAnimation {
-            0%, 100% { transform: translate(-50%, -50%) scale(1) rotate(-2deg); }
-            50% { transform: translate(-50%, -50%) scale(1.15) rotate(2deg); }
+
+            0%,
+            100% {
+                transform: translate(-50%, -50%) scale(1) rotate(-2deg);
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.15) rotate(2deg);
+            }
         }
 
         @keyframes shootAnimation {
-            0% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -50%) scale(1.2); }
-            100% { transform: translate(-50%, -50%) scale(1); }
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
         }
 
         @keyframes chewAnimation {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -50%) scale(1.1) rotate(5deg); }
+
+            0%,
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.1) rotate(5deg);
+            }
         }
 
         @keyframes plantGrow {
-            0% { transform: translate(-50%, -50%) scale(0) rotate(0deg); }
-            50% { transform: translate(-50%, -50%) scale(1.2) rotate(10deg); }
-            100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+            0% {
+                transform: translate(-50%, -50%) scale(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.2) rotate(10deg);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+            }
         }
 
         .zombie {
             position: absolute;
             font-size: 2.5em;
             z-index: 3;
-            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5));
             transition: filter calc(0.3s / var(--game-speed)) ease;
             will-change: transform;
             transform: scaleX(-1);
@@ -258,37 +312,77 @@ Copyright (c) 2025 Olexandr_43
         .zombie.dancing {
             animation: moonwalk calc(1s / var(--game-speed)) infinite alternate ease-in-out;
         }
+
         .zombie.dancing.eating {
-             animation: zombieEat calc(0.5s / var(--game-speed)) infinite; /* Override moonwalk when eating */
+            animation: zombieEat calc(0.5s / var(--game-speed)) infinite;
+            /* Override moonwalk when eating */
         }
-        
+
         @keyframes moonwalk {
-            0% { transform: scaleX(-1) translateX(-5px); }
-            100% { transform: scaleX(-1) translateX(5px); }
+            0% {
+                transform: scaleX(-1) translateX(-5px);
+            }
+
+            100% {
+                transform: scaleX(-1) translateX(5px);
+            }
         }
 
         .zombie.zomboni {
             font-size: 3.35em;
         }
-		.zombie.gargantuar {
-			font-size: 3.5em;
-		}
-        
+
+        .zombie.gargantuar {
+            font-size: 3.5em;
+        }
+
         .zombie.frozen {
             filter: drop-shadow(2px 2px 8px rgba(173, 216, 230, 0.9)) brightness(1.4) saturate(0);
             animation: frozenWiggle calc(0.5s / var(--game-speed)) infinite ease-in-out;
         }
 
+        .zombie.jackInTheBox {
+            animation: winding-up calc(0.7s / var(--game-speed)) infinite ease-in-out;
+        }
+
+        @keyframes winding-up {
+
+            0%,
+            100% {
+                transform: scaleX(-1) rotate(-2deg);
+            }
+
+            50% {
+                transform: scaleX(-1) rotate(2deg);
+            }
+        }
+
         @keyframes frozenWiggle {
-            0%, 100% { transform: scaleX(-1) rotate(-1deg); }
-            50% { transform: scaleX(-1) rotate(1deg); }
+
+            0%,
+            100% {
+                transform: scaleX(-1) rotate(-1deg);
+            }
+
+            50% {
+                transform: scaleX(-1) rotate(1deg);
+            }
+        }
+
+        .zombie.stunned::after {
+            content: '🧈';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.2em;
         }
 
         .zombie-health-bar {
             position: absolute;
             width: 40px;
             height: 4px;
-            background: rgba(255,0,0,0.8);
+            background: rgba(255, 0, 0, 0.8);
             top: -10px;
             left: 50%;
             transform: translateX(-50%);
@@ -300,11 +394,11 @@ Copyright (c) 2025 Olexandr_43
             height: 100%;
             background: linear-gradient(90deg, #ff0000, #ff6600);
             transition: width calc(0.3s / var(--game-speed)) ease;
-            box-shadow: 0 0 5px rgba(255,0,0,0.5);
+            box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
         }
 
         .zombie.slowed {
-            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5)) hue-rotate(200deg) brightness(1.5);
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5)) hue-rotate(200deg) brightness(1.5);
         }
 
         .zombie.eating {
@@ -312,32 +406,51 @@ Copyright (c) 2025 Olexandr_43
         }
 
         @keyframes zombieEat {
-            0%, 100% { transform: scaleX(-1) translateY(0); }
-            50% { transform: scaleX(-1) translateY(-5px); }
+
+            0%,
+            100% {
+                transform: scaleX(-1) translateY(0);
+            }
+
+            50% {
+                transform: scaleX(-1) translateY(-5px);
+            }
         }
 
         .projectile {
             position: absolute;
             font-size: 1.5em;
             z-index: 4;
-            filter: drop-shadow(0 0 5px rgba(255,255,0,0.8));
+            filter: drop-shadow(0 0 5px rgba(255, 255, 0, 0.8));
             will-change: transform;
             pointer-events: none;
         }
 
         .projectile.fire {
-            filter: drop-shadow(0 0 10px rgba(255,100,0,1));
+            filter: drop-shadow(0 0 10px rgba(255, 100, 0, 1));
             animation: fireGlow calc(0.3s / var(--game-speed)) infinite alternate;
         }
 
         @keyframes fireGlow {
-            from { transform: scale(1); }
-            to { transform: scale(1.2); }
+            from {
+                transform: scale(1);
+            }
+
+            to {
+                transform: scale(1.2);
+            }
         }
-        
+
         @keyframes windBlow {
-            0% { transform: translateX(0) scale(1); opacity: 0.7; }
-            100% { transform: translateX(1000px) scale(1.5); opacity: 0; }
+            0% {
+                transform: translateX(0) scale(1);
+                opacity: 0.7;
+            }
+
+            100% {
+                transform: translateX(1000px) scale(1.5);
+                opacity: 0;
+            }
         }
 
         #ui {
@@ -346,10 +459,10 @@ Copyright (c) 2025 Olexandr_43
             left: 10px;
             right: 10px;
             height: 130px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(240,240,240,0.95));
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(240, 240, 240, 0.95));
             border-radius: 15px;
             padding: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             display: flex;
             gap: 10px;
             align-items: center;
@@ -373,7 +486,7 @@ Copyright (c) 2025 Olexandr_43
             overflow-y: hidden;
             padding: 5px;
             scrollbar-width: thin;
-            scrollbar-color: rgba(0,0,0,0.2) transparent;
+            scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
         }
 
         #plantSelection::-webkit-scrollbar {
@@ -381,12 +494,12 @@ Copyright (c) 2025 Olexandr_43
         }
 
         #plantSelection::-webkit-scrollbar-track {
-            background: rgba(0,0,0,0.1);
+            background: rgba(0, 0, 0, 0.1);
             border-radius: 3px;
         }
 
         #plantSelection::-webkit-scrollbar-thumb {
-            background: rgba(0,0,0,0.3);
+            background: rgba(0, 0, 0, 0.3);
             border-radius: 3px;
         }
 
@@ -403,12 +516,12 @@ Copyright (c) 2025 Olexandr_43
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             position: relative;
             overflow: hidden;
             flex-shrink: 0;
         }
-        
+
         .plantCard.imitated {
             filter: grayscale(1);
         }
@@ -419,8 +532,8 @@ Copyright (c) 2025 Olexandr_43
         }
 
         .plantCard[data-upgrade="true"].selected {
-             background: linear-gradient(135deg, #9b59b6, #8e44ad);
-             box-shadow: 0 0 20px rgba(155, 89, 182, 0.5);
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            box-shadow: 0 0 20px rgba(155, 89, 182, 0.5);
         }
 
 
@@ -431,7 +544,7 @@ Copyright (c) 2025 Olexandr_43
             left: -50%;
             width: 200%;
             height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
             transform: rotate(45deg);
             transition: all 0.5s ease;
             opacity: 0;
@@ -442,14 +555,24 @@ Copyright (c) 2025 Olexandr_43
         }
 
         @keyframes shine {
-            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); opacity: 0; }
-            50% { opacity: 1; }
-            100% { transform: translateX(100%) translateY(100%) rotate(45deg); opacity: 0; }
+            0% {
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateX(100%) translateY(100%) rotate(45deg);
+                opacity: 0;
+            }
         }
 
         .plantCard:hover {
             transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
             border-color: #45a049;
         }
 
@@ -458,7 +581,7 @@ Copyright (c) 2025 Olexandr_43
             transform: scale(1.1);
             box-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
         }
-        
+
         .plantCard.imitated.selected {
             filter: grayscale(0.5);
         }
@@ -478,7 +601,8 @@ Copyright (c) 2025 Olexandr_43
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 0; /* Starts at 0, animates from 100% to 0 */
+            height: 0;
+            /* Starts at 0, animates from 100% to 0 */
             background: rgba(25, 25, 25, 0.7);
             z-index: 1;
             pointer-events: none;
@@ -494,7 +618,7 @@ Copyright (c) 2025 Olexandr_43
         .plantCard.imitated.on-cooldown {
             filter: grayscale(1) opacity(0.7);
         }
-        
+
         .plantCard .emoji,
         .plantCard .cost,
         .plantCard .name {
@@ -511,7 +635,7 @@ Copyright (c) 2025 Olexandr_43
             font-size: 0.75em;
             font-weight: bold;
             color: #FFD700;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
         }
 
         .plantCard .name {
@@ -520,7 +644,8 @@ Copyright (c) 2025 Olexandr_43
             text-align: center;
         }
 
-        #sunCounter, #scoreCounter {
+        #sunCounter,
+        #scoreCounter {
             display: flex;
             align-items: center;
             gap: 8px;
@@ -530,7 +655,7 @@ Copyright (c) 2025 Olexandr_43
             border-radius: 20px;
             box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
             color: white;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
             white-space: nowrap;
             transition: transform 0.1s ease;
         }
@@ -564,14 +689,14 @@ Copyright (c) 2025 Olexandr_43
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
             white-space: nowrap;
             flex: 1;
         }
 
         .controlBtn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
 
         .controlBtn.active {
@@ -595,7 +720,7 @@ Copyright (c) 2025 Olexandr_43
             font-size: 0.6em;
             font-weight: bold;
             color: #FFD700;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
 
         .sun:hover {
@@ -608,39 +733,43 @@ Copyright (c) 2025 Olexandr_43
             font-size: 1.5em;
             font-weight: bold;
             color: #FFD700;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
             z-index: 10;
             pointer-events: none;
             animation: pointsFloat calc(1.5s / var(--game-speed)) ease-out forwards;
         }
 
         @keyframes pointsFloat {
-            0% { 
+            0% {
                 transform: translateY(0) scale(1);
                 opacity: 1;
             }
-            100% { 
+
+            100% {
                 transform: translateY(-50px) scale(1.5);
                 opacity: 0;
             }
         }
 
-        #gameOver, #pauseMenu, #leaderboard, #victoryScreen {
+        #gameOver,
+        #pauseMenu,
+        #leaderboard,
+        #victoryScreen {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(240,240,240,0.98));
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(240, 240, 240, 0.98));
             padding: 30px;
             border-radius: 20px;
             text-align: center;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(10px);
             display: none;
             max-width: 500px;
             width: 90%;
         }
-        
+
         /* Make leaderboard highest z-index */
         #leaderboard {
             z-index: 1000;
@@ -648,11 +777,16 @@ Copyright (c) 2025 Olexandr_43
             overflow-y: auto;
         }
 
-        #gameOver, #pauseMenu, #victoryScreen {
+        #gameOver,
+        #pauseMenu,
+        #victoryScreen {
             z-index: 100;
         }
 
-        #gameOver h2, #pauseMenu h2, #leaderboard h2, #victoryScreen h2 {
+        #gameOver h2,
+        #pauseMenu h2,
+        #leaderboard h2,
+        #victoryScreen h2 {
             font-size: 2.2em;
             margin-bottom: 20px;
             background: linear-gradient(135deg, #667eea, #764ba2);
@@ -674,16 +808,16 @@ Copyright (c) 2025 Olexandr_43
             align-items: center;
             padding: 10px 15px;
             margin: 5px 0;
-            background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(240,240,240,0.8));
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(240, 240, 240, 0.8));
             border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
             position: relative;
         }
 
         .leaderboard-entry:hover {
             transform: translateX(5px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
         .leaderboard-entry.gold {
@@ -735,7 +869,7 @@ Copyright (c) 2025 Olexandr_43
         .leaderboard-entry.gold .leaderboard-score,
         .leaderboard-entry.silver .leaderboard-score,
         .leaderboard-entry.bronze .leaderboard-score {
-            color: rgba(255,255,255,0.9);
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .stats {
@@ -754,12 +888,12 @@ Copyright (c) 2025 Olexandr_43
             border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         .btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
         }
 
         .btn.secondary {
@@ -771,7 +905,7 @@ Copyright (c) 2025 Olexandr_43
         }
 
         .btn.gold {
-			margin: 0px;
+            margin: 0px;
             background: linear-gradient(135deg, #FFD700, #FFA500);
         }
 
@@ -782,11 +916,11 @@ Copyright (c) 2025 Olexandr_43
             font-size: 1.2em;
             font-weight: bold;
             color: white;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
             background: linear-gradient(135deg, #FF6B6B, #FF8E53);
             padding: 10px 20px;
             border-radius: 20px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             z-index: 9;
             display: flex;
             flex-direction: column;
@@ -806,8 +940,15 @@ Copyright (c) 2025 Olexandr_43
         }
 
         @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
         }
 
         .zombie.damage-effect {
@@ -815,8 +956,17 @@ Copyright (c) 2025 Olexandr_43
         }
 
         @keyframes damage {
-            0%, 100% { transform: scaleX(-1); filter: brightness(1); }
-            50% { transform: scaleX(-1) scale(0.9); filter: brightness(1.5) hue-rotate(180deg); }
+
+            0%,
+            100% {
+                transform: scaleX(-1);
+                filter: brightness(1);
+            }
+
+            50% {
+                transform: scaleX(-1) scale(0.9);
+                filter: brightness(1.5) hue-rotate(180deg);
+            }
         }
 
         .plant-damage-effect {
@@ -824,8 +974,17 @@ Copyright (c) 2025 Olexandr_43
         }
 
         @keyframes plantDamage {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); filter: brightness(1); }
-            50% { transform: translate(-50%, -50%) scale(0.9); filter: brightness(1.5) hue-rotate(90deg); }
+
+            0%,
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                filter: brightness(1);
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(0.9);
+                filter: brightness(1.5) hue-rotate(90deg);
+            }
         }
 
         .collect-effect {
@@ -833,14 +992,31 @@ Copyright (c) 2025 Olexandr_43
         }
 
         @keyframes collect {
-            0% { transform: scale(1) rotate(0deg); }
-            100% { transform: scale(0) rotate(360deg); opacity: 0; }
+            0% {
+                transform: scale(1) rotate(0deg);
+            }
+
+            100% {
+                transform: scale(0) rotate(360deg);
+                opacity: 0;
+            }
         }
-        
+
         @keyframes freezeFlash {
-            0% { transform: translate(-50%, -50%) scale(0); opacity: 0.8; }
-            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.5; }
-            100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0.8;
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 0.5;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1.5);
+                opacity: 0;
+            }
         }
 
         .particle {
@@ -852,17 +1028,25 @@ Copyright (c) 2025 Olexandr_43
         }
 
         @keyframes particle {
-            0% { transform: translate(0, 0) scale(1); opacity: 1; }
-            100% { transform: translate(var(--x), var(--y)) scale(0); opacity: 0; }
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(var(--x), var(--y)) scale(0);
+                opacity: 0;
+            }
         }
 
         #debugInfo {
             position: absolute;
+            z-index: 999999;
             bottom: 10px;
             left: 10px;
             color: white;
             font-size: 0.8em;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
             padding: 5px;
             border-radius: 5px;
             display: none;
@@ -900,7 +1084,7 @@ Copyright (c) 2025 Olexandr_43
             #landscapeMessage {
                 display: flex;
             }
-            
+
             #gameContainer {
                 display: none;
             }
@@ -919,15 +1103,31 @@ Copyright (c) 2025 Olexandr_43
             font-weight: bold;
             z-index: 200;
             animation: saveNotification calc(2s / var(--game-speed)) ease forwards;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
         @keyframes saveNotification {
-            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
-            20% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
-            40% { transform: translate(-50%, -50%) scale(1); }
-            80% { opacity: 1; }
-            100% { opacity: 0; }
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+
+            20% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+
+            40% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            80% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+            }
         }
 
         .lawnmower {
@@ -935,7 +1135,8 @@ Copyright (c) 2025 Olexandr_43
             font-size: 2.5em;
             z-index: 3;
             will-change: left;
-            transform: scaleX(-1); /* Face right */
+            transform: scaleX(-1);
+            /* Face right */
         }
 
         /* Shovel Styles */
@@ -947,18 +1148,18 @@ Copyright (c) 2025 Olexandr_43
             background: rgba(255, 0, 0, 0.3);
             outline: 2px solid red;
         }
-		
-		#shovelCard {
-			background: linear-gradient(135deg, #c0c0c0, #a9a9a9);
-			border-color: #808080;
-		}
+
+        #shovelCard {
+            background: linear-gradient(135deg, #c0c0c0, #a9a9a9);
+            border-color: #808080;
+        }
 
         #shovelCard.selected {
             background: linear-gradient(135deg, #A9A9A9, #808080);
             border-color: #696969;
             box-shadow: 0 0 20px rgba(128, 128, 128, 0.5);
         }
-        
+
         #zombieSpawner {
             position: absolute;
             bottom: 0;
@@ -975,7 +1176,7 @@ Copyright (c) 2025 Olexandr_43
             overflow-x: auto;
             overflow-y: hidden;
             scrollbar-width: thin;
-            scrollbar-color: rgba(255,255,255,0.2) transparent;
+            scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
         }
 
         #zombieSpawner::-webkit-scrollbar {
@@ -983,12 +1184,12 @@ Copyright (c) 2025 Olexandr_43
         }
 
         #zombieSpawner::-webkit-scrollbar-track {
-            background: rgba(0,0,0,0.1);
+            background: rgba(0, 0, 0, 0.1);
             border-radius: 3px;
         }
 
         #zombieSpawner::-webkit-scrollbar-thumb {
-            background: rgba(255,255,255,0.3);
+            background: rgba(255, 255, 255, 0.3);
             border-radius: 3px;
         }
 
@@ -1005,13 +1206,13 @@ Copyright (c) 2025 Olexandr_43
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             flex-shrink: 0;
         }
 
         .zombieCard:hover {
             transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
             border-color: #ff0000;
         }
 
@@ -1023,17 +1224,18 @@ Copyright (c) 2025 Olexandr_43
 
         .zombieCard .emoji {
             font-size: 1.6em;
-            transform: scaleX(-1); /* Face right */
+            transform: scaleX(-1);
+            /* Face right */
             margin-bottom: 2px;
         }
-        
+
         .zombieCard .name {
             font-size: 0.6em;
             color: #333;
             text-align: center;
             font-weight: bold;
         }
-        
+
         .zombieCard.selected .name {
             color: white;
         }
@@ -1053,7 +1255,7 @@ Copyright (c) 2025 Olexandr_43
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(15px);
             z-index: 150;
             display: flex;
@@ -1063,7 +1265,7 @@ Copyright (c) 2025 Olexandr_43
             padding: 15px;
             color: white;
         }
-        
+
         #deckContainer {
             width: 100%;
             text-align: center;
@@ -1071,12 +1273,12 @@ Copyright (c) 2025 Olexandr_43
 
         #deckContainer h2 {
             font-size: 2.2em;
-            text-shadow: 3px 3px 5px rgba(0,0,0,0.5);
+            text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
             margin-bottom: 10px;
         }
-        
+
         #deckBar {
-            background: rgba(0,0,0,0.4);
+            background: rgba(0, 0, 0, 0.4);
             border-radius: 15px;
             padding: 10px;
             display: flex;
@@ -1084,7 +1286,7 @@ Copyright (c) 2025 Olexandr_43
             align-items: center;
             justify-content: flex-start;
             height: 130px;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
             overflow-x: auto;
             flex-wrap: nowrap;
         }
@@ -1098,10 +1300,10 @@ Copyright (c) 2025 Olexandr_43
             opacity: 0;
             pointer-events: none;
         }
-        
+
         #plantLibrary {
             max-width: 950px;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 15px;
             padding: 20px;
             margin: 15px 0;
@@ -1110,13 +1312,13 @@ Copyright (c) 2025 Olexandr_43
         }
 
         #plantLibraryGrid {
-			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
-			gap: 10px;
-			max-width: calc(8 * 70px + 7 * 10px);
-			margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+            gap: 10px;
+            max-width: calc(8 * 70px + 7 * 10px);
+            margin: 0 auto;
         }
-        
+
         #plantLibrary .plantCard {
             transition: opacity 0.3s ease, filter 0.3s ease;
         }
@@ -1140,7 +1342,7 @@ Copyright (c) 2025 Olexandr_43
             position: relative;
         }
 
-        #plantSelectionFooter > div:first-child {
+        #plantSelectionFooter>div:first-child {
             position: absolute;
             left: 25px;
         }
@@ -1150,35 +1352,43 @@ Copyright (c) 2025 Olexandr_43
             font-weight: bold;
         }
 
-                /* Custom Dialog Styles */
-                .dialog-overlay {
+        /* Custom Dialog Styles */
+        .dialog-overlay {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.3);
+            background: rgba(0, 0, 0, 0.3);
             z-index: 2000;
-            display: none; /* Hidden by default */
+            display: none;
+            /* Hidden by default */
             align-items: center;
             justify-content: center;
             padding: 15px;
         }
 
         .dialog-box {
-            background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(240,240,240,0.98));
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(240, 240, 240, 0.98));
             padding: 30px;
             border-radius: 20px;
             text-align: center;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             max-width: 450px;
             width: 100%;
             animation: dialogAppear calc(0.3s / var(--game-speed)) ease-out;
         }
 
         @keyframes dialogAppear {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
 
         .dialog-box h2 {
@@ -1193,54 +1403,58 @@ Copyright (c) 2025 Olexandr_43
             color: #555;
             line-height: 1.6;
         }
-		
-		/* Landscape mode optimizations */
+
+        /* Landscape mode optimizations */
         @media (orientation: landscape) and (max-height: 600px) {
             #ui {
                 height: 100px;
             }
-            
+
             #gameBoard {
                 top: 110px;
                 bottom: 20px;
             }
-            
+
             #wave {
                 bottom: 5px;
             }
-            
+
             .plantCard {
                 min-width: 55px;
                 width: 55px;
                 height: 75px;
             }
-            
+
             .plantCard .emoji {
                 font-size: 1.3em;
             }
-            
+
             .controlBtn {
                 padding: 5px 8px;
                 font-size: 0.85em;
             }
-            
-            #sunCounter, #scoreCounter {
+
+            #sunCounter,
+            #scoreCounter {
                 font-size: 0.95em;
                 padding: 6px 12px;
             }
-			
-			#deckBar {
+
+            #deckBar {
                 height: 100px;
                 padding: 8px;
             }
+
             #deckBar .plantCard {
                 min-width: 60px;
                 width: 60px;
                 height: 80px;
             }
+
             #deckBar .plantCard .emoji {
                 font-size: 1.4em;
             }
+
             #plantLibrary {
                 padding: 10px;
             }
@@ -1252,25 +1466,26 @@ Copyright (c) 2025 Olexandr_43
                 right: 10px;
                 top: 140px;
             }
-            
+
             #wave {
                 bottom: 5px;
                 right: 10px;
                 font-size: 1em;
                 padding: 8px 15px;
             }
-            
+
             .plantCard {
                 min-width: 60px;
                 width: 60px;
                 height: 80px;
             }
-            
+
             .plantCard .emoji {
                 font-size: 1.4em;
             }
-            
-            .plant, .zombie {
+
+            .plant,
+            .zombie {
                 font-size: 2em;
             }
 
@@ -1279,7 +1494,8 @@ Copyright (c) 2025 Olexandr_43
                 gap: 8px;
             }
 
-            #leftPanel, #controlButtons {
+            #leftPanel,
+            #controlButtons {
                 min-width: 120px;
             }
 
@@ -1290,6 +1506,7 @@ Copyright (c) 2025 Olexandr_43
         }
     </style>
 </head>
+
 <body>
     <div id="landscapeMessage">
         <h2>📱 Rotate Your Device</h2>
@@ -1305,7 +1522,7 @@ Copyright (c) 2025 Olexandr_43
                     <!-- Selected plants go here -->
                 </div>
             </div>
-            
+
             <div id="plantLibrary">
                 <div id="plantLibraryGrid">
                     <!-- All available plants go here -->
@@ -1323,11 +1540,11 @@ Copyright (c) 2025 Olexandr_43
                 <div id="sunCounter">☀️ <span id="sunCount">200</span></div>
                 <div id="scoreCounter">⭐ <span id="scoreCount">0</span></div>
             </div>
-            
+
             <div id="plantSelection">
                 <!-- Selected plant cards will be populated here -->
             </div>
-            
+
             <div id="controlButtons">
                 <div class="controlRow">
                     <button class="controlBtn" id="pauseBtn">⏸️ Pause</button>
@@ -1339,28 +1556,28 @@ Copyright (c) 2025 Olexandr_43
                 </div>
             </div>
         </div>
-        
+
         <div id="wave" style="visibility: hidden;">
             <div>Wave: <span id="waveCount">1</span>/20</div>
             <div class="damage-bonus">DMG: +<span id="damageBonus">0</span>%</div>
         </div>
-        
+
         <div id="gameBoard"></div>
-        
+
         <div id="debugInfo"></div>
-        
+
         <div id="pauseMenu">
             <h2>Game Paused</h2>
             <button class="btn" onclick="resumeGame()">▶️ Resume</button>
-            <button class="btn restart" onclick="confirmRestart()">🔄 Restart</button>            
+            <button class="btn restart" onclick="confirmRestart()">🔄 Restart</button>
         </div>
-        
+
         <div id="leaderboard">
             <h2>🏆 Top 10 Scores</h2>
             <div id="leaderboardList"></div>
             <button class="btn" onclick="closeLeaderboard()">Close</button>
         </div>
-        
+
         <div id="gameOver">
             <h2>Game Over!</h2>
             <div class="stats">
@@ -1403,9 +1620,9 @@ Copyright (c) 2025 Olexandr_43
             </div>
         </div>
     </div>
-    
+
     <div id="plantCardTemplates" style="display: none;">
-	    <div class="plantCard" data-plant="peashooter" data-cost="100">
+        <div class="plantCard" data-plant="peashooter" data-cost="100">
             <div class="cooldown-overlay"></div>
             <div class="emoji">🌱</div>
             <div class="cost">100</div>
@@ -1423,7 +1640,7 @@ Copyright (c) 2025 Olexandr_43
             <div class="cost">150</div>
             <div class="name">Cherry Bomb</div>
         </div>
-		<div class="plantCard" data-plant="wallnut" data-cost="50">
+        <div class="plantCard" data-plant="wallnut" data-cost="50">
             <div class="cooldown-overlay"></div>
             <div class="emoji">🥥</div>
             <div class="cost">50</div>
@@ -1507,6 +1724,18 @@ Copyright (c) 2025 Olexandr_43
             <div class="cost">125</div>
             <div class="name">Blover</div>
         </div>
+        <div class="plantCard" data-plant="cabbagepult" data-cost="100">
+            <div class="cooldown-overlay"></div>
+            <div class="emoji">🥬</div>
+            <div class="cost">100</div>
+            <div class="name">Cabbage-pult</div>
+        </div>
+        <div class="plantCard" data-plant="kernelpult" data-cost="100">
+            <div class="cooldown-overlay"></div>
+            <div class="emoji">🌽</div>
+            <div class="cost">100</div>
+            <div class="name">Kernel-pult</div>
+        </div>
         <div class="plantCard" data-plant="garlic" data-cost="50">
             <div class="cooldown-overlay"></div>
             <div class="emoji">🧄</div>
@@ -1519,31 +1748,33 @@ Copyright (c) 2025 Olexandr_43
             <div class="cost">50</div>
             <div class="name">Marigold</div>
         </div>
-		<div class="plantCard" data-plant="melonpult" data-cost="300">
+        <div class="plantCard" data-plant="melonpult" data-cost="300">
             <div class="cooldown-overlay"></div>
             <div class="emoji">🍉</div>
             <div class="cost">300</div>
             <div class="name">Melon-pult</div>
         </div>
-		<div class="plantCard" data-plant="firepea" data-cost="250">
+        <div class="plantCard" data-plant="firepea" data-cost="250">
             <div class="cooldown-overlay"></div>
             <div class="emoji">🔥</div>
             <div class="cost">250</div>
             <div class="name">Fire Pea</div>
         </div>
-		<div class="plantCard" data-plant="gatling" data-cost="250" data-upgrade="true" data-upgrades-from="repeater">
+        <div class="plantCard" data-plant="gatling" data-cost="250" data-upgrade="true" data-upgrades-from="repeater">
             <div class="cooldown-overlay"></div>
             <div class="emoji">🔫</div>
             <div class="cost">250</div>
             <div class="name">Gatling Pea</div>
         </div>
-        <div class="plantCard" data-plant="twinSunflower" data-cost="150" data-upgrade="true" data-upgrades-from="sunflower">
+        <div class="plantCard" data-plant="twinSunflower" data-cost="150" data-upgrade="true"
+            data-upgrades-from="sunflower">
             <div class="cooldown-overlay"></div>
             <div class="emoji">🌻🌻</div>
             <div class="cost">150</div>
             <div class="name">Twin Sunflower</div>
         </div>
-        <div class="plantCard" data-plant="wintermelon" data-cost="200" data-upgrade="true" data-upgrades-from="melonpult">
+        <div class="plantCard" data-plant="wintermelon" data-cost="200" data-upgrade="true"
+            data-upgrades-from="melonpult">
             <div class="cooldown-overlay"></div>
             <div class="emoji">🥶</div>
             <div class="cost">200</div>
@@ -1555,7 +1786,7 @@ Copyright (c) 2025 Olexandr_43
             <div class="cost"></div>
             <div class="name">Imitater</div>
         </div>
-		<div class="plantCard" data-plant="suncheat" data-cost="0">
+        <div class="plantCard" data-plant="suncheat" data-cost="0">
             <div class="cooldown-overlay"></div>
             <div class="emoji">☀️</div>
             <div class="cost">0</div>
@@ -1570,7 +1801,7 @@ Copyright (c) 2025 Olexandr_43
 
 
     <script>
-        let selectedPlantDeck = []; 
+        let selectedPlantDeck = [];
         let lastSelectedPlantForImitater = null;
 
         // Game State
@@ -1590,7 +1821,7 @@ Copyright (c) 2025 Olexandr_43
             iceTrails: [],
             wave: 1,
             maxWaves: 20,
-			isSpawningComplete: false,
+            isSpawningComplete: false,
             zombiesDefeated: 0,
             isPaused: false,
             isGameOver: false,
@@ -1611,18 +1842,29 @@ Copyright (c) 2025 Olexandr_43
 
         // Plant Types
         const plantTypes = { // 🌴Umbrella Leaf \ 🧲Magnet-shroom
-            sunflower: { 
-                emoji: '🌻', 
+            sunflower: {
+                emoji: '🌻',
                 health: 3.6,
                 maxHealth: 3.6,
-                produces: 'sun', 
+                produces: 'sun',
                 sunAmount: 50,
                 baseInterval: 24000,
                 shoots: false,
                 description: 'Produces sun',
                 cooldown: 7500 // Fast
             },
-			melonpult: {
+            cabbagepult: {
+                emoji: '🥬',
+                health: 3.6,
+                maxHealth: 3.6,
+                shoots: true,
+                damage: 2,
+                shootInterval: 3000,
+                projectile: '🥬',
+                description: 'Lobs cabbages at zombies.',
+                cooldown: 7500 // Fast
+            },
+            melonpult: {
                 emoji: '🍉',
                 health: 3.6,
                 maxHealth: 3.6,
@@ -1635,15 +1877,27 @@ Copyright (c) 2025 Olexandr_43
                 description: 'Splash damage',
                 cooldown: 7500 // Fast
             },
+            kernelpult: {
+                emoji: '🌽',
+                health: 3.6,
+                maxHealth: 3.6,
+                shoots: true,
+                damage: 1,
+                shootInterval: 3000,
+                projectile: '🟡',
+                hasButter: true,
+                description: 'Lobs kernels and butter that stuns.',
+                cooldown: 7500, // Fast
+            },
             wintermelon: {
                 emoji: '🥶',
                 health: 4.8,
                 maxHealth: 4.8,
                 shoots: true,
-                damage: 4, 
+                damage: 4,
                 splashDamage: 1.5,
                 splashRadiusY: 1,
-                slow: true, 
+                slow: true,
                 shootInterval: 3000,
                 projectile: '🧊',
                 description: 'Upgrade: Freezes and damages zombies.',
@@ -1651,11 +1905,11 @@ Copyright (c) 2025 Olexandr_43
                 upgradesFrom: 'melonpult',
                 cooldown: 50000 // Very Slow
             },
-			suncheat: { 
-                emoji: '☀️', 
+            suncheat: {
+                emoji: '☀️',
                 health: 1,
                 maxHealth: 1,
-                produces: 'sun', 
+                produces: 'sun',
                 sunAmount: 9990,
                 baseInterval: 99900,
                 shoots: false,
@@ -1675,19 +1929,19 @@ Copyright (c) 2025 Olexandr_43
                 upgradesFrom: 'sunflower',
                 cooldown: 50000 // Very Slow
             },
-            peashooter: { 
-                emoji: '🌱', 
+            peashooter: {
+                emoji: '🌱',
                 health: 3.6,
                 maxHealth: 3.6,
-                shoots: true, 
-                damage: 1, 
+                shoots: true,
+                damage: 1,
                 shootInterval: 1500,
                 projectile: '🟢',
                 description: 'Basic shooter',
                 cooldown: 7500 // Fast
             },
-            wallnut: { 
-                emoji: '🥥', 
+            wallnut: {
+                emoji: '🥥',
                 health: 24,
                 maxHealth: 24,
                 shoots: false,
@@ -1714,20 +1968,20 @@ Copyright (c) 2025 Olexandr_43
                 description: 'Diverts zombies to other lanes',
                 cooldown: 7500 // Fast
             },
-            snowpea: { 
-                emoji: '❄️', 
+            snowpea: {
+                emoji: '❄️',
                 health: 3.6,
                 maxHealth: 3.6,
-                shoots: true, 
-                damage: 1, 
-                slow: true, 
+                shoots: true,
+                damage: 1,
+                slow: true,
                 shootInterval: 2000,
                 projectile: '❄️',
                 description: 'Slows zombies',
                 cooldown: 7500 // Fast
             },
-            chomper: { 
-                emoji: '🌿', 
+            chomper: {
+                emoji: '🌿',
                 health: 4.88,
                 maxHealth: 4.88,
                 shoots: false,
@@ -1737,13 +1991,13 @@ Copyright (c) 2025 Olexandr_43
                 description: 'Eats zombies',
                 cooldown: 7500 // Fast
             },
-            repeater: { 
-                emoji: '🌾', 
+            repeater: {
+                emoji: '🌾',
                 health: 3.6,
                 maxHealth: 3.6,
-                shoots: true, 
-                damage: 1, 
-                double: true, 
+                shoots: true,
+                damage: 1,
+                double: true,
                 shootInterval: 1500,
                 projectile: '🟢',
                 description: 'Shoots twice',
@@ -1761,13 +2015,13 @@ Copyright (c) 2025 Olexandr_43
                 description: 'Shoots 3 lanes',
                 cooldown: 7500 // Fast
             },
-			gatling: { 
-                emoji: '🔫', 
+            gatling: {
+                emoji: '🔫',
                 health: 3.6,
                 maxHealth: 3.6,
-                shoots: true, 
-                damage: 1, 
-                quad: true, 
+                shoots: true,
+                damage: 1,
+                quad: true,
                 shootInterval: 1500,
                 projectile: '🟢',
                 description: 'Shoots 4 peas',
@@ -1860,16 +2114,16 @@ Copyright (c) 2025 Olexandr_43
                 description: 'Freezes all zombies on screen.',
                 cooldown: 50000 // Very Slow
             },
-			tallnut: { 
-                emoji: '🌰', 
+            tallnut: {
+                emoji: '🌰',
                 health: 48,
                 maxHealth: 48,
                 shoots: false,
                 description: 'Great defensive wall',
                 cooldown: 30000 // Slow
             },
-			marigold: { 
-                emoji: '🌼', 
+            marigold: {
+                emoji: '🌼',
                 health: 3.6,
                 maxHealth: 3.6,
                 produces: 'coin',
@@ -1902,9 +2156,10 @@ Copyright (c) 2025 Olexandr_43
             cone: { name: 'Conehead', emoji: '🧟‍♂️', health: 32, maxHealth: 32, speed: 13, damage: 1, points: 200 },
             bucket: { name: 'Buckethead', emoji: '🧟‍♀️', health: 68, maxHealth: 68, speed: 10, damage: 1, points: 400 },
             fast: { name: 'Pole Vault', emoji: '💀', health: 25, maxHealth: 25, speed: 25, damage: 1, points: 150 },
+            jackInTheBox: { name: 'Jack-in-the-Box', emoji: '🤡', health: 25, maxHealth: 25, speed: 25, damage: 1, points: 450, isExplosive: true },
             football: { name: 'Football', emoji: '👹', health: 84, maxHealth: 84, speed: 25, damage: 2, points: 600 },
-			gargantuar: { name: 'Gargantuar', emoji: '🗿', health: 180, maxHealth: 180, speed: 5, damage: 99, points: 2000, uneatable: true, crushes: true },
-			giga: { name: 'Giga-Garg', emoji: '👺', health: 600, maxHealth: 600, speed: 5, damage: 99, points: 6000, uneatable: true, crushes: true },
+            gargantuar: { name: 'Gargantuar', emoji: '🗿', health: 180, maxHealth: 180, speed: 5, damage: 99, points: 2000, uneatable: true, crushes: true },
+            giga: { name: 'Giga-Garg', emoji: '👺', health: 600, maxHealth: 600, speed: 5, damage: 99, points: 6000, uneatable: true, crushes: true },
             dancing: { name: 'Dancing', emoji: '🕺', health: 25, maxHealth: 25, speed: 13, damage: 1, points: 500, summons: true, summonCooldown: 10000 }, // Changed cooldown
             backupDancer: { name: 'Backup', emoji: '💃', health: 14, maxHealth: 14, speed: 13, damage: 1, points: 150, isSummoned: true },
             zomboni: { name: 'Zomboni', emoji: '🚚', health: 58, maxHealth: 58, speed: 10, damage: 99, points: 1000, uneatable: true, crushes: true, leavesIceTrail: true },
@@ -1945,7 +2200,7 @@ Copyright (c) 2025 Olexandr_43
                             console.error("Error in timer callback:", e);
                         }
 
-                        if (timer.isInterval && gameState.timers[id]) { 
+                        if (timer.isInterval && gameState.timers[id]) {
                             timer.remaining += timer.delay;
                         } else {
                             clearTimer(id);
@@ -1961,10 +2216,10 @@ Copyright (c) 2025 Olexandr_43
             clearTimer(gameState.waveTimerId);
             clearTimer(gameState.sunIntervalId);
             gameState.timers = {}; // Clear all active timers
-            
+
             // Clear all DOM elements
             clearAllGameElements();
-            
+
             lastSelectedPlantForImitater = null;
 
             // Reset game state
@@ -1972,9 +2227,9 @@ Copyright (c) 2025 Olexandr_43
                 sun: 200,
                 score: 0,
                 selectedPlant: null,
-                selectedZombie: null, 
+                selectedZombie: null,
                 isShovelActive: false,
-                isZombieSpawnMode: false, 
+                isZombieSpawnMode: false,
                 plants: [],
                 zombies: [],
                 projectiles: [],
@@ -2001,7 +2256,7 @@ Copyright (c) 2025 Olexandr_43
                 timers: {},
                 nextTimerId: 0
             };
-            
+
             // Reset UI
             document.getElementById('sunCount').textContent = '200';
             document.getElementById('scoreCount').textContent = '0';
@@ -2013,7 +2268,7 @@ Copyright (c) 2025 Olexandr_43
             document.getElementById('gameBoard').classList.remove('shovel-mode');
             document.getElementById('gameBoard').classList.remove('zombie-spawn-mode');
             document.getElementById('gameContainer').style.setProperty('--game-speed', 1);
-            
+
             // Hide all menus
             document.getElementById('gameOver').style.display = 'none';
             document.getElementById('pauseMenu').style.display = 'none';
@@ -2021,11 +2276,11 @@ Copyright (c) 2025 Olexandr_43
             document.getElementById('victoryScreen').style.display = 'none';
             document.getElementById('zombieSpawner').style.display = 'none';
             document.getElementById('plantSelection').innerHTML = '';
-            
-            
+
+
             // Reset zombie card selection
             document.querySelectorAll('.zombieCard').forEach(card => card.classList.remove('selected'));
-            
+
             // Update displays
             updateSunDisplay();
             updateDamageDisplay();
@@ -2037,24 +2292,24 @@ Copyright (c) 2025 Olexandr_43
         function clearAllGameElements() {
             // Remove all zombies
             document.querySelectorAll('.zombie').forEach(el => el.remove());
-            
+
             // Remove all projectiles
             document.querySelectorAll('.projectile').forEach(el => el.remove());
-            
+
             // Remove all suns
             document.querySelectorAll('.sun').forEach(el => el.remove());
-            
+
             // Remove all plants from cells
             document.querySelectorAll('.cell .plant').forEach(el => el.remove());
-            
+
             // Remove any floating particles or popups
             document.querySelectorAll('.particle, .points-popup, .instant-effect').forEach(el => el.remove());
-			
-			// Remove all lawnmovers
-			document.querySelectorAll('.lawnmower').forEach(el => el.remove());
-			
-			// Remove all craters
-			document.querySelectorAll('.cell.crater').forEach(cell => cell.classList.remove('crater'));
+
+            // Remove all lawnmovers
+            document.querySelectorAll('.lawnmower').forEach(el => el.remove());
+
+            // Remove all craters
+            document.querySelectorAll('.cell.crater').forEach(cell => cell.classList.remove('crater'));
 
             // Remove all graves
             document.querySelectorAll('.cell.grave').forEach(cell => cell.classList.remove('grave'));
@@ -2091,13 +2346,13 @@ Copyright (c) 2025 Olexandr_43
             const now = new Date();
             const diffTime = Math.abs(now - date);
             const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-            
-            const timeStr = date.toLocaleTimeString('en-US', { 
-                hour: '2-digit', 
+
+            const timeStr = date.toLocaleTimeString('en-US', {
+                hour: '2-digit',
                 minute: '2-digit',
-                hour12: true 
+                hour12: true
             });
-            
+
             let dateStr;
             if (diffDays === 0) {
                 dateStr = 'Today';
@@ -2106,13 +2361,13 @@ Copyright (c) 2025 Olexandr_43
             } else if (diffDays < 7) {
                 dateStr = `${diffDays} days ago`;
             } else {
-                dateStr = date.toLocaleDateString('en-US', { 
-                    month: 'short', 
+                dateStr = date.toLocaleDateString('en-US', {
+                    month: 'short',
                     day: 'numeric',
                     year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
                 });
             }
-            
+
             return { date: dateStr, time: timeStr };
         }
 
@@ -2122,7 +2377,7 @@ Copyright (c) 2025 Olexandr_43
             notification.className = 'save-notification';
             notification.textContent = '✅ Score Saved to Top 10!';
             document.body.appendChild(notification);
-            
+
             setTimeout(() => {
                 notification.remove();
             }, 2000);
@@ -2136,7 +2391,7 @@ Copyright (c) 2025 Olexandr_43
 
         function saveToLeaderboard(score, wave, zombies) {
             let leaderboard = getLeaderboard();
-            
+
             leaderboard.push({
                 score: score,
                 wave: wave,
@@ -2144,18 +2399,18 @@ Copyright (c) 2025 Olexandr_43
                 datetime: new Date().toISOString(),
                 victory: gameState.isVictory
             });
-            
+
             // Sort by score and keep top 10
             leaderboard.sort((a, b) => b.score - a.score);
             leaderboard = leaderboard.slice(0, 10);
-            
+
             localStorage.setItem('pvz_leaderboard', JSON.stringify(leaderboard));
-            
+
             // Show notification if score made it to top 10
             if (leaderboard.some(entry => entry.score === score && entry.datetime === leaderboard[leaderboard.length - 1].datetime)) {
                 showSaveNotification();
             }
-            
+
             return leaderboard;
         }
 
@@ -2163,24 +2418,24 @@ Copyright (c) 2025 Olexandr_43
             const leaderboard = getLeaderboard();
             const listElement = document.getElementById('leaderboardList');
             listElement.innerHTML = '';
-            
+
             if (leaderboard.length === 0) {
                 listElement.innerHTML = '<p style="color: #666;">No scores yet. Be the first!</p>';
                 return;
             }
-            
+
             leaderboard.forEach((entry, index) => {
                 const entryDiv = document.createElement('div');
                 entryDiv.className = 'leaderboard-entry';
-                
+
                 if (index === 0) entryDiv.classList.add('gold');
                 else if (index === 1) entryDiv.classList.add('silver');
                 else if (index === 2) entryDiv.classList.add('bronze');
-                
+
                 const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`;
                 const { date, time } = formatDateTime(entry.datetime);
                 const victoryBadge = entry.victory ? ' 👑' : '';
-                
+
                 entryDiv.innerHTML = `
                     <span class="leaderboard-rank">${medal}</span>
                     <div class="leaderboard-datetime">
@@ -2189,7 +2444,7 @@ Copyright (c) 2025 Olexandr_43
                     </div>
                     <span class="leaderboard-score">${entry.score.toLocaleString()}</span>
                 `;
-                
+
                 listElement.appendChild(entryDiv);
             });
         }
@@ -2203,186 +2458,186 @@ Copyright (c) 2025 Olexandr_43
             document.getElementById('leaderboard').style.display = 'none';
         }
 
-    // This function now only sets up listeners for dynamic or game-session-specific elements.
-    function setupGameBoardListeners() {
-        document.querySelectorAll('.cell').forEach(cell => {
-            cell.addEventListener('click', () => placePlant(cell));
-            cell.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                placePlant(cell);
+        // This function now only sets up listeners for dynamic or game-session-specific elements.
+        function setupGameBoardListeners() {
+            document.querySelectorAll('.cell').forEach(cell => {
+                cell.addEventListener('click', () => placePlant(cell));
+                cell.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    placePlant(cell);
+                });
             });
-        });
 
-        document.getElementById('startGameBtn').addEventListener('click', confirmAndStartGame);
-    }
+            document.getElementById('startGameBtn').addEventListener('click', confirmAndStartGame);
+        }
 
-    // This function sets up listeners for permanent UI elements and is only called ONCE.
-    function setupUIEventListeners() {
-        document.getElementById('pauseBtn').addEventListener('click', togglePause);
+        // This function sets up listeners for permanent UI elements and is only called ONCE.
+        function setupUIEventListeners() {
+            document.getElementById('pauseBtn').addEventListener('click', togglePause);
 
-        document.getElementById('speedBtn').addEventListener('click', () => {
-            gameState.gameSpeed = gameState.gameSpeed === 1 ? 2 : gameState.gameSpeed === 2 ? 3 : 1;
-            const btn = document.getElementById('speedBtn');
-            btn.textContent = `⚡ x${gameState.gameSpeed}`;
-            btn.classList.toggle('active', gameState.gameSpeed > 1);
-            document.getElementById('gameContainer').style.setProperty('--game-speed', gameState.gameSpeed);
-        });
+            document.getElementById('speedBtn').addEventListener('click', () => {
+                gameState.gameSpeed = gameState.gameSpeed === 1 ? 2 : gameState.gameSpeed === 2 ? 3 : 1;
+                const btn = document.getElementById('speedBtn');
+                btn.textContent = `⚡ x${gameState.gameSpeed}`;
+                btn.classList.toggle('active', gameState.gameSpeed > 1);
+                document.getElementById('gameContainer').style.setProperty('--game-speed', gameState.gameSpeed);
+            });
 
-        document.getElementById('leaderBtn').addEventListener('click', showLeaderboard);
-        document.getElementById('fullscreenBtn').addEventListener('click', toggleFullscreen);
+            document.getElementById('leaderBtn').addEventListener('click', showLeaderboard);
+            document.getElementById('fullscreenBtn').addEventListener('click', toggleFullscreen);
 
-        window.addEventListener('resize', updateBoardDimensions);
-        
-        document.addEventListener('fullscreenchange', () => {
-            setTimeout(updateBoardDimensions, 100);
-        });
-        
-        document.addEventListener('webkitfullscreenchange', () => {
-            setTimeout(updateBoardDimensions, 100);
-        });
-        
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'd' || e.key === 'D') {
-                const debugInfo = document.getElementById('debugInfo');
-                debugInfo.style.display = debugInfo.style.display === 'none' ? 'block' : 'none';
-            }
-            if (e.key === 'z' || e.key === 'Z') {
-                toggleZombieSpawner();
-            }
-        });
-    }
+            window.addEventListener('resize', updateBoardDimensions);
 
-    // Sets up the plant selection listeners ONCE
-    function setupPlantSelectionListeners() {
-        const libraryGrid = document.getElementById('plantLibraryGrid');
-        const deckBar = document.getElementById('deckBar');
+            document.addEventListener('fullscreenchange', () => {
+                setTimeout(updateBoardDimensions, 100);
+            });
 
-        // Main click listener for the library (using event delegation)
-        libraryGrid.addEventListener('click', (event) => {
-            const clickedCard = event.target.closest('.plantCard');
-            if (!clickedCard || clickedCard.classList.contains('in-library-hidden')) return;
+            document.addEventListener('webkitfullscreenchange', () => {
+                setTimeout(updateBoardDimensions, 100);
+            });
 
-            const plantName = clickedCard.dataset.plant;
-            const plantInfo = plantTypes[plantName];
-
-            if (plantInfo.isImitater) {
-                // --- IMITATER LOGIC ---
-                if (!lastSelectedPlantForImitater) {
-                    showCustomDialog(
-                        'Imitater Plant',
-                        'Please select a regular plant from the library first, which the Imitater will copy.',
-                        [{ text: 'OK', class: 'secondary' }]
-                    );
-                    return;
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'd' || e.key === 'D') {
+                    const debugInfo = document.getElementById('debugInfo');
+                    debugInfo.style.display = debugInfo.style.display === 'none' ? 'block' : 'none';
                 }
-                if (plantTypes[lastSelectedPlantForImitater.type].isUpgrade) {
-                    showCustomDialog(
-                        'Imitater Plant',
-                        'The Imitater cannot copy upgrade plants like Gatling Pea or Twin Sunflower.',
-                        [{ text: 'OK', class: 'secondary' }]
-                    );
-                    return;
+                if (e.key === 'z' || e.key === 'Z') {
+                    toggleZombieSpawner();
+                }
+            });
+        }
+
+        // Sets up the plant selection listeners ONCE
+        function setupPlantSelectionListeners() {
+            const libraryGrid = document.getElementById('plantLibraryGrid');
+            const deckBar = document.getElementById('deckBar');
+
+            // Main click listener for the library (using event delegation)
+            libraryGrid.addEventListener('click', (event) => {
+                const clickedCard = event.target.closest('.plantCard');
+                if (!clickedCard || clickedCard.classList.contains('in-library-hidden')) return;
+
+                const plantName = clickedCard.dataset.plant;
+                const plantInfo = plantTypes[plantName];
+
+                if (plantInfo.isImitater) {
+                    // --- IMITATER LOGIC ---
+                    if (!lastSelectedPlantForImitater) {
+                        showCustomDialog(
+                            'Imitater Plant',
+                            'Please select a regular plant from the library first, which the Imitater will copy.',
+                            [{ text: 'OK', class: 'secondary' }]
+                        );
+                        return;
+                    }
+                    if (plantTypes[lastSelectedPlantForImitater.type].isUpgrade) {
+                        showCustomDialog(
+                            'Imitater Plant',
+                            'The Imitater cannot copy upgrade plants like Gatling Pea or Twin Sunflower.',
+                            [{ text: 'OK', class: 'secondary' }]
+                        );
+                        return;
+                    }
+
+                    const targetInfo = plantTypes[lastSelectedPlantForImitater.type];
+
+                    const imitaterCardClone = clickedCard.cloneNode(true);
+                    imitaterCardClone.dataset.plant = lastSelectedPlantForImitater.type;
+                    imitaterCardClone.dataset.cost = targetInfo.cost;
+                    imitaterCardClone.dataset.isImitated = 'true';
+                    imitaterCardClone.classList.add('imitated');
+
+                    imitaterCardClone.querySelector('.emoji').textContent = targetInfo.emoji;
+                    imitaterCardClone.querySelector('.cost').textContent = targetInfo.cost;
+                    imitaterCardClone.querySelector('.name').textContent = targetInfo.name;
+
+                    deckBar.appendChild(imitaterCardClone);
+                    selectedPlantDeck.push({ type: lastSelectedPlantForImitater.type, isImitated: true });
+
+                    clickedCard.classList.add('in-library-hidden');
+                } else {
+                    // --- REGULAR PLANT LOGIC ---
+                    const newDeckCard = clickedCard.cloneNode(true);
+                    deckBar.appendChild(newDeckCard);
+                    selectedPlantDeck.push({ type: plantName, isImitated: false });
+                    lastSelectedPlantForImitater = { type: plantName };
+
+                    clickedCard.classList.add('in-library-hidden');
                 }
 
-                const targetInfo = plantTypes[lastSelectedPlantForImitater.type];
-                
-                const imitaterCardClone = clickedCard.cloneNode(true);
-                imitaterCardClone.dataset.plant = lastSelectedPlantForImitater.type;
-                imitaterCardClone.dataset.cost = targetInfo.cost;
-                imitaterCardClone.dataset.isImitated = 'true';
-                imitaterCardClone.classList.add('imitated');
+                document.getElementById('selectedPlantCount').textContent = selectedPlantDeck.length;
+            });
 
-                imitaterCardClone.querySelector('.emoji').textContent = targetInfo.emoji;
-                imitaterCardClone.querySelector('.cost').textContent = targetInfo.cost;
-                imitaterCardClone.querySelector('.name').textContent = targetInfo.name;
+            // Click listener for removing plants from the deck (using event delegation)
+            deckBar.addEventListener('click', (event) => {
+                const clickedCard = event.target.closest('.plantCard');
+                if (clickedCard) {
+                    handleRemoveFromDeck(clickedCard);
+                }
+            });
+        }
 
-                deckBar.appendChild(imitaterCardClone);
-                selectedPlantDeck.push({ type: lastSelectedPlantForImitater.type, isImitated: true });
 
-                clickedCard.classList.add('in-library-hidden');
-            } else {
-                // --- REGULAR PLANT LOGIC ---
-                const newDeckCard = clickedCard.cloneNode(true);
-                deckBar.appendChild(newDeckCard);
-                selectedPlantDeck.push({ type: plantName, isImitated: false });
-                lastSelectedPlantForImitater = { type: plantName };
+        // --- Initialize Game ---
+        function init() {
+            createBoard();
+            loadGameState();
+            setupGameBoardListeners();
+            setupUIEventListeners();
+            setupPlantSelectionListeners();
+            setupZombieSpawner();
+            showPlantSelectionScreen();
+            togglePause();
+        }
 
-                clickedCard.classList.add('in-library-hidden');
+        // --- Plant Selection Logic ---
+        function handleRemoveFromDeck(deckCard) {
+            const plantName = deckCard.dataset.plant;
+            const isImitated = deckCard.dataset.isImitated === 'true';
+
+            // Find the library card to unhide
+            const libraryCardToShow = document.querySelector(`#plantLibraryGrid .plantCard[data-plant="${isImitated ? 'imitater' : plantName}"]`);
+            if (libraryCardToShow) {
+                libraryCardToShow.classList.remove('in-library-hidden');
             }
 
+            // Remove from the internal deck array
+            const indexToRemove = selectedPlantDeck.findIndex(card => card.isImitated === isImitated && card.type === plantName);
+            if (indexToRemove > -1) {
+                selectedPlantDeck.splice(indexToRemove, 1);
+            }
+
+            // Remove from the DOM and update state
+            deckCard.remove();
             document.getElementById('selectedPlantCount').textContent = selectedPlantDeck.length;
-        });
-
-        // Click listener for removing plants from the deck (using event delegation)
-        deckBar.addEventListener('click', (event) => {
-            const clickedCard = event.target.closest('.plantCard');
-            if (clickedCard) {
-                handleRemoveFromDeck(clickedCard);
-            }
-        });
-    }
-
-
-    // --- Initialize Game ---
-    function init() {
-        createBoard();
-        loadGameState();
-        setupGameBoardListeners();
-        setupUIEventListeners();
-        setupPlantSelectionListeners();
-        setupZombieSpawner();
-        showPlantSelectionScreen();
-        togglePause();
-    }
-        
-    // --- Plant Selection Logic ---
-    function handleRemoveFromDeck(deckCard) {
-        const plantName = deckCard.dataset.plant;
-        const isImitated = deckCard.dataset.isImitated === 'true';
-
-        // Find the library card to unhide
-        const libraryCardToShow = document.querySelector(`#plantLibraryGrid .plantCard[data-plant="${isImitated ? 'imitater' : plantName}"]`);
-        if (libraryCardToShow) {
-            libraryCardToShow.classList.remove('in-library-hidden');
-        }
-        
-        // Remove from the internal deck array
-        const indexToRemove = selectedPlantDeck.findIndex(card => card.isImitated === isImitated && card.type === plantName);
-        if (indexToRemove > -1) {
-            selectedPlantDeck.splice(indexToRemove, 1);
+            lastSelectedPlantForImitater = selectedPlantDeck.length > 0 ? selectedPlantDeck[selectedPlantDeck.length - 1] : null;
         }
 
-        // Remove from the DOM and update state
-        deckCard.remove();
-        document.getElementById('selectedPlantCount').textContent = selectedPlantDeck.length;
-        lastSelectedPlantForImitater = selectedPlantDeck.length > 0 ? selectedPlantDeck[selectedPlantDeck.length - 1] : null;
-    }
+        function showPlantSelectionScreen() {
+            const screen = document.getElementById('plantSelectionScreen');
+            const libraryGrid = document.getElementById('plantLibraryGrid');
+            const deckBar = document.getElementById('deckBar');
+            const templates = document.getElementById('plantCardTemplates');
 
-    function showPlantSelectionScreen() {
-        const screen = document.getElementById('plantSelectionScreen');
-        const libraryGrid = document.getElementById('plantLibraryGrid');
-        const deckBar = document.getElementById('deckBar');
-        const templates = document.getElementById('plantCardTemplates');
-        
-        // Reset state for new selection
-        libraryGrid.innerHTML = '';
-        deckBar.innerHTML = '';
-        selectedPlantDeck = [];
-        lastSelectedPlantForImitater = null;
-        document.getElementById('selectedPlantCount').textContent = '0'; // Reset count display
+            // Reset state for new selection
+            libraryGrid.innerHTML = '';
+            deckBar.innerHTML = '';
+            selectedPlantDeck = [];
+            lastSelectedPlantForImitater = null;
+            document.getElementById('selectedPlantCount').textContent = '0'; // Reset count display
 
-        document.getElementById('ui').style.visibility = 'hidden';
-        document.getElementById('wave').style.visibility = 'hidden';
-        screen.style.display = 'flex';
+            document.getElementById('ui').style.visibility = 'hidden';
+            document.getElementById('wave').style.visibility = 'hidden';
+            screen.style.display = 'flex';
 
-        // Populate the library
-        templates.querySelectorAll('.plantCard').forEach(cardTemplate => {
-            if(cardTemplate.id === 'shovelCard') return;
-            const libraryCard = cardTemplate.cloneNode(true);
-            libraryGrid.appendChild(libraryCard);
-        });
+            // Populate the library
+            templates.querySelectorAll('.plantCard').forEach(cardTemplate => {
+                if (cardTemplate.id === 'shovelCard') return;
+                const libraryCard = cardTemplate.cloneNode(true);
+                libraryGrid.appendChild(libraryCard);
+            });
 
-    }
+        }
 
 
         function populateInGameUI() {
@@ -2424,12 +2679,12 @@ Copyright (c) 2025 Olexandr_43
             document.getElementById('plantSelectionScreen').style.display = 'none';
             document.getElementById('ui').style.visibility = 'visible';
             document.getElementById('wave').style.visibility = 'visible';
-            
+
             populateInGameUI();
             updatePlantCardAvailability();
-            
+
             updateBoardDimensions();
-			resumeGame();
+            resumeGame();
             startGameLoop();
             spawnSunPeriodically();
             updateDamageDisplay();
@@ -2440,18 +2695,18 @@ Copyright (c) 2025 Olexandr_43
         // Check if mobile device
         function isMobile() {
             return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-                   (window.innerWidth <= 768);
+                (window.innerWidth <= 768);
         }
 
         // Enter fullscreen
         function enterFullscreen() {
             const elem = document.documentElement;
-            
-            const requestFS = elem.requestFullscreen || 
-                             elem.webkitRequestFullscreen || 
-                             elem.mozRequestFullScreen || 
-                             elem.msRequestFullscreen;
-            
+
+            const requestFS = elem.requestFullscreen ||
+                elem.webkitRequestFullscreen ||
+                elem.mozRequestFullScreen ||
+                elem.msRequestFullscreen;
+
             if (requestFS && !document.fullscreenElement) {
                 requestFS.call(elem).then(() => {
                     gameState.wasFullscreen = true;
@@ -2476,7 +2731,7 @@ Copyright (c) 2025 Olexandr_43
                 const mower = document.createElement('div');
                 mower.className = 'lawnmower';
                 mower.textContent = '🚜';
-                
+
                 const yPosition = gameState.boardRect.top + i * gameState.cellSize.height + gameState.cellSize.height / 2 - 20;
                 const xPosition = gameState.boardRect.left - gameState.cellSize.width * 0.4;
 
@@ -2499,7 +2754,7 @@ Copyright (c) 2025 Olexandr_43
         function createBoard() {
             const board = document.getElementById('gameBoard');
             board.innerHTML = '';
-            
+
             for (let row = 0; row < 5; row++) {
                 for (let col = 0; col < 9; col++) {
                     const cell = document.createElement('div');
@@ -2509,7 +2764,7 @@ Copyright (c) 2025 Olexandr_43
                     board.appendChild(cell);
                 }
             }
-            
+
             setTimeout(updateBoardDimensions, 100);
         }
 
@@ -2541,7 +2796,7 @@ Copyright (c) 2025 Olexandr_43
                     }
                 });
             }
-            
+
             // Update existing zombie and projectile positions
             gameState.zombies.forEach(zombie => {
                 if (zombie.element) {
@@ -2551,7 +2806,7 @@ Copyright (c) 2025 Olexandr_43
             });
         }
 
-// --- Separated listener setup for in-game cards ---
+        // --- Separated listener setup for in-game cards ---
         function setupInGameCardListeners() {
             const mobileDevice = isMobile();
 
@@ -2597,8 +2852,8 @@ Copyright (c) 2025 Olexandr_43
                             handleSelect();
                         }
                     });
-                
-                // --- Desktop-Specific Logic ---
+
+                    // --- Desktop-Specific Logic ---
                 } else {
                     card.addEventListener('click', handleSelect);
                 }
@@ -2615,7 +2870,7 @@ Copyright (c) 2025 Olexandr_43
                     placePlant(cell);
                 });
             });
-            
+
             document.getElementById('startGameBtn').addEventListener('click', confirmAndStartGame);
             document.getElementById('pauseBtn').addEventListener('click', togglePause);
 
@@ -2631,15 +2886,15 @@ Copyright (c) 2025 Olexandr_43
             document.getElementById('fullscreenBtn').addEventListener('click', toggleFullscreen);
 
             window.addEventListener('resize', updateBoardDimensions);
-            
+
             document.addEventListener('fullscreenchange', () => {
                 setTimeout(updateBoardDimensions, 100);
             });
-            
+
             document.addEventListener('webkitfullscreenchange', () => {
                 setTimeout(updateBoardDimensions, 100);
             });
-            
+
             // --- DEBUG KEY LISTENERS ---
             document.addEventListener('keydown', (e) => {
                 // Debug info toggle with 'D' key
@@ -2647,30 +2902,30 @@ Copyright (c) 2025 Olexandr_43
                     const debugInfo = document.getElementById('debugInfo');
                     debugInfo.style.display = debugInfo.style.display === 'none' ? 'block' : 'none';
                 }
-                
+
                 // Zombie spawner toggle with 'Z' key
                 if (e.key === 'z' || e.key === 'Z') {
                     toggleZombieSpawner();
                 }
             });
         }
-        
+
         // --- Setup Zombie Spawner UI ---
         function setupZombieSpawner() {
             const spawner = document.getElementById('zombieSpawner');
             spawner.innerHTML = ''; // Clear any existing
-            
+
             Object.keys(zombieTypes).forEach(typeKey => {
                 const zombieType = zombieTypes[typeKey];
                 const card = document.createElement('div');
                 card.className = 'zombieCard';
                 card.dataset.zombieType = typeKey;
-                
+
                 card.innerHTML = `
                     <div class="emoji">${zombieType.emoji}</div>
                     <div class="name">${zombieType.name || typeKey}</div>
                 `;
-                
+
                 card.addEventListener('click', () => selectZombie(card, typeKey));
                 spawner.appendChild(card);
             });
@@ -2680,7 +2935,7 @@ Copyright (c) 2025 Olexandr_43
         function toggleZombieSpawner() {
             gameState.isZombieSpawnMode = !gameState.isZombieSpawnMode;
             const spawner = document.getElementById('zombieSpawner');
-            
+
             if (gameState.isZombieSpawnMode) {
                 spawner.style.display = 'flex';
             } else {
@@ -2691,7 +2946,7 @@ Copyright (c) 2025 Olexandr_43
                 document.querySelectorAll('.zombieCard.selected').forEach(c => c.classList.remove('selected'));
             }
         }
-        
+
         // --- Select Zombie from Spawner ---
         function selectZombie(card, typeKey) {
             if (gameState.isPaused) return;
@@ -2720,14 +2975,14 @@ Copyright (c) 2025 Olexandr_43
         // Select Shovel
         function selectShovel() {
             if (gameState.isPaused) return;
-            
+
             // Deselect zombie if active
             if (gameState.selectedZombie) {
                 gameState.selectedZombie = null;
                 document.getElementById('gameBoard').classList.remove('zombie-spawn-mode');
                 document.querySelectorAll('.zombieCard.selected').forEach(c => c.classList.remove('selected'));
             }
-            
+
             gameState.isShovelActive = !gameState.isShovelActive;
             const shovelCard = document.getElementById('shovelCard');
             const gameBoard = document.getElementById('gameBoard');
@@ -2736,7 +2991,7 @@ Copyright (c) 2025 Olexandr_43
                 // Deselect any plant
                 gameState.selectedPlant = null;
                 document.querySelectorAll('.plantCard').forEach(c => c.classList.remove('selected'));
-                
+
                 shovelCard.classList.add('selected');
                 gameBoard.classList.add('shovel-mode');
             } else {
@@ -2774,7 +3029,7 @@ Copyright (c) 2025 Olexandr_43
                     type: card.dataset.plant,
                     cost: parseInt(card.dataset.cost),
                     isImitated: card.dataset.isImitated === 'true',
-                    cardElement: card 
+                    cardElement: card
                 };
             }
         }
@@ -2788,7 +3043,7 @@ Copyright (c) 2025 Olexandr_43
             const plantIndex = gameState.plants.findIndex(p => p.row === row && p.col === col);
             if (plantIndex !== -1) {
                 const plantToRemove = gameState.plants[plantIndex];
-                
+
                 if (plantToRemove.graveBusterTimerId) {
                     clearTimer(plantToRemove.graveBusterTimerId);
                 }
@@ -2803,7 +3058,7 @@ Copyright (c) 2025 Olexandr_43
                 gameState.plants.splice(plantIndex, 1);
                 actionTaken = true;
             }
-            
+
             // Deactivate shovel after use
             if (actionTaken) {
                 gameState.isShovelActive = false;
@@ -2816,9 +3071,9 @@ Copyright (c) 2025 Olexandr_43
         // Start Cooldown on Plant Card
         function startCooldown(card, duration) {
             if (!card) return;
-            
+
             card.classList.add('on-cooldown');
-            
+
             const timerId = createTimer(duration, () => {
                 card.classList.remove('on-cooldown');
                 delete card.dataset.cooldownTimerId;
@@ -2868,7 +3123,7 @@ Copyright (c) 2025 Olexandr_43
                     return { canPlant: false, reason: 'Upgrades must be planted on an existing plant', action: 'none' };
                 }
             }
-            
+
             // 5. Handle Regular planting logic
             if (hasGrave) {
                 return { canPlant: false, reason: 'Cell has a grave', action: 'none' };
@@ -2877,7 +3132,7 @@ Copyright (c) 2025 Olexandr_43
             if (existingPlant) {
                 return { canPlant: false, reason: 'Cell already has a plant', action: 'none' };
             }
-            
+
             // 6. If all checks pass, it's a valid regular planting
             return { canPlant: true, reason: 'Cell is clear for planting', action: 'regular' };
         }
@@ -2887,7 +3142,7 @@ Copyright (c) 2025 Olexandr_43
          */
         function plantGraveBuster(row, col, plantToPlaceType, selectedPlantTypeInfo) {
             const cell = document.querySelector(`.cell[data-row='${row}'][data-col='${col}']`);
-            
+
             const plant = {
                 type: plantToPlaceType,
                 row: row,
@@ -2905,7 +3160,7 @@ Copyright (c) 2025 Olexandr_43
             plantElement.className = 'plant eating-grave';
             plantElement.textContent = selectedPlantTypeInfo.emoji;
             plantElement.style.zIndex = '2'; // Ensure it's above the grave emoji
-            
+
             const healthBar = document.createElement('div');
             healthBar.className = 'plant-health-bar';
             const healthFill = document.createElement('div');
@@ -2913,12 +3168,12 @@ Copyright (c) 2025 Olexandr_43
             healthFill.style.width = '100%';
             healthBar.appendChild(healthFill);
             plantElement.appendChild(healthBar);
-            
+
             cell.appendChild(plantElement);
             plant.element = plantElement;
             plant.healthBar = healthBar;
             plant.healthFill = healthFill;
-            
+
             gameState.plants.push(plant);
 
             const graveBusterTimerId = createTimer(5000, () => {
@@ -2936,21 +3191,21 @@ Copyright (c) 2025 Olexandr_43
                 }
 
                 const sunValue = Math.random() < 0.2 ? 75 : 25; // 20% chance for 75, 80% for 25
-                const emoji = sunValue === 75 ? '💰' : '🏵️'; 
-                
+                const emoji = sunValue === 75 ? '💰' : '🏵️';
+
                 const sun = document.createElement('div');
                 sun.className = 'sun';
                 sun.innerHTML = `<span>${emoji}</span><span class="sun-value" style="display: none;">${sunValue}</span>`;
-                
+
                 const rect = cell.getBoundingClientRect();
                 sun.style.left = (rect.left + rect.width / 2 - 15) + 'px';
                 sun.style.top = (rect.top + rect.height / 2 - 15) + 'px';
                 sun.style.position = 'fixed';
                 document.getElementById('gameContainer').appendChild(sun);
-                
+
                 sun.addEventListener('click', () => collectSun(sun, sunValue));
                 sun.addEventListener('touchstart', (e) => { e.preventDefault(); collectSun(sun, sunValue); });
-                
+
                 // Auto-fade sun
                 createTimer(7000, () => {
                     if (sun.parentElement && !sun.dataset.collecting) {
@@ -2965,10 +3220,10 @@ Copyright (c) 2025 Olexandr_43
                     plant.element.remove();
                 }
                 gameState.plants.splice(plantIndex, 1);
-                
+
                 updatePlantCardAvailability(); // Check if gravebuster should be disabled
             });
-            
+
             // Store timer ID on plant in case it gets eaten
             plant.graveBusterTimerId = graveBusterTimerId;
         }
@@ -2981,16 +3236,16 @@ Copyright (c) 2025 Olexandr_43
             const cell = document.querySelector(`.cell[data-row='${row}'][data-col='${col}']`);
 
             // We already checked if plantToUpgrade exists and is the correct type in canPlantOnCell
-            if (!plantToUpgrade) return; 
+            if (!plantToUpgrade) return;
 
             // Morph the existing plant
             plantToUpgrade.type = plantToPlaceType;
             plantToUpgrade.health = selectedPlantTypeInfo.health;
             plantToUpgrade.maxHealth = selectedPlantTypeInfo.maxHealth;
             plantToUpgrade.shootCooldown = 0;
-            
+
             if (selectedPlantTypeInfo.produces === 'sun' || selectedPlantTypeInfo.produces === 'coin') {
-                 plantToUpgrade.sunCooldown = (selectedPlantTypeInfo.baseInterval - 2000) + (Math.random() * 4000);
+                plantToUpgrade.sunCooldown = (selectedPlantTypeInfo.baseInterval - 2000) + (Math.random() * 4000);
             }
 
             if (plantToUpgrade.element) {
@@ -2998,7 +3253,7 @@ Copyright (c) 2025 Olexandr_43
                 plantToUpgrade.element.appendChild(plantToUpgrade.healthBar); // Re-append health bar
             }
             updatePlantHealth(plantToUpgrade);
-            
+
             createParticleEffect(cell, '🌟');
         }
 
@@ -3024,11 +3279,11 @@ Copyright (c) 2025 Olexandr_43
                     sunCooldown: 0,
                     isImitated: gameState.selectedPlant.isImitated || false
                 };
-                
+
                 if (plant.type === 'chomper') {
                     plant.isChewing = false;
                     plant.chewTimer = 0;
-                    plant.lastChomp = 0; 
+                    plant.lastChomp = 0;
                 }
 
                 if (selectedPlantTypeInfo.produces === 'sun' || selectedPlantTypeInfo.produces === 'coin') {
@@ -3041,7 +3296,7 @@ Copyright (c) 2025 Olexandr_43
                     plantElement.classList.add('imitated');
                 }
                 plantElement.textContent = selectedPlantTypeInfo.emoji;
-                
+
                 const healthBar = document.createElement('div');
                 healthBar.className = 'plant-health-bar';
                 const healthFill = document.createElement('div');
@@ -3049,7 +3304,7 @@ Copyright (c) 2025 Olexandr_43
                 healthFill.style.width = '100%';
                 healthBar.appendChild(healthFill);
                 plantElement.appendChild(healthBar);
-                
+
                 cell.appendChild(plantElement);
                 plant.element = plantElement;
                 plant.healthBar = healthBar;
@@ -3072,12 +3327,12 @@ Copyright (c) 2025 Olexandr_43
                     });
                     plant.armingTimerId = armingTimerId;
                 }
-                
+
                 gameState.plants.push(plant);
                 createParticleEffect(cell, '✨');
             }
         }
-        
+
         // Spawn Zombie on Tile (from Debug)
         function spawnZombieOnTile(cell) {
             if (gameState.isPaused || !gameState.selectedZombie) return;
@@ -3109,14 +3364,14 @@ Copyright (c) 2025 Olexandr_43
             const col = parseInt(cell.dataset.col);
             const plantToPlaceType = gameState.selectedPlant.type;
             const selectedPlantTypeInfo = plantTypes[plantToPlaceType];
-            
+
             // --- Centralized Planting Logic ---
             const plantingCheck = canPlantOnCell(row, col, selectedPlantTypeInfo);
 
             if (!plantingCheck.canPlant) {
                 return;
             }
-            
+
             // 5. Check affordability
             if (gameState.sun < gameState.selectedPlant.cost) {
                 flashSunCounter();
@@ -3141,7 +3396,7 @@ Copyright (c) 2025 Olexandr_43
                     gameState.sun += gameState.selectedPlant.cost;
                     return;
             }
-            
+
             // 7. Common post-planting logic
             const plantCard = gameState.selectedPlant.cardElement;
             if (plantCard && selectedPlantTypeInfo.cooldown) {
@@ -3151,14 +3406,14 @@ Copyright (c) 2025 Olexandr_43
             if (plantingCheck.action !== 'regular') {
                 addScore(50); // Bonus for upgrade/gravebusting
             } else if (!selectedPlantTypeInfo.instant) { // Instants score on explosion
-                 addScore(25);
+                addScore(25);
             }
-            
+
             gameState.selectedPlant = null;
             document.querySelectorAll('.plantCard').forEach(c => c.classList.remove('selected'));
             updateSunDisplay();
         }
-        
+
         // Function to handle instant-kill plants like Cherry Bomb and Jalapeno
         function activateInstantPlant(row, col, plantType) {
             const cell = document.querySelector(`.cell[data-row='${row}'][data-col='${col}']`);
@@ -3176,7 +3431,7 @@ Copyright (c) 2025 Olexandr_43
                 plantElement.remove();
 
                 const zombiesToDamage = [];
-                
+
                 if (plantType.radius) { // Cherry Bomb Logic
                     const explosionElement = document.createElement('div');
                     explosionElement.className = 'instant-effect';
@@ -3184,7 +3439,7 @@ Copyright (c) 2025 Olexandr_43
                     explosionElement.style.cssText = `position: absolute; font-size: 7em; z-index: 10; filter: drop-shadow(0 0 15px red); transform: translate(-50%, -50%); top: 50%; left: 50%;`;
                     cell.appendChild(explosionElement);
                     createTimer(600, () => explosionElement.remove());
-                    
+
                     for (let r = row - plantType.radius; r <= row + plantType.radius; r++) {
                         for (let c = col - plantType.radius; c <= col + plantType.radius; c++) {
                             if (r >= 0 && r < 5 && c >= 0 && c < 9) {
@@ -3200,7 +3455,7 @@ Copyright (c) 2025 Olexandr_43
                             }
                         }
                     }
-                     gameState.zombies.forEach(zombie => {
+                    gameState.zombies.forEach(zombie => {
                         const zombieCol = Math.floor(zombie.x / gameState.cellSize.width);
                         if (zombie.row >= row - plantType.radius && zombie.row <= row + plantType.radius &&
                             zombieCol >= col - plantType.radius && zombieCol <= col + plantType.radius) {
@@ -3276,13 +3531,13 @@ Copyright (c) 2025 Olexandr_43
                             zombie.element.classList.add('frozen');
                             zombie.element.classList.remove('eating');
                             updateZombieHealth(zombie);
-                            
+
                             if (zombie.health <= 0) {
                                 handleZombieDefeat(zombie);
                             }
                         }
                     });
-                    
+
                     gameState.zombies = gameState.zombies.filter(z => z.element !== null);
                     return;
                 } else if (plantType.isBlower) { // Blover Logic
@@ -3296,7 +3551,7 @@ Copyright (c) 2025 Olexandr_43
                     }
 
                     const zombiesToBlow = gameState.zombies.filter(z => z.isFlying);
-                    
+
                     zombiesToBlow.forEach(zombie => {
                         zombie.health = 0; // Mark for defeat
                         handleZombieDefeat(zombie, '💨');
@@ -3349,35 +3604,35 @@ Copyright (c) 2025 Olexandr_43
         // Update Plant Health
         function updatePlantHealth(plant) {
             if (!plant.element || !plant.healthFill) return;
-            
+
             const healthPercent = Math.max(0, plant.health / plant.maxHealth);
             plant.healthFill.style.width = (healthPercent * 100) + '%';
-            
+
             if (healthPercent < 0.3) {
                 plant.healthFill.style.background = 'linear-gradient(90deg, #ff0000, #ff6600)';
             } else if (healthPercent < 0.6) {
                 plant.healthFill.style.background = 'linear-gradient(90deg, #FFA500, #FFD700)';
             } else {
-                 plant.healthFill.style.background = 'linear-gradient(90deg, #4CAF50, #8BC34A)';
+                plant.healthFill.style.background = 'linear-gradient(90deg, #4CAF50, #8BC34A)';
             }
         }
 
         // Produce Sun
         function produceSun(plant) {
             if (!plant.element || !plant.element.parentElement) return;
-            
+
             const cell = plant.element.parentElement;
             const rect = cell.getBoundingClientRect();
             const plantType = plantTypes[plant.type];
             const sunValue = plantType.sunAmount || 50;
-            
+
             const sun = document.createElement('div');
             sun.className = 'sun';
-            
+
             const sunEmoji = document.createElement('span');
             sunEmoji.textContent = plantType.produces === 'coin' ? '💰' : '☀️';
             sun.appendChild(sunEmoji);
-            
+
             const sunValueElement = document.createElement('span');
             sunValueElement.className = 'sun-value';
             sunValueElement.textContent = sunValue;
@@ -3386,36 +3641,36 @@ Copyright (c) 2025 Olexandr_43
                 sunValueElement.style.display = 'none';
             }
             sun.appendChild(sunValueElement);
-            
+
             // Set initial position for animation
             const startLeft = rect.left + rect.width / 2 - 15 + (Math.random() * 40 - 20);
             const startTop = rect.top;
-            
+
             sun.style.left = startLeft + 'px';
             sun.style.top = startTop + 'px';
             sun.style.animation = 'none';
             sun.style.position = 'fixed';
-            
+
             // Initial state for pop-up animation
             sun.style.transform = 'scale(0) translateY(20px)';
             sun.style.opacity = '0';
             sun.style.transition = 'transform calc(0.4s / var(--game-speed)) cubic-bezier(0.18, 0.89, 0.32, 1.28), opacity calc(0.3s / var(--game-speed)) ease-out, top calc(0.3s / var(--game-speed)) ease-out';
-            
+
             document.getElementById('gameContainer').appendChild(sun);
-            
+
             // Trigger animation after element is added
             setTimeout(() => {
                 sun.style.transform = 'scale(1)';
                 sun.style.opacity = '1';
                 sun.style.top = (startTop - 15) + 'px';
             }, 10);
-            
+
             sun.addEventListener('click', () => collectSun(sun, sunValue));
             sun.addEventListener('touchstart', (e) => {
                 e.preventDefault();
                 collectSun(sun, sunValue);
             });
-            
+
             createTimer(7000, () => {
                 if (sun.parentElement && !sun.dataset.collecting) {
                     sun.style.transition = 'opacity calc(0.5s / var(--game-speed)) ease-in, transform calc(0.5s / var(--game-speed)) ease-in';
@@ -3430,16 +3685,16 @@ Copyright (c) 2025 Olexandr_43
         // Shoot Projectile
         function shoot(plant) {
             if (!plant.element || !plant.element.parentElement) return;
-            
+
             const plantType = plantTypes[plant.type];
             if (!plantType.shoots || plant.shootCooldown > 0) return;
-            
+
             let targetRows = [plant.row];
             if (plantType.triple) {
                 targetRows = [plant.row - 1, plant.row, plant.row + 1].filter(r => r >= 0 && r < 5);
             }
-            
-            const hasTarget = targetRows.some(row => 
+
+            const hasTarget = targetRows.some(row =>
                 gameState.zombies.some(z => {
                     if (z.row !== row || !z.element || z.x <= plant.col * gameState.cellSize.width) return false;
                     // Cactus can target flying, others can't
@@ -3447,20 +3702,20 @@ Copyright (c) 2025 Olexandr_43
                 })
             );
 
-            
+
             if (!hasTarget) return;
-            
+
             plant.shootCooldown = plantType.shootInterval;
             plant.element.classList.add('shooting');
             createTimer(300, () => {
                 if (plant.element) plant.element.classList.remove('shooting');
             });
-            
+
             const cell = plant.element.parentElement;
             const rect = cell.getBoundingClientRect();
-            
+
             const createProjectileForRow = (targetRow) => {
-                 const hasRowTarget = gameState.zombies.some(z => {
+                const hasRowTarget = gameState.zombies.some(z => {
                     if (z.row !== targetRow || !z.element) return false;
                     return plant.type === 'cactus' || !z.isFlying;
                 });
@@ -3471,17 +3726,27 @@ Copyright (c) 2025 Olexandr_43
                 projectile.className = 'projectile';
                 if (plantType.fire) projectile.classList.add('fire');
                 projectile.textContent = plantType.projectile || '🟢';
-                
+
                 const rowY = gameState.boardRect.top + targetRow * gameState.cellSize.height + gameState.cellSize.height / 2 - 10;
-                
+
                 projectile.style.left = (rect.left + rect.width * 0.7) + 'px';
                 projectile.style.top = rowY + 'px';
                 projectile.style.position = 'fixed';
-                
+
                 document.getElementById('gameContainer').appendChild(projectile);
-                
+
                 let projectileDamage = plantType.damage;
-                
+
+                // KERNEL-PULT BUTTER LOGIC
+                let stunDuration = 0;
+                if (plantType.hasButter && plant.type === 'kernelpult') {
+                    if (Math.random() < 0.25) {
+                        projectile.textContent = '🧈';
+                        projectileDamage = 2; // Butter does double damage
+                        stunDuration = 5000;  // 5 seconds stun
+                    }
+                }
+
                 const proj = {
                     element: projectile,
                     row: targetRow,
@@ -3490,20 +3755,21 @@ Copyright (c) 2025 Olexandr_43
                     splashRadiusY: plantType.splashRadiusY,
                     slow: plantType.slow,
                     fire: plantType.fire,
+                    stunDuration: stunDuration,
                     pierce: plantType.pierce,
                     x: rect.left + rect.width * 0.7 - gameState.boardRect.left,
                     speed: 200,
                     hitZombies: [],
                     hitTorchwoods: []
                 };
-                
+
                 gameState.projectiles.push(proj);
             };
-            
+
             targetRows.forEach(row => {
                 createProjectileForRow(row);
             });
-            
+
             if (plantType.double) {
                 createTimer(200, () => {
                     targetRows.forEach(row => {
@@ -3511,24 +3777,24 @@ Copyright (c) 2025 Olexandr_43
                     });
                 });
             }
-			
-			if (plantType.quad) {
-				createTimer(133, () => {
-					targetRows.forEach(row => {
-						createProjectileForRow(row);
-					});
-				});
-				createTimer(266, () => {
-					targetRows.forEach(row => {
-						createProjectileForRow(row);
-					});
-				});
-				createTimer(399, () => {
-					targetRows.forEach(row => {
-						createProjectileForRow(row);
-					});
-				});
-			}
+
+            if (plantType.quad) {
+                createTimer(133, () => {
+                    targetRows.forEach(row => {
+                        createProjectileForRow(row);
+                    });
+                });
+                createTimer(266, () => {
+                    targetRows.forEach(row => {
+                        createProjectileForRow(row);
+                    });
+                });
+                createTimer(399, () => {
+                    targetRows.forEach(row => {
+                        createProjectileForRow(row);
+                    });
+                });
+            }
         }
 
         // Move Projectiles
@@ -3536,15 +3802,15 @@ Copyright (c) 2025 Olexandr_43
             const adjustedDelta = deltaTime * gameState.gameSpeed;
             gameState.projectiles = gameState.projectiles.filter(proj => {
                 if (!proj.element || !proj.element.parentElement) return false;
-                
+
                 proj.x += proj.speed * adjustedDelta / 1000;
                 proj.element.style.left = (gameState.boardRect.left + proj.x) + 'px';
-                
+
                 // Logic for sequential Torchwood interaction
                 const projCol = Math.floor(proj.x / gameState.cellSize.width);
-                const torchwood = gameState.plants.find(p => 
-                    p.type === 'torchwood' && 
-                    p.row === proj.row && 
+                const torchwood = gameState.plants.find(p =>
+                    p.type === 'torchwood' &&
+                    p.row === proj.row &&
                     p.col === projCol
                 );
 
@@ -3567,26 +3833,26 @@ Copyright (c) 2025 Olexandr_43
                             proj.damage *= 2;
                             proj.element.textContent = '🔥';
                             proj.element.classList.add('fire');
-							proj.splashDamage = 0.65; // Add splash damage
+                            proj.splashDamage = 0.65; // Add splash damage
                             proj.splashRadiusY = 0;   // 3x1 radius
-							proj.fire = true;
+                            proj.fire = true;
                         }
                     }
                 }
 
                 const rowY = gameState.boardRect.top + proj.row * gameState.cellSize.height + gameState.cellSize.height / 2 - 10;
                 proj.element.style.top = rowY + 'px';
-                
+
                 const projRect = proj.element.getBoundingClientRect();
                 let hit = false;
-                
+
                 for (const zombie of gameState.zombies) {
                     if (hit) break; // If projectile has already hit, stop checking
                     if (!zombie.element || zombie.row !== proj.row || proj.hitZombies.includes(zombie)) continue;
-                    
+
                     const zombieRect = zombie.element.getBoundingClientRect();
-                    
-                    if (projRect.left < zombieRect.right && projRect.right > zombieRect.left) {                        
+
+                    if (projRect.left < zombieRect.right && projRect.right > zombieRect.left) {
                         // Flying zombies can only be hit by piercing projectiles (e.g., Cactus)
                         if (zombie.isFlying && !proj.pierce) {
                             continue;
@@ -3595,7 +3861,7 @@ Copyright (c) 2025 Olexandr_43
                         // Balloon Zombie Logic: popping the balloon
                         if (proj.pierce && zombie.isFlying) {
                             zombie.isFlying = false;
-                            
+
                             const zombieEmoji = zombie.element.firstChild;
                             if (zombieEmoji) {
                                 zombieEmoji.nodeValue = '🧟';
@@ -3603,12 +3869,21 @@ Copyright (c) 2025 Olexandr_43
                             zombie.element.style.transition = `top calc(0.3s / var(--game-speed)) ease-in`;
                             const yPosition = gameState.boardRect.top + zombie.row * gameState.cellSize.height + gameState.cellSize.height / 2 - 20;
                             zombie.element.style.top = yPosition + 'px';
-                            
+
                             zombie.element.appendChild(zombie.healthBar);
-                            
+
                             createTimer(300, () => {
                                 if (zombie.element) zombie.element.style.transition = '';
                             });
+                        }
+
+                        // Apply stun from butter before damage processing
+                        if (proj.stunDuration > 0) {
+                            zombie.isStunned = true;
+                            zombie.stunTimer = proj.stunDuration;
+                            if (zombie.element) {
+                                zombie.element.classList.add('stunned');
+                            }
                         }
 
                         // --- SPLASH DAMAGE LOGIC (Melon-pult & Winter Melon) ---
@@ -3617,19 +3892,19 @@ Copyright (c) 2025 Olexandr_43
 
                             // Use existing particle mechanic for splash effect
                             createParticleEffect(zombie.element, proj.slow ? '❄️' : (proj.fire ? '🔥' : '💧'));
-                            
+
                             // Damage primary target
                             zombie.health -= proj.damage;
                             updateZombieHealth(zombie);
                             if (zombie.element) zombie.element.classList.add('damage-effect');
                             createTimer(300, () => { if (zombie.element) zombie.element.classList.remove('damage-effect'); });
-                            
+
                             if (proj.slow) {
                                 zombie.slowed = true;
                                 zombie.slowTimer = 3000;
-                                if(zombie.element) zombie.element.classList.add('slowed');
+                                if (zombie.element) zombie.element.classList.add('slowed');
                             }
-                            
+
                             if (zombie.health <= 0) handleZombieDefeat(zombie);
 
                             const impactX = zombie.x;
@@ -3638,7 +3913,7 @@ Copyright (c) 2025 Olexandr_43
                             // Find and damage/slow splash targets based on proximity
                             gameState.zombies.forEach(splashTarget => {
                                 if (splashTarget === zombie || !splashTarget.element || splashTarget.isFlying) return;
-                                
+
                                 // Check if the target is within the horizontal and vertical splash radius
                                 const isHorizontallyClose = Math.abs(splashTarget.x - impactX) <= splashRadiusX;
                                 const isVerticallyClose = Math.abs(splashTarget.row - proj.row) <= proj.splashRadiusY;
@@ -3647,9 +3922,9 @@ Copyright (c) 2025 Olexandr_43
                                     // Apply splash damage
                                     splashTarget.health -= proj.splashDamage;
                                     updateZombieHealth(splashTarget);
-                                    if(splashTarget.element) splashTarget.element.classList.add('damage-effect');
+                                    if (splashTarget.element) splashTarget.element.classList.add('damage-effect');
                                     createTimer(300, () => { if (splashTarget.element) splashTarget.element.classList.remove('damage-effect'); });
-                                    
+
                                     // Apply slow effect if projectile has it
                                     if (proj.slow) {
                                         splashTarget.slowed = true;
@@ -3665,13 +3940,13 @@ Copyright (c) 2025 Olexandr_43
                             zombie.health -= proj.damage;
                             updateZombieHealth(zombie);
                             zombie.element.classList.add('damage-effect');
-                            
+
                             if (proj.slow) {
                                 zombie.slowed = true;
                                 zombie.slowTimer = 3000;
                                 zombie.element.classList.add('slowed');
                             }
-                            
+
                             if (proj.fire && zombie.element) {
                                 if (zombie.isFrozen) {
                                     zombie.isFrozen = false;
@@ -3687,11 +3962,11 @@ Copyright (c) 2025 Olexandr_43
                                     createParticleEffect(zombie.element, '🔥');
                                 }
                             }
-                            
+
                             createTimer(300, () => { if (zombie.element) zombie.element.classList.remove('damage-effect'); });
-                            
+
                             if (zombie.health <= 0) handleZombieDefeat(zombie);
-                            
+
                             if (!proj.pierce) {
                                 hit = true;
                             } else {
@@ -3700,12 +3975,12 @@ Copyright (c) 2025 Olexandr_43
                         }
                     }
                 }
-                
+
                 if (hit || proj.x > window.innerWidth) {
                     proj.element.remove();
                     return false;
                 }
-                
+
                 return true;
             });
         }
@@ -3741,7 +4016,7 @@ Copyright (c) 2025 Olexandr_43
                     mower.element = null;
                 }
             });
-            
+
             // If any zombies were killed, filter the main array once
             if (zombiesKilledByMower) {
                 gameState.zombies = gameState.zombies.filter(z => z.element);
@@ -3751,7 +4026,7 @@ Copyright (c) 2025 Olexandr_43
         // Update Zombie Health Bar
         function updateZombieHealth(zombie) {
             if (!zombie.element || !zombie.healthBar) return;
-            
+
             const healthPercent = Math.max(0, zombie.health / zombieTypes[zombie.type].maxHealth);
             zombie.healthFill.style.width = (healthPercent * 100) + '%';
         }
@@ -3762,7 +4037,7 @@ Copyright (c) 2025 Olexandr_43
             if (!cell || cell.classList.contains('iced')) return;
 
             cell.classList.add('iced');
-            
+
             const timerId = createTimer(90000, () => {
                 cell.classList.remove('iced');
                 const index = gameState.iceTrails.findIndex(t => t.row === row && t.col === col);
@@ -3777,12 +4052,12 @@ Copyright (c) 2025 Olexandr_43
         // Summon Backup Dancers
         function summonBackupDancers(leader) {
             if (!leader || !leader.element) return;
-            
+
             const now = Date.now();
             leader.lastSummon = now;
 
             const leaderCol = Math.floor(leader.x / gameState.cellSize.width);
-            
+
             // Define relative positions
             const positions = [
                 { r: leader.row - 1, c: leaderCol }, // Above
@@ -3801,7 +4076,7 @@ Copyright (c) 2025 Olexandr_43
                 // Check if a dancer (from this leader) is already there
                 const dancerExists = leader.dancers.some(d => d.row === pos.r && d.spawnCol === pos.c);
                 if (dancerExists) return;
-                
+
                 // Check if the cell is blocked (crater, ice)
                 const cell = document.querySelector(`.cell[data-row='${pos.r}'][data-col='${pos.c}']`);
                 if (!cell || cell.classList.contains('crater')) return;
@@ -3826,7 +4101,7 @@ Copyright (c) 2025 Olexandr_43
 
             // --- Dancing Zombie Group Logic ---
             const dancingLeaders = gameState.zombies.filter(z => z.type === 'dancing' && z.element);
-            
+
             dancingLeaders.forEach(leader => {
                 // 1. Check if group is slowed or attacking
                 let isGroupSlowed = leader.slowed;
@@ -3856,7 +4131,16 @@ Copyright (c) 2025 Olexandr_43
 
             gameState.zombies = gameState.zombies.filter(zombie => {
                 if (!zombie.element) return false;
-                
+
+                // Handle stun timers
+                if (zombie.isStunned) {
+                    zombie.stunTimer -= adjustedDelta;
+                    if (zombie.stunTimer <= 0) {
+                        zombie.isStunned = false;
+                        if (zombie.element) zombie.element.classList.remove('stunned');
+                    }
+                }
+
                 if (zombie.isFrozen) {
                     zombie.freezeTimer -= adjustedDelta;
                     if (zombie.freezeTimer <= 0) {
@@ -3866,9 +4150,34 @@ Copyright (c) 2025 Olexandr_43
                         zombie.slowTimer = 6000;
                         zombie.element.classList.add('slowed');
                     }
+                }
+
+                // --- Jack-in-the-Box Timer Pause/Resume Logic ---
+                if (zombie.type === 'jackInTheBox') {
+                    const isStopped = zombie.isFrozen || zombie.isStunned;
+
+                    // Pause logic: If stopped and a timer is running
+                    if (isStopped && zombie.explosionTimerId) {
+                        const timer = gameState.timers[zombie.explosionTimerId];
+                        if (timer) {
+                            zombie.remainingExplosionTime = timer.remaining;
+                            clearTimer(zombie.explosionTimerId);
+                            zombie.explosionTimerId = null;
+                        }
+                    }
+                    // Resume logic: If not stopped and has remaining time stored
+                    else if (!isStopped && zombie.remainingExplosionTime) {
+                        zombie.explosionTimerId = createTimer(zombie.remainingExplosionTime, () => explodeJackInTheBox(zombie));
+                        delete zombie.remainingExplosionTime; // Clear the stored time
+                    }
+                }
+
+                // If stunned or frozen, skip all movement and attack logic for this frame
+                if (zombie.element && zombie.isStunned || zombie.isFrozen) {
+                    zombie.element.classList.remove('eating');
                     return true;
                 }
-                
+
                 if (zombie.slowTimer > 0) {
                     zombie.slowTimer -= adjustedDelta;
                     if (zombie.slowTimer <= 0) {
@@ -3876,7 +4185,7 @@ Copyright (c) 2025 Olexandr_43
                         zombie.element.classList.remove('slowed');
                     }
                 }
-                
+
                 // Determine speed and attacking state (handles group logic)
                 const isSlowed = zombie.isGroupSlowed || zombie.slowed;
                 let isAttacking = zombie.isGroupAttacking || zombie.attacking;
@@ -3885,7 +4194,7 @@ Copyright (c) 2025 Olexandr_43
                 // Check for armed potato mines before moving
                 const zombieColBeforeMove = Math.floor(zombie.x / gameState.cellSize.width);
                 const mineOnTile = gameState.plants.find(p => p.type === 'potatomine' && p.isArmed && p.row === zombie.row && p.col === zombieColBeforeMove);
-                
+
                 if (mineOnTile) {
                     isAttacking = true;
                 }
@@ -3899,44 +4208,44 @@ Copyright (c) 2025 Olexandr_43
                         baseSpeed = zombieTypes['normal'].speed;
                     }
                     const currentSpeed = isSlowed ? baseSpeed * 0.5 : baseSpeed;
-                    
+
                     if (!isAttacking || isFlyingAndNotAttacking) {
                         zombie.x -= currentSpeed * adjustedDelta / 1000;
                         zombie.element.style.left = (gameState.boardRect.left + zombie.x) + 'px';
-                        
+
                         // Set Y position based on flying status
                         const yPosition = gameState.boardRect.top + zombie.row * gameState.cellSize.height + (zombie.isFlying ? -10 : gameState.cellSize.height / 2 - 20);
-                        if(zombie.element.style.top !== yPosition + 'px' && !zombie.element.style.transition.includes('top')) {
-                             zombie.element.style.top = yPosition + 'px';
+                        if (zombie.element.style.top !== yPosition + 'px' && !zombie.element.style.transition.includes('top')) {
+                            zombie.element.style.top = yPosition + 'px';
                         }
 
 
                         // Zomboni Ice Trail Logic
                         if (zombieTypes[zombie.type].leavesIceTrail) {
-							const zomboniCenter = zombie.x + (gameState.cellSize.width / 2);
-							const zomboniCol = Math.floor(zomboniCenter / gameState.cellSize.width);
+                            const zomboniCenter = zombie.x + (gameState.cellSize.width / 2);
+                            const zomboniCol = Math.floor(zomboniCenter / gameState.cellSize.width);
                             if (zomboniCol >= 0 && zomboniCol < 9) {
                                 createIceTrail(zombie.row, zomboniCol);
                             }
                         }
                     }
                 }
-                
+
                 zombie.attacking = false;
                 const zombieCol = Math.floor(zombie.x / gameState.cellSize.width);
                 const zombieTypeInfo = zombieTypes[zombie.type];
-                
+
                 gameState.plants.forEach(plant => {
                     if (!plant.element || plant.row !== zombie.row || zombie.isFlying) return;
-                    
+
                     if (plant.col === zombieCol) {
 
                         if (plant.type === 'potatomine' && plant.isArmed) return;
 
                         // Crusher Logic (Zomboni, Gargantuar)
                         const isCrusher = zombieTypeInfo.crushes || zombieTypeInfo.uneatable;
-                        
-                        if (isCrusher) {
+
+                        if (zombie.element && isCrusher) {
                             zombie.attacking = false; // Crushers don't stop
                             zombie.element.classList.remove('eating');
                             plant.health = 0; // Insta-kill
@@ -3949,7 +4258,7 @@ Copyright (c) 2025 Olexandr_43
                         } else { // Not a crusher, normal attack
                             zombie.attacking = true;
                             zombie.element.classList.add('eating');
-                            
+
                             zombie.attackCooldown -= adjustedDelta;
                             if (zombie.attackCooldown <= 0) {
                                 zombie.attackCooldown = 1000;
@@ -3957,13 +4266,13 @@ Copyright (c) 2025 Olexandr_43
                                 plant.health -= damage;
                                 updatePlantHealth(plant);
                                 plant.element.classList.add('plant-damage-effect');
-                                
+
                                 createTimer(300, () => {
                                     if (plant.element) {
                                         plant.element.classList.remove('plant-damage-effect');
                                     }
                                 });
-                                
+
                                 // Garlic Logic (only for non-crushers)
                                 if (plantTypes[plant.type].diverts && !zombie.isChangingLane) {
                                     zombie.isChangingLane = true; // Prevent movement and re-diversion
@@ -3978,19 +4287,19 @@ Copyright (c) 2025 Olexandr_43
                                         if (zombie.row === 0) possibleRows.push(1);
                                         else if (zombie.row === 4) possibleRows.push(3);
                                         else possibleRows.push(zombie.row - 1, zombie.row + 1);
-                                        
+
                                         const newRow = possibleRows[Math.floor(Math.random() * possibleRows.length)];
-                                        
+
                                         zombie.row = newRow;
                                         zombie.attacking = false;
-                                        
+
                                         zombie.x -= gameState.cellSize.width * 0.375;
 
                                         const yPosition = gameState.boardRect.top + zombie.row * gameState.cellSize.height + (zombie.isFlying ? -10 : gameState.cellSize.height / 2 - 20);
                                         zombie.element.style.transition = `top calc(0.3s / var(--game-speed)) ease, left calc(0.3s / var(--game-speed)) ease`;
                                         zombie.element.style.top = yPosition + 'px';
                                         zombie.element.style.left = (gameState.boardRect.left + zombie.x) + 'px';
-                                        
+
                                         // After animation, reset state
                                         createTimer(300, () => {
                                             if (zombie.element) {
@@ -4019,11 +4328,11 @@ Copyright (c) 2025 Olexandr_43
 
                     }
                 });
-                
-                if (!zombie.attacking) {
+
+                if (zombie.element && !zombie.attacking) {
                     zombie.element.classList.remove('eating');
                 }
-                
+
                 // Lawnmower activation
                 if (zombie.x <= 0) {
                     const mower = gameState.lawnmowers.find(m => m.row === zombie.row);
@@ -4036,27 +4345,85 @@ Copyright (c) 2025 Olexandr_43
                 if (zombie.x <= -gameState.cellSize.width) {
                     gameOver();
                 }
-                
+
                 return zombie.element !== null;
             });
         }
-        
+
+        // --- Jack-in-the-Box Zombie Logic ---
+
+        function startJackInTheBoxTimer(zombie) {
+            let delay;
+            // 5% chance of fast explosion
+            if (Math.random() < 0.05) {
+                // 4.4 to 7.54 seconds
+                delay = 4400 + Math.random() * (7540 - 4400);
+            } else {
+                // 95% chance of slow explosion
+                // 13.22 to 22.68 seconds
+                delay = 13220 + Math.random() * (22680 - 13220);
+            }
+            zombie.explosionTimerId = createTimer(delay, () => explodeJackInTheBox(zombie));
+        }
+
+        function explodeJackInTheBox(zombie) {
+            if (!zombie.element) return;
+
+            const row = zombie.row;
+            const col = Math.floor(zombie.x / gameState.cellSize.width);
+
+            // Create visual explosion effect
+            const cell = document.querySelector(`.cell[data-row='${row}'][data-col='${col}']`);
+            if (cell) {
+                const explosionElement = document.createElement('div');
+                explosionElement.className = 'instant-effect';
+                explosionElement.textContent = '💥';
+                explosionElement.style.cssText = `position: absolute; font-size: 7em; z-index: 10; filter: drop-shadow(0 0 15px red); transform: translate(-50%, -50%); top: 50%; left: 50%;`;
+                cell.appendChild(explosionElement);
+                createTimer(600, () => explosionElement.remove());
+            }
+
+            // Damage plants in 3x3 radius
+            for (let r = row - 1; r <= row + 1; r++) {
+                for (let c = col - 1; c <= col + 1; c++) {
+                    if (r >= 0 && r < 5 && c >= 0 && c < 9) {
+                        const plant = gameState.plants.find(p => p.row === r && p.col === c);
+                        if (plant && plant.element) {
+                            plant.health = 0;
+                            if (plant.armingTimerId) clearTimer(plant.armingTimerId);
+                            if (plant.graveBusterTimerId) clearTimer(plant.graveBusterTimerId);
+                            plant.element.remove();
+                            plant.element = null;
+                        }
+                    }
+                }
+            }
+
+            // Clean up plants array
+            gameState.plants = gameState.plants.filter(p => p.element);
+
+            // Kill the Jack-in-the-Box zombie itself
+            zombie.health = 0;
+            handleZombieDefeat(zombie, '💥');
+        }
+
         // Generic function to spawn a zombie at a specific grid location
         function spawnZombieAt(row, col, typeKey) {
             if (gameState.cellSize.width === 0) return null; // Board not ready
 
             const zombieType = zombieTypes[typeKey];
             if (!zombieType) return null;
-            
+
             const zombie = document.createElement('div');
             zombie.className = 'zombie';
             zombie.textContent = zombieType.emoji;
-            
+
             // Add classes for specific zombie styles
             if (typeKey === 'dancing') zombie.classList.add('dancing');
             if (typeKey === 'zomboni') zombie.classList.add('zomboni');
-			if (typeKey === 'gargantuar' || typeKey === 'giga') zombie.classList.add('gargantuar');
-            
+            if (typeKey === 'gargantuar' || typeKey === 'giga') zombie.classList.add('gargantuar');
+            if (typeKey === 'jackInTheBox') zombie.classList.add('jackInTheBox');
+
             const healthBar = document.createElement('div');
             healthBar.className = 'zombie-health-bar';
             const healthFill = document.createElement('div');
@@ -4064,27 +4431,27 @@ Copyright (c) 2025 Olexandr_43
             healthFill.style.width = '100%';
             healthBar.appendChild(healthFill);
             zombie.appendChild(healthBar);
-            
+
             // Spawn *at* the cell's column
             const startX = col * gameState.cellSize.width + (gameState.cellSize.width * 0.2);
             const yPosition = gameState.boardRect.top + row * gameState.cellSize.height + (zombieType.isFlying ? -10 : gameState.cellSize.height / 2 - 20);
-            
+
             zombie.style.position = 'fixed';
             zombie.style.left = (gameState.boardRect.left + startX) + 'px';
             zombie.style.top = yPosition + 'px';
-            
+
             // Rise from ground animation
             zombie.style.opacity = '0';
             zombie.style.transform = 'scaleX(-1) translateY(20px)';
             zombie.style.transition = 'opacity calc(0.5s / var(--game-speed)) ease, transform calc(0.5s / var(--game-speed)) ease';
-            
+
             document.getElementById('gameContainer').appendChild(zombie);
 
             setTimeout(() => {
                 zombie.style.opacity = '1';
                 zombie.style.transform = 'scaleX(-1) translateY(0)';
             }, 50);
-            
+
             const zombieObj = {
                 element: zombie,
                 healthBar: healthBar,
@@ -4101,17 +4468,23 @@ Copyright (c) 2025 Olexandr_43
                 freezeTimer: 0,
                 isFlying: !!zombieType.isFlying,
                 lastChomped: 0,
-                isChangingLane: false
+                isChangingLane: false,
+                isStunned: false,
+                stunTimer: 0
             };
-            
+
             // Add special properties for Dancing Zombie
             if (typeKey === 'dancing') {
                 zombieObj.dancers = [];
                 // Set lastSummon time to trigger first summon after 3 seconds
-                zombieObj.lastSummon = Date.now() - (zombieType.summonCooldown - 3000); 
+                zombieObj.lastSummon = Date.now() - (zombieType.summonCooldown - 3000);
                 zombieObj.summonCooldown = zombieType.summonCooldown;
             }
-            
+
+            if (zombieType.isExplosive) {
+                startJackInTheBoxTimer(zombieObj);
+            }
+
             gameState.zombies.push(zombieObj);
             return zombieObj;
         }
@@ -4119,7 +4492,7 @@ Copyright (c) 2025 Olexandr_43
         // Spawn Zombie with Health Bar (from edge)
         function spawnZombie() {
             const row = Math.floor(Math.random() * 5);
-            
+
             // Filter out summoned zombies from natural spawn pool
             const zombieTypeKeys = Object.keys(zombieTypes).filter(k => !zombieTypes[k].isSummoned);
             let typeKey;
@@ -4138,6 +4511,8 @@ Copyright (c) 2025 Olexandr_43
                 typeKey = 'dancing';
             } else if (gameState.wave > 7 && rand > 0.6) {
                 typeKey = 'balloon';
+            } else if (gameState.wave > 6 && rand > 0.55) {
+                typeKey = 'jackInTheBox';
             } else if (gameState.wave > 5 && rand > 0.4) {
                 typeKey = 'bucket';
             } else if (gameState.wave > 3 && rand > 0.3) {
@@ -4147,19 +4522,20 @@ Copyright (c) 2025 Olexandr_43
             } else {
                 typeKey = 'normal';
             }
-            
+
             const zombieType = zombieTypes[typeKey];
-            
+
             const zombie = document.createElement('div');
             zombie.className = 'zombie';
             zombie.textContent = zombieType.emoji;
-            
+
             // Add classes for specific zombie styles
             if (typeKey === 'dancing') zombie.classList.add('dancing');
             if (typeKey === 'zomboni') zombie.classList.add('zomboni');
-			if (typeKey === 'gargantuar' || typeKey === 'giga') zombie.classList.add('gargantuar');
+            if (typeKey === 'gargantuar' || typeKey === 'giga') zombie.classList.add('gargantuar');
+            if (typeKey === 'jackInTheBox') zombie.classList.add('jackInTheBox');
 
-            
+
             const healthBar = document.createElement('div');
             healthBar.className = 'zombie-health-bar';
             const healthFill = document.createElement('div');
@@ -4167,16 +4543,16 @@ Copyright (c) 2025 Olexandr_43
             healthFill.style.width = '100%';
             healthBar.appendChild(healthFill);
             zombie.appendChild(healthBar);
-            
+
             const startX = gameState.boardRect.width;
             const yPosition = gameState.boardRect.top + row * gameState.cellSize.height + (zombieType.isFlying ? -10 : gameState.cellSize.height / 2 - 20);
-            
+
             zombie.style.position = 'fixed';
             zombie.style.left = (gameState.boardRect.left + startX) + 'px';
             zombie.style.top = yPosition + 'px';
-            
+
             document.getElementById('gameContainer').appendChild(zombie);
-            
+
             const zombieObj = {
                 element: zombie,
                 healthBar: healthBar,
@@ -4193,17 +4569,23 @@ Copyright (c) 2025 Olexandr_43
                 freezeTimer: 0,
                 isFlying: !!zombieType.isFlying,
                 lastChomped: 0,
-                isChangingLane: false
+                isChangingLane: false,
+                isStunned: false,
+                stunTimer: 0
             };
 
             // Add special properties for Dancing Zombie
             if (typeKey === 'dancing') {
                 zombieObj.dancers = [];
                 // Set lastSummon time to trigger first summon after 3 seconds
-                zombieObj.lastSummon = Date.now() - (zombieType.summonCooldown - 3000); 
+                zombieObj.lastSummon = Date.now() - (zombieType.summonCooldown - 3000);
                 zombieObj.summonCooldown = zombieType.summonCooldown;
             }
-            
+
+            if (zombieType.isExplosive) {
+                startJackInTheBoxTimer(zombieObj);
+            }
+
             gameState.zombies.push(zombieObj);
         }
 
@@ -4220,31 +4602,31 @@ Copyright (c) 2025 Olexandr_43
         function spawnGraves(count) {
             const board = document.getElementById('gameBoard');
             const allCells = Array.from(board.getElementsByClassName('cell'));
-            
+
             // Find cells that are free (no plant, no grave, not a crater, not iced)
             const freeCells = allCells.filter(cell => {
                 const row = parseInt(cell.dataset.row);
                 const col = parseInt(cell.dataset.col);
-                
+
                 // Only spawn graves in last 4 columns (5, 6, 7, 8)
                 if (col < 5) return false;
-                
+
                 const hasPlant = gameState.plants.some(p => p.row === row && p.col === col);
                 const hasGrave = gameState.graves.some(g => g.row === row && g.col === col);
                 const isCrater = cell.classList.contains('crater');
                 const isIced = cell.classList.contains('iced');
-                
+
                 return !hasPlant && !hasGrave && !isCrater && !isIced;
             });
 
             freeCells.sort(() => 0.5 - Math.random());
-            
+
             const cellsToGrave = freeCells.slice(0, count);
-            
+
             cellsToGrave.forEach(cell => {
                 const row = parseInt(cell.dataset.row);
                 const col = parseInt(cell.dataset.col);
-                
+
                 cell.classList.add('grave', 'grave-spawn');
                 gameState.graves.push({ row, col, element: cell });
 
@@ -4265,9 +4647,9 @@ Copyright (c) 2025 Olexandr_43
             popup.style.left = rect.left + 'px';
             popup.style.top = rect.top + 'px';
             popup.style.position = 'fixed';
-            
+
             document.body.appendChild(popup);
-            
+
             setTimeout(() => popup.remove(), 1500 / gameState.gameSpeed);
         }
 
@@ -4275,7 +4657,7 @@ Copyright (c) 2025 Olexandr_43
         function addScore(points) {
             gameState.score += points;
             document.getElementById('scoreCount').textContent = gameState.score.toLocaleString();
-            
+
             if (gameState.score % 1000 < points) {
                 gameState.sun += 50;
                 updateSunDisplay();
@@ -4286,15 +4668,15 @@ Copyright (c) 2025 Olexandr_43
         // Spawn Zombie Wave
         function spawnZombieWave() {
             if (gameState.isGameOver || gameState.isVictory) return;
-			
-			gameState.isSpawningComplete = false;
-            
+
+            gameState.isSpawningComplete = false;
+
             // Spawn graves (e.g., 1-3 new graves from wave 8 onwards, 33% chance)
             if (gameState.wave > 7 && Math.random() < 0.33) { // 33% chance
                 const newGraveCount = Math.floor(Math.random() * 3) + 1; // 1, 2, or 3
                 spawnGraves(newGraveCount);
             }
-            
+
             // Spawn zombies from existing graves
             gameState.graves.forEach(grave => {
                 createTimer(Math.random() * 5000 + 1000, () => {
@@ -4306,7 +4688,7 @@ Copyright (c) 2025 Olexandr_43
 
             const zombieCount = Math.min(3 + Math.floor(gameState.wave / 2), 15);
             const spawnDelay = Math.max(3000 - gameState.wave * 100, 1000);
-            
+
             for (let i = 0; i < zombieCount; i++) {
                 createTimer(i * spawnDelay, () => {
                     if (!gameState.isGameOver && !gameState.isVictory) {
@@ -4314,15 +4696,15 @@ Copyright (c) 2025 Olexandr_43
                     }
                 });
             }
-			
-			const totalSpawnDuration = (zombieCount - 1) * spawnDelay;
 
-			createTimer(totalSpawnDuration, () => {
-				gameState.isSpawningComplete = true;
-			});
-            
+            const totalSpawnDuration = (zombieCount - 1) * spawnDelay;
+
+            createTimer(totalSpawnDuration, () => {
+                gameState.isSpawningComplete = true;
+            });
+
             clearTimer(gameState.waveTimerId);
-            
+
             gameState.waveTimerId = createTimer(30000, () => {
                 if (!gameState.isGameOver && !gameState.isVictory && gameState.wave < gameState.maxWaves) {
                     gameState.wave++;
@@ -4341,14 +4723,14 @@ Copyright (c) 2025 Olexandr_43
             if (gameState.isVictory) return;
             gameState.isVictory = true;
             gameState.isGameOver = true;
-            
+
             // Add victory bonus
             const victoryBonus = 5000;
             gameState.score += victoryBonus;
-            
+
             // Auto-save score
             saveToLeaderboard(gameState.score, gameState.wave, gameState.zombiesDefeated);
-            
+
             // Show victory screen
             document.getElementById('victoryScore').textContent = gameState.score.toLocaleString();
             document.getElementById('victoryZombies').textContent = gameState.zombiesDefeated;
@@ -4358,7 +4740,7 @@ Copyright (c) 2025 Olexandr_43
         // Spawn Sun Periodically
         function spawnSunPeriodically() {
             clearTimer(gameState.sunIntervalId);
-            
+
             gameState.sunIntervalId = createTimer(8000, () => {
                 if (!gameState.isGameOver) {
                     spawnFallingSun();
@@ -4370,7 +4752,7 @@ Copyright (c) 2025 Olexandr_43
         function spawnFallingSun() {
             const gameContainer = document.getElementById('gameContainer');
             const containerRect = gameContainer.getBoundingClientRect();
-            
+
             const padding = 100;
             const spawnWidth = containerRect.width - (padding * 2);
             if (spawnWidth <= 0) return;
@@ -4380,41 +4762,41 @@ Copyright (c) 2025 Olexandr_43
 
             const boardTopMargin = 150 / 700;
             const boardBottomMargin = 50 / 700;
-            
+
             const landMinY = containerRect.top + (containerRect.height * boardTopMargin);
             const landMaxY = containerRect.top + containerRect.height - (containerRect.height * boardBottomMargin) - 50;
             const endTop = landMinY + (Math.random() * (landMaxY - landMinY));
-            
+
             const sun = document.createElement('div');
             sun.className = 'sun';
-            
+
             const sunEmoji = document.createElement('span');
             sunEmoji.textContent = '☀️';
             sun.appendChild(sunEmoji);
-            
+
             const sunValue = document.createElement('span');
             sunValue.className = 'sun-value';
             sunValue.textContent = '50';
             sun.appendChild(sunValue);
-            
+
             sun.style.position = 'fixed';
             sun.style.left = startLeft + 'px';
             sun.style.top = startTop + 'px';
-            sun.style.opacity = '1'; 
+            sun.style.opacity = '1';
             sun.style.transform = 'scale(1)';
             sun.style.transition = `top calc(10s / var(--game-speed)) cubic-bezier(0.3, 0, 0.7, 1), opacity calc(0.5s / var(--game-speed)) ease-out, transform calc(0.5s / var(--game-speed)) ease-out`;
-            
+
             document.getElementById('gameContainer').appendChild(sun);
-            
-            void sun.offsetHeight; 
+
+            void sun.offsetHeight;
             sun.style.top = endTop + 'px';
-            
+
             sun.addEventListener('click', () => collectSun(sun, 50));
             sun.addEventListener('touchstart', (e) => {
                 e.preventDefault();
                 collectSun(sun, 50);
             });
-            
+
             const timeToFall = 10000;
             const lifeOnGround = 7000;
             createTimer(timeToFall + lifeOnGround, () => {
@@ -4430,16 +4812,16 @@ Copyright (c) 2025 Olexandr_43
 
         // Collect Sun
         function collectSun(sunElement, value) {
-			if (gameState.isPaused) return;
-		
+            if (gameState.isPaused) return;
+
             if (!sunElement.parentElement || sunElement.dataset.collecting) return;
-			
+
             sunElement.dataset.collecting = 'true';
-			sunElement.style.pointerEvents = 'none';
-            
+            sunElement.style.pointerEvents = 'none';
+
             const sunCounter = document.getElementById('sunCounter');
             const counterRect = sunCounter.getBoundingClientRect();
-            
+
             const sunRect = sunElement.getBoundingClientRect();
 
             sunElement.style.zIndex = '11';
@@ -4447,7 +4829,7 @@ Copyright (c) 2025 Olexandr_43
             sunElement.style.left = (counterRect.left + counterRect.width / 2 - sunRect.width / 2) + 'px';
             sunElement.style.top = (counterRect.top + counterRect.height / 2 - sunRect.height / 2) + 'px';
             sunElement.style.opacity = '0.5';
-            
+
             createTimer(500, () => {
                 if (sunElement.parentElement) {
                     sunElement.remove();
@@ -4487,7 +4869,7 @@ Copyright (c) 2025 Olexandr_43
                         hasBasePlant = melonpultOnBoard;
                     }
                 }
-                
+
                 if (plantType === 'gravebuster') {
                     meetsSpecialReq = gravesOnBoard;
                 }
@@ -4514,23 +4896,23 @@ Copyright (c) 2025 Olexandr_43
             sunCounter.style.transition = 'transform 0.1s ease, background 0.1s ease';
             sunCounter.style.transform = 'scale(1.1)';
             sunCounter.style.background = 'linear-gradient(135deg, #FF6B6B, #E91E63)'; // Flash red
-            
+
             createTimer(100, () => {
                 sunCounter.style.transform = 'scale(1)';
                 sunCounter.style.background = 'linear-gradient(135deg, #FFD700, #FFA500)'; // Return to normal
-                
+
                 createTimer(100, () => {
-                     sunCounter.style.transition = 'transform 0.1s ease'; // Restore original transition
+                    sunCounter.style.transition = 'transform 0.1s ease'; // Restore original transition
                 });
             });
         }
 
         // Create Particle Effect
         function createParticleEffect(element, emoji) {
-            const rect = element.getBoundingClientRect ? 
-                element.getBoundingClientRect() : 
+            const rect = element.getBoundingClientRect ?
+                element.getBoundingClientRect() :
                 { left: element.offsetLeft, top: element.offsetTop };
-            
+
             for (let i = 0; i < 3; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'particle';
@@ -4539,49 +4921,54 @@ Copyright (c) 2025 Olexandr_43
                 particle.style.top = rect.top + 'px';
                 particle.style.setProperty('--x', (Math.random() - 0.5) * 100 + 'px');
                 particle.style.setProperty('--y', (Math.random() - 0.5) * 100 + 'px');
-                
+
                 document.body.appendChild(particle);
-                
+
                 setTimeout(() => particle.remove(), 1000);
             }
         }
-        
-		function updateCooldownVisuals() {
-			document.querySelectorAll('#plantSelection .plantCard').forEach(card => {
-				const overlay = card.querySelector('.cooldown-overlay');
-				if (!overlay) return;
 
-				// If the card IS on cooldown...
-				if (card.classList.contains('on-cooldown')) {
-					const timerId = card.dataset.cooldownTimerId;
-					if (timerId && gameState.timers[timerId]) {
-						const timer = gameState.timers[timerId];
-						const percent = Math.max(0, timer.remaining / timer.delay);
-						overlay.style.height = `${percent * 100}%`;
-					} else {
-						overlay.style.height = '0%';
-					}
-				} else {
-					// Force reset if the card is NOT on cooldown.
-					overlay.style.height = '0%';
-				}
-			});
-		}
+        function updateCooldownVisuals() {
+            document.querySelectorAll('#plantSelection .plantCard').forEach(card => {
+                const overlay = card.querySelector('.cooldown-overlay');
+                if (!overlay) return;
+
+                // If the card IS on cooldown...
+                if (card.classList.contains('on-cooldown')) {
+                    const timerId = card.dataset.cooldownTimerId;
+                    if (timerId && gameState.timers[timerId]) {
+                        const timer = gameState.timers[timerId];
+                        const percent = Math.max(0, timer.remaining / timer.delay);
+                        overlay.style.height = `${percent * 100}%`;
+                    } else {
+                        overlay.style.height = '0%';
+                    }
+                } else {
+                    // Force reset if the card is NOT on cooldown.
+                    overlay.style.height = '0%';
+                }
+            });
+        }
 
         // --- Centralized function for handling zombie defeat ---
         function handleZombieDefeat(zombie, particleEmoji = '💀') {
             if (!zombie || !zombie.element || zombie.health > 0) return;
 
+            // Clear any explosion timer if the zombie is defeated by other means
+            if (zombie.explosionTimerId) {
+                clearTimer(zombie.explosionTimerId);
+            }
+
             // Check for victory condition.
             if (gameState.wave === gameState.maxWaves && gameState.isSpawningComplete && !gameState.victoryTriggered) {
                 // Check if this kill results in zero *living* zombies on the board.
                 const livingZombiesCount = gameState.zombies.filter(z => z.health > 0).length;
-                
+
                 if (livingZombiesCount === 0) {
                     // This is the last zombie (or part of the last batch).
                     gameState.victoryTriggered = true; // Set flag immediately to prevent multiple trophies
                     dropVictoryTrophy(zombie);
-                    
+
                     // Award points for the final kill
                     addScore(zombieTypes[zombie.type].points);
                     gameState.zombiesDefeated++;
@@ -4615,7 +5002,7 @@ Copyright (c) 2025 Olexandr_43
                 filter: drop-shadow(0 0 15px gold);
                 transition: transform calc(0.2s / var(--game-speed) ease-out;
             `;
-            
+
             const zombieRect = zombie.element.getBoundingClientRect();
             trophy.style.left = zombieRect.left + 'px';
             trophy.style.top = zombieRect.top + 'px';
@@ -4628,21 +5015,21 @@ Copyright (c) 2025 Olexandr_43
             });
 
             trophy.addEventListener('click', () => animateAndTriggerVictory(trophy));
-            
+
             document.getElementById('gameContainer').appendChild(trophy);
         }
 
         function animateAndTriggerVictory(trophyElement) {
             trophyElement.style.pointerEvents = 'none'; // Prevent double clicks
-            
+
             const gameContainer = document.getElementById('gameContainer');
             const containerRect = gameContainer.getBoundingClientRect();
-            
+
             const endLeft = containerRect.left + containerRect.width / 2;
             const endTop = containerRect.top + containerRect.height / 2;
 
             trophyElement.style.transition = 'left 0.75s ease-in-out, top 0.75s ease-in-out, transform 0.75s ease-in-out, filter 0.75s ease-in-out';
-            
+
             // Start animation
             trophyElement.style.left = endLeft + 'px';
             trophyElement.style.top = endTop + 'px';
@@ -4663,7 +5050,7 @@ Copyright (c) 2025 Olexandr_43
                 const now = Date.now();
                 const deltaTime = now - gameState.lastUpdate;
                 gameState.lastUpdate = now;
-                
+
                 if (!gameState.isPaused && !gameState.isGameOver) {
                     const adjustedDelta = deltaTime * gameState.gameSpeed;
 
@@ -4715,11 +5102,11 @@ Copyright (c) 2025 Olexandr_43
                         gameState.plants = gameState.plants.filter(p => p.element);
                         gameState.zombies = gameState.zombies.filter(z => z.element);
                     }
-					
-					// UPDATED: Logic to advance to the next wave
+
+                    // UPDATED: Logic to advance to the next wave
                     if (gameState.isSpawningComplete && gameState.zombies.length === 0 && !gameState.victoryTriggered) {
                         if (gameState.wave < gameState.maxWaves) {
-                            gameState.isSpawningComplete = false; 
+                            gameState.isSpawningComplete = false;
 
                             clearTimer(gameState.waveTimerId);
 
@@ -4740,17 +5127,17 @@ Copyright (c) 2025 Olexandr_43
                     gameState.plants.forEach(plant => {
                         if (!plant.element) return;
                         const plantType = plantTypes[plant.type];
-                        
+
                         // Sun Production
                         if (plantType.produces === 'sun' || plantType.produces === 'coin') {
-                             plant.sunCooldown -= adjustedDelta;
-                             if (plant.sunCooldown <= 0) {
+                            plant.sunCooldown -= adjustedDelta;
+                            if (plant.sunCooldown <= 0) {
                                 produceSun(plant);
                                 const baseInterval = plantType.baseInterval || 24000;
                                 plant.sunCooldown = (baseInterval - 2000) + (Math.random() * 4000);
                             }
                         }
-                        
+
                         // Shooting
                         if (plantType.shoots) {
                             plant.shootCooldown -= adjustedDelta;
@@ -4784,7 +5171,7 @@ Copyright (c) 2025 Olexandr_43
                                         if (now - plant.lastChomp > plantType.attackInterval / gameState.gameSpeed) {
                                             plant.lastChomp = now;
                                             targetZombie.health -= plantType.damage;
-                                            
+
                                             if (plant.element) {
                                                 plant.element.classList.add('shooting');
                                                 createTimer(300, () => { if (plant.element) plant.element.classList.remove('shooting'); });
@@ -4810,7 +5197,7 @@ Copyright (c) 2025 Olexandr_43
                                         if (plant.element) {
                                             plant.element.classList.add('shooting');
                                             createTimer(300, () => { if (plant.element) plant.element.classList.remove('shooting'); });
-                                            
+
                                             createTimer(750, () => {
                                                 if (plant.element && plant.isChewing) {
                                                     plant.element.classList.add('chewing');
@@ -4822,9 +5209,9 @@ Copyright (c) 2025 Olexandr_43
                             }
                         }
                     });
-                    
+
                     gameState.plants = gameState.plants.filter(p => p.element);
-                    
+
                     const debugInfo = document.getElementById('debugInfo');
                     if (debugInfo.style.display === 'block') {
                         debugInfo.innerHTML = `
@@ -4842,10 +5229,10 @@ Copyright (c) 2025 Olexandr_43
                         `;
                     }
                 }
-                
+
                 gameState.gameLoopId = requestAnimationFrame(gameLoop);
             }
-            
+
             gameState.gameLoopId = requestAnimationFrame(gameLoop);
         }
 
@@ -4864,7 +5251,7 @@ Copyright (c) 2025 Olexandr_43
                 // Actions on resume
                 gameState.lastUpdate = Date.now(); // Prevents a large deltaTime jump
             }
-            document.getElementById('pauseMenu').style.display = 
+            document.getElementById('pauseMenu').style.display =
                 gameState.isPaused ? 'block' : 'none';
             document.getElementById('pauseBtn').textContent = gameState.isPaused ? '▶️ Play' : '⏸️ Pause';
         }
@@ -4880,12 +5267,13 @@ Copyright (c) 2025 Olexandr_43
         // Game Over - AUTO SAVE SCORE
         function gameOver() {
             if (gameState.isGameOver) return;
-            
+
             gameState.isGameOver = true;
-            
+            togglePause();
+
             // Auto-save score
             saveToLeaderboard(gameState.score, gameState.wave, gameState.zombiesDefeated);
-            
+
             document.getElementById('gameOver').style.display = 'block';
             document.getElementById('finalScore').textContent = gameState.score.toLocaleString();
             document.getElementById('finalWave').textContent = gameState.wave;
@@ -4940,32 +5328,32 @@ Copyright (c) 2025 Olexandr_43
         }
 
         // Restart Game
-		function restartGame() {
-			if (gameState.gameLoopId) {
-				cancelAnimationFrame(gameState.gameLoopId);
-			}
-			resetGame();
-			createBoard(); 
-        
-			// Only need to re-attach listeners to the newly created cells.
-			setupGameBoardListeners(); 
-        
-			selectedPlantDeck = [];
-			document.getElementById('selectedPlantCount').textContent = '0';
-			showPlantSelectionScreen();
-			togglePause();
-		}
+        function restartGame() {
+            if (gameState.gameLoopId) {
+                cancelAnimationFrame(gameState.gameLoopId);
+            }
+            resetGame();
+            createBoard();
+
+            // Only need to re-attach listeners to the newly created cells.
+            setupGameBoardListeners();
+
+            selectedPlantDeck = [];
+            document.getElementById('selectedPlantCount').textContent = '0';
+            showPlantSelectionScreen();
+            togglePause();
+        }
 
         // Toggle Fullscreen
         function toggleFullscreen() {
             if (!document.fullscreenElement) {
                 enterFullscreen();
             } else {
-                const exitFS = document.exitFullscreen || 
-                              document.webkitExitFullscreen || 
-                              document.mozCancelFullScreen || 
-                              document.msExitFullscreen;
-                
+                const exitFS = document.exitFullscreen ||
+                    document.webkitExitFullscreen ||
+                    document.mozCancelFullScreen ||
+                    document.msExitFullscreen;
+
                 if (exitFS) {
                     exitFS.call(document).then(() => {
                         gameState.wasFullscreen = false;
@@ -4997,13 +5385,13 @@ Copyright (c) 2025 Olexandr_43
                     enterFullscreen();
                 }, 100);
             }
-            
+
             updateSunDisplay();
         }
 
         // Initialize game when page loads
         window.addEventListener('load', init);
-        
+
         // Handle visibility change
         document.addEventListener('visibilitychange', () => {
             if (document.hidden && !gameState.isPaused && !gameState.isGameOver) {
@@ -5015,4 +5403,5 @@ Copyright (c) 2025 Olexandr_43
         });
     </script>
 </body>
+
 </html>
