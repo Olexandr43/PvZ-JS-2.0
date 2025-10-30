@@ -71,6 +71,8 @@ The arsenal of plants has more than doubled, adding significant strategic variet
 *   **Ice-shroom (🧊):** Costs 75 sun. An instant-use plant that freezes every zombie on the entire screen, stopping them in their tracks for 4 seconds and dealing minor damage.
 *   **Doom-shroom (🍄):** Costs 125 sun. A highly destructive instant-use plant that explodes in a massive 7x5 area, dealing huge damage (90) to all zombies caught in the blast. It leaves a temporary, unplantable crater at its location.
 *   **Blover (🍀):** Costs 125 sun. An instant-use plant that creates a strong gust of wind, blowing away all flying Balloon Zombies from the screen instantly.
+*   **Cabbage-pult (🥬):** Costs 100 sun. Lobs cabbage at zombies, has 2x pea damage but 0.5x pea shoot interval.
+*   **Kernel-pult (🌽):** Costs 100 sun. Has a 25% chance to launch butter instead of a kernel. Butter not only deals more damage but also stuns zombies for 5 seconds, temporarily stopping them in their tracks.
 *   **Garlic (🧄):** Costs 50 sun. A defensive plant that doesn't attack but diverts any zombie that bites it into an adjacent lane.
 *   **Marigold (🌼):** Costs 50 sun. An economic plant that produces coins instead of sun (though the game describes this feature as "useless" for gameplay).
 *   **Melon-pult (🍉):** Costs 300 sun. Lobs melons that deal solid damage and splash to nearby zombies on impact.
