@@ -62,25 +62,27 @@ A lightweight, browser-based implementation of the classic lane defense game, Pl
 
 The arsenal of plants has more than doubled, adding significant strategic variety.
 
-*   **Cherry Bomb (💣):** Costs 150 sun. An instant-use plant that explodes, dealing massive damage (90) to all zombies in a 3x3 area. It is consumed on use.
-*   **Potato Mine (🥔):** Costs 25 sun. A cheap, single-use plant that is initially vulnerable. After a 14-second arming time, it will explode on contact, dealing immense damage (90) to a single zombie.
-*   **Grave Buster (🦇):** Costs 75 sun. A special single-use plant that can only be planted on graves. It consumes the grave over 5 seconds and rewards the player with sun.
-*   **Torchwood (🪔):** Costs 175 sun. A supportive plant that turns regular peas passing through it into fire peas, doubling their damage. It also extinguishes freezing projectiles from Snow Peas, turning them into normal peas.
-*   **Tall-nut (🌰):** Costs 125 sun. A heavy-duty defensive plant with significantly more health (48) than a Wall-nut, making it an excellent blocker.
-*   **Jalapeno (🌶️):** Costs 125 sun. An instant-use plant that creates a wall of fire, dealing massive damage (90) to and destroying all zombies in an entire lane. It also melts any ice trails left by Zombonis.
-*   **Ice-shroom (🧊):** Costs 75 sun. An instant-use plant that freezes every zombie on the entire screen, stopping them in their tracks for 4 seconds and dealing minor damage.
-*   **Doom-shroom (🍄):** Costs 125 sun. A highly destructive instant-use plant that explodes in a massive 7x5 area, dealing huge damage (90) to all zombies caught in the blast. It leaves a temporary, unplantable crater at its location.
 *   **Blover (🍀):** Costs 125 sun. An instant-use plant that creates a strong gust of wind, blowing away all flying Balloon Zombies from the screen instantly.
-*   **Cabbage-pult (🥬):** Costs 100 sun. Lobs cabbage at zombies, has 2x pea damage but 0.5x pea shoot interval.
-*   **Kernel-pult (🌽):** Costs 100 sun. Has a 25% chance to launch butter instead of a kernel. Butter not only deals more damage but also stuns zombies for 5 seconds, temporarily stopping them in their tracks.
+*   **Cabbage-pult (🥬):** Costs 100 sun. Lobs cabbages at zombies, dealing twice the damage of a standard pea.
+*   **Cherry Bomb (💣):** Costs 150 sun. An instant-use plant that explodes, dealing massive damage (90) to all zombies in a 3x3 area. It is consumed on use.
+*   **Coffee Bean (☕):** Costs 75 sun. An instant-use plant placed on top of sleeping mushrooms to wake them up for use during the day.
+*   **Doom-shroom (🍄):** Costs 125 sun. A highly destructive instant-use plant that explodes in a massive 7x5 area, dealing huge damage (90) to all zombies caught in the blast. It leaves a temporary, unplantable crater at its location.
 *   **Garlic (🧄):** Costs 50 sun. A defensive plant that doesn't attack but diverts any zombie that bites it into an adjacent lane.
-*   **Marigold (🌼):** Costs 50 sun. An economic plant that produces coins instead of sun (though the game describes this feature as "useless" for gameplay).
-*   **Melon-pult (🍉):** Costs 300 sun. Lobs melons that deal solid damage and splash to nearby zombies on impact.
-*   **Imitater (🎭):** Cost varies. A strategic plant that transforms into a copy of the previously selected plant card, allowing you to bring two of the same plant into a level with separate cooldowns.
 *   **Gatling Pea (🔫):** Costs 250 sun. An upgrade plant that must be planted on an existing Repeater. It fires a burst of four peas at a time.
+*   **Grave Buster (🦇):** Costs 75 sun. A special single-use plant that can only be planted on graves. It consumes the grave over 5 seconds and rewards the player with sun.
+*   **Ice-shroom (🧊):** Costs 75 sun. An instant-use plant that freezes every zombie on the entire screen, stopping them in their tracks for 4 seconds and dealing minor damage.
+*   **Imitater (🎭):** Cost varies. A strategic plant that transforms into a copy of the previously selected plant card, allowing you to bring two of the same plant into a level with separate cooldowns.
+*   **Jalapeno (🌶️):** Costs 125 sun. An instant-use plant that creates a wall of fire, dealing massive damage (90) to and destroying all zombies in an entire lane. It also melts any ice trails left by Zombonis.
+*   **Kernel-pult (🌽):** Costs 100 sun. Has a 25% chance to launch butter instead of a kernel. Butter deals more damage and stuns zombies for 5 seconds, temporarily stopping them.
+*   **Marigold (🌼):** Costs 50 sun. An economic plant that produces coins instead of sun (described in-game as "useless" for gameplay).
+*   **Melon-pult (🍉):** Costs 300 sun. Lobs melons that deal solid damage and splash to nearby zombies on impact.
+*   **Potato Mine (🥔):** Costs 25 sun. A cheap, single-use plant that is initially vulnerable. After a 14-second arming time, it will explode on contact, dealing immense damage (90) to a single zombie.
+*   **Spikerock (📍):** Costs 125 sun. An upgrade for Spikeweed. It deals more damage and can survive multiple hits from crushing zombies like the Zomboni.
+*   **Spikeweed (📌):** Costs 100 sun. A ground-level plant that damages any zombie that walks over it. It cannot be eaten and can be upgraded to Spikerock.
+*   **Tall-nut (🌰):** Costs 125 sun. A heavy-duty defensive plant with significantly more health (48) than a Wall-nut, making it an excellent blocker.
+*   **Torchwood (🪔):** Costs 175 sun. A supportive plant that turns regular peas passing through it into fire peas, doubling their damage. It also extinguishes freezing projectiles, turning them into normal peas.
 *   **Twin Sunflower (🌻🌻):** Costs 150 sun. An upgrade plant that must be planted on an existing Sunflower. It produces 100 sun at a time, doubling the normal rate.
-*   **Winter Melon (🥶):** Costs 200 sun. Upgrade for Melon-pult; adds a slowing effect to its splash damage.
-
+*   **Winter Melon (🥶):** Costs 200 sun. An upgrade for the Melon-pult. Its projectiles deal heavy damage and slow all zombies in the splash zone.
 ---
 
 ### New Zombies Added
