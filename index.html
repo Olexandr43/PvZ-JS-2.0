@@ -47,6 +47,25 @@ Copyright (c) 2025 Olexandr_43
             overflow: hidden;
         }
 
+        /* Night mode styles */
+        #nightOverlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 50, 0.4);
+            pointer-events: none;
+            z-index: 25;
+            display: none;
+            /* Hidden by default */
+        }
+
+        #gameContainer.night-mode #nightOverlay {
+            display: block;
+        }
+
+
         /* Fullscreen mode adjustments */
         body:fullscreen #gameContainer,
         body:-webkit-full-screen #gameContainer,
@@ -187,6 +206,43 @@ Copyright (c) 2025 Olexandr_43
             transform: translate(-50%, -50%);
         }
 
+        .plant.sleeping {
+            opacity: 0.6;
+            filter: grayscale(50%) drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+            transition: opacity 0.3s ease, filter 0.3s ease;
+        }
+
+        .plant.sleeping::after {
+            content: 'Zzz';
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 0.5em;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            animation: sleepAnimation calc(2.5s / var(--game-speed)) infinite ease-in-out;
+        }
+
+        @keyframes sleepAnimation {
+
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: translateY(-5px) scale(1.1);
+                opacity: 0.7;
+            }
+        }
+
+
+        .plant.spike-plant {
+            z-index: 1;
+            transform: translate(-50%, -25%);
+        }
+
         .plant.imitated {
             filter: grayscale(100%) drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
         }
@@ -266,6 +322,7 @@ Copyright (c) 2025 Olexandr_43
             50% {
                 transform: translate(-50%, -50%) scale(1.2);
             }
+
 
             100% {
                 transform: translate(-50%, -50%) scale(1);
@@ -467,7 +524,7 @@ Copyright (c) 2025 Olexandr_43
             gap: 10px;
             align-items: center;
             backdrop-filter: blur(10px);
-            z-index: 10;
+            z-index: 30;
         }
 
         #leftPanel {
@@ -921,7 +978,7 @@ Copyright (c) 2025 Olexandr_43
             padding: 10px 20px;
             border-radius: 20px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            z-index: 9;
+            z-index: 29;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -1266,6 +1323,34 @@ Copyright (c) 2025 Olexandr_43
             color: white;
         }
 
+        #mapChooser {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .mapOption {
+            padding: 4px 7px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .mapOption:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .mapOption.active {
+            background: #FFD700;
+            color: #333;
+            border-color: #FFA500;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+
         #deckContainer {
             width: 100%;
             text-align: center;
@@ -1515,7 +1600,14 @@ Copyright (c) 2025 Olexandr_43
     </div>
 
     <div id="gameContainer">
+        <div id="nightOverlay"></div>
+
         <div id="plantSelectionScreen" style="display: none;">
+            <div id="mapChooser">
+                <div class="mapOption active" data-map="day">☀️ Day</div>
+                <div class="mapOption" data-map="night">🌙 Night</div>
+            </div>
+
             <div id="deckContainer">
                 <h2>Choose Your Plants</h2>
                 <div id="deckBar">
@@ -1700,6 +1792,12 @@ Copyright (c) 2025 Olexandr_43
             <div class="cost">125</div>
             <div class="name">Jalapeno</div>
         </div>
+        <div class="plantCard" data-plant="spikeweed" data-cost="100">
+            <div class="cooldown-overlay"></div>
+            <div class="emoji">📌</div>
+            <div class="cost">100</div>
+            <div class="name">Spikeweed</div>
+        </div>
         <div class="plantCard" data-plant="torchwood" data-cost="175">
             <div class="cooldown-overlay"></div>
             <div class="emoji">🪔</div>
@@ -1735,6 +1833,12 @@ Copyright (c) 2025 Olexandr_43
             <div class="emoji">🌽</div>
             <div class="cost">100</div>
             <div class="name">Kernel-pult</div>
+        </div>
+        <div class="plantCard" data-plant="coffeebean" data-cost="75">
+            <div class="cooldown-overlay"></div>
+            <div class="emoji">☕</div>
+            <div class="cost">75</div>
+            <div class="name">Coffee Bean</div>
         </div>
         <div class="plantCard" data-plant="garlic" data-cost="50">
             <div class="cooldown-overlay"></div>
@@ -1780,6 +1884,13 @@ Copyright (c) 2025 Olexandr_43
             <div class="cost">200</div>
             <div class="name">Winter Melon</div>
         </div>
+        <div class="plantCard" data-plant="spikerock" data-cost="125" data-upgrade="true"
+            data-upgrades-from="spikeweed">
+            <div class="cooldown-overlay"></div>
+            <div class="emoji">📍</div>
+            <div class="cost">125</div>
+            <div class="name">Spikerock</div>
+        </div>
         <div class="plantCard" data-plant="imitater" data-cost="">
             <div class="cooldown-overlay"></div>
             <div class="emoji">🎭</div>
@@ -1808,6 +1919,7 @@ Copyright (c) 2025 Olexandr_43
         let gameState = {
             sun: 200,
             score: 0,
+            map: 'day',
             selectedPlant: null,
             selectedZombie: null, // For debug spawner
             isShovelActive: false,
@@ -1870,7 +1982,7 @@ Copyright (c) 2025 Olexandr_43
                 maxHealth: 3.6,
                 shoots: true,
                 damage: 4, // High direct damage
-                splashDamage: 1.5, // Lower splash damage
+                splashDamage: 1.3, // Lower splash damage
                 splashRadiusY: 1, // 3 rows total (target row +/- 1)
                 shootInterval: 3000,
                 projectile: '🍈',
@@ -1895,7 +2007,7 @@ Copyright (c) 2025 Olexandr_43
                 maxHealth: 4.8,
                 shoots: true,
                 damage: 4,
-                splashDamage: 1.5,
+                splashDamage: 1.3,
                 splashRadiusY: 1,
                 slow: true,
                 shootInterval: 3000,
@@ -2072,6 +2184,31 @@ Copyright (c) 2025 Olexandr_43
                 description: 'Ignites peas',
                 cooldown: 7500 // Fast
             },
+            spikeweed: {
+                emoji: '📌',
+                health: 4.8,
+                maxHealth: 4.8,
+                shoots: false,
+                isSpike: true,
+                damage: 0.5,
+                attackInterval: 1000,
+                description: 'Damages zombies that walk over it.',
+                cooldown: 7500 // Fast
+            },
+            spikerock: {
+                emoji: '📍',
+                health: 9.6 * 3,
+                maxHealth: 9.6 * 3,
+                shoots: false,
+                isSpike: true,
+                isSpikerock: true,
+                damage: 1,
+                attackInterval: 750,
+                description: 'Upgrade: Tougher and deals more damage.',
+                isUpgrade: true,
+                upgradesFrom: 'spikeweed',
+                cooldown: 50000 // Very Slow
+            },
             cherrybomb: {
                 emoji: '💣',
                 health: Infinity,
@@ -2094,25 +2231,35 @@ Copyright (c) 2025 Olexandr_43
             },
             doomshroom: {
                 emoji: '🍄',
-                health: Infinity,
+                health: 3.6,
+                maxHealth: 3.6,
                 shoots: false,
-                instant: true,
+                isMushroom: true,
                 damage: 90,
                 radiusX: 3, // 7 wide
                 radiusY: 2, // 5 high
                 createsCrater: true,
-                description: 'Huge explosion, leaves crater.',
+                description: 'Huge explosion, leaves crater. Sleeps in day.',
                 cooldown: 50000 // Very Slow
             },
             iceshroom: {
                 emoji: '🧊',
+                health: 3.6,
+                maxHealth: 3.6,
+                shoots: false,
+                isMushroom: true,
+                damage: 1,
+                freezes: true,
+                description: 'Freezes all zombies on screen. Sleeps in day.',
+                cooldown: 50000 // Very Slow
+            },
+            coffeebean: {
+                emoji: '☕',
                 health: Infinity,
                 shoots: false,
-                instant: true,
-                damage: 4,
-                freezes: true,
-                description: 'Freezes all zombies on screen.',
-                cooldown: 50000 // Very Slow
+                isWakeUp: true,
+                description: 'Wakes up sleeping mushrooms.',
+                cooldown: 7500 // Fast
             },
             tallnut: {
                 emoji: '🌰',
@@ -2153,17 +2300,17 @@ Copyright (c) 2025 Olexandr_43
         // Zombies
         const zombieTypes = {
             normal: { name: 'Zombie', emoji: '🧟', health: 10, maxHealth: 10, speed: 13, damage: 1, points: 100 },
-            cone: { name: 'Conehead', emoji: '🧟‍♂️', health: 32, maxHealth: 32, speed: 13, damage: 1, points: 200 },
-            bucket: { name: 'Buckethead', emoji: '🧟‍♀️', health: 68, maxHealth: 68, speed: 10, damage: 1, points: 400 },
-            fast: { name: 'Pole Vault', emoji: '💀', health: 25, maxHealth: 25, speed: 25, damage: 1, points: 150 },
-            jackInTheBox: { name: 'Jack-in-the-Box', emoji: '🤡', health: 25, maxHealth: 25, speed: 25, damage: 1, points: 450, isExplosive: true },
-            football: { name: 'Football', emoji: '👹', health: 84, maxHealth: 84, speed: 25, damage: 2, points: 600 },
-            gargantuar: { name: 'Gargantuar', emoji: '🗿', health: 180, maxHealth: 180, speed: 5, damage: 99, points: 2000, uneatable: true, crushes: true },
-            giga: { name: 'Giga-Garg', emoji: '👺', health: 600, maxHealth: 600, speed: 5, damage: 99, points: 6000, uneatable: true, crushes: true },
-            dancing: { name: 'Dancing', emoji: '🕺', health: 25, maxHealth: 25, speed: 13, damage: 1, points: 500, summons: true, summonCooldown: 10000 }, // Changed cooldown
-            backupDancer: { name: 'Backup', emoji: '💃', health: 14, maxHealth: 14, speed: 13, damage: 1, points: 150, isSummoned: true },
-            zomboni: { name: 'Zomboni', emoji: '🚚', health: 58, maxHealth: 58, speed: 10, damage: 99, points: 1000, uneatable: true, crushes: true, leavesIceTrail: true },
-            balloon: { name: 'Balloon', emoji: '🎈', health: 15, maxHealth: 15, speed: 25, damage: 1, points: 250, isFlying: true }
+            cone: { name: 'Conehead', emoji: '🧟‍♂️', health: 28, maxHealth: 28, speed: 13, damage: 1, points: 200 },
+            bucket: { name: 'Buckethead', emoji: '🧟‍♀️', health: 65, maxHealth: 65, speed: 10, damage: 1, points: 400 },
+            fast: { name: 'Pole Vault', emoji: '💀', health: 17, maxHealth: 17, speed: 25, damage: 1, points: 150 },
+            jackInTheBox: { name: 'Jack-in-the-Box', emoji: '🤡', health: 17, maxHealth: 17, speed: 25, damage: 1, points: 450, isExplosive: true },
+            football: { name: 'Football', emoji: '👹', health: 80, maxHealth: 80, speed: 25, damage: 2, points: 600 },
+            gargantuar: { name: 'Gargantuar', emoji: '🗿', health: 150, maxHealth: 150, speed: 5, damage: 99, points: 2000, uneatable: true, crushes: true },
+            giga: { name: 'Giga-Garg', emoji: '👺', health: 300, maxHealth: 300, speed: 5, damage: 99, points: 6000, uneatable: true, crushes: true },
+            dancing: { name: 'Dancing', emoji: '🕺', health: 17, maxHealth: 17, speed: 13, damage: 1, points: 500, summons: true, summonCooldown: 10000 },
+            backupDancer: { name: 'Backup', emoji: '💃', health: 10, maxHealth: 10, speed: 13, damage: 1, points: 150, isSummoned: true },
+            zomboni: { name: 'Zomboni', emoji: '🚚', health: 65, maxHealth: 65, speed: 10, damage: 99, points: 1000, uneatable: true, crushes: true, leavesIceTrail: true },
+            balloon: { name: 'Balloon', emoji: '🎈', health: 11, maxHealth: 11, speed: 25, damage: 1, points: 250, isFlying: true }
         };
 
         // --- NEW TIMER SYSTEM ---
@@ -2226,6 +2373,7 @@ Copyright (c) 2025 Olexandr_43
             gameState = {
                 sun: 200,
                 score: 0,
+                map: gameState.map, // Keep the selected map
                 selectedPlant: null,
                 selectedZombie: null,
                 isShovelActive: false,
@@ -2277,6 +2425,8 @@ Copyright (c) 2025 Olexandr_43
             document.getElementById('zombieSpawner').style.display = 'none';
             document.getElementById('plantSelection').innerHTML = '';
 
+            // Reset map visuals
+            document.getElementById('gameContainer').classList.remove('night-mode');
 
             // Reset zombie card selection
             document.querySelectorAll('.zombieCard').forEach(card => card.classList.remove('selected'));
@@ -2512,6 +2662,15 @@ Copyright (c) 2025 Olexandr_43
             const libraryGrid = document.getElementById('plantLibraryGrid');
             const deckBar = document.getElementById('deckBar');
 
+            // Map chooser logic
+            document.querySelectorAll('.mapOption').forEach(option => {
+                option.addEventListener('click', () => {
+                    document.querySelector('.mapOption.active').classList.remove('active');
+                    option.classList.add('active');
+                    gameState.map = option.dataset.map;
+                });
+            });
+
             // Main click listener for the library (using event delegation)
             libraryGrid.addEventListener('click', (event) => {
                 const clickedCard = event.target.closest('.plantCard');
@@ -2675,6 +2834,14 @@ Copyright (c) 2025 Olexandr_43
                 );
                 return;
             }
+
+            // Set map visuals
+            if (gameState.map === 'night') {
+                document.getElementById('gameContainer').classList.add('night-mode');
+            } else {
+                document.getElementById('gameContainer').classList.remove('night-mode');
+            }
+
 
             document.getElementById('plantSelectionScreen').style.display = 'none';
             document.getElementById('ui').style.visibility = 'visible';
@@ -3086,56 +3253,51 @@ Copyright (c) 2025 Olexandr_43
         /**
          * Checks if a plant can be placed on a specific cell.
          * This is the new central logic hub for planting rules.
-         * @returns {object} { canPlant: boolean, reason: string, action: 'regular' | 'upgrade' | 'gravebust' | 'none' }
+         * @returns {object} { canPlant: boolean, reason: string, action: 'regular' | 'upgrade' | 'gravebust' | 'wakeup' | 'none' }
          */
         function canPlantOnCell(row, col, plantTypeInfo) {
             const cell = document.querySelector(`.cell[data-row='${row}'][data-col='${col}']`);
-
-            // 1. Check for unplantable terrain
-            if (cell.classList.contains('crater')) {
-                return { canPlant: false, reason: 'Cell is a crater', action: 'none' };
-            }
-            // Check for ice trail
-            if (cell.classList.contains('iced')) {
-                return { canPlant: false, reason: 'Cell is frozen', action: 'none' };
-            }
-
-            // 2. Get info about what's on the cell
             const hasGrave = gameState.graves.some(g => g.row === row && g.col === col);
             const existingPlant = gameState.plants.find(p => p.row === row && p.col === col);
 
-            // 3. Handle Grave Buster logic
-            if (plantTypeInfo.isGraveBuster) {
-                if (hasGrave) {
-                    return { canPlant: true, reason: 'Planting Grave Buster', action: 'gravebust' };
+            // 1. Check for unplantable terrain
+            if (cell.classList.contains('crater') || cell.classList.contains('iced')) {
+                return { canPlant: false, reason: 'Cell is blocked', action: 'none' };
+            }
+
+            // 2. Handle Coffee Bean
+            if (plantTypeInfo.isWakeUp) {
+                if (existingPlant && existingPlant.isMushroom && existingPlant.isSleeping) {
+                    return { canPlant: true, reason: 'Waking up mushroom', action: 'wakeup' };
                 } else {
-                    return { canPlant: false, reason: 'Grave Buster must be planted on a grave', action: 'none' };
+                    return { canPlant: false, reason: 'Can only be used on sleeping mushrooms', action: 'none' };
                 }
             }
 
-            // 4. Handle Upgrade logic
+            // 3. Handle Grave Buster
+            if (plantTypeInfo.isGraveBuster) {
+                return hasGrave ? { canPlant: true, reason: 'Planting Grave Buster', action: 'gravebust' } :
+                    { canPlant: false, reason: 'Must be planted on a grave', action: 'none' };
+            }
+
+            // 4. Handle Upgrades
             if (plantTypeInfo.isUpgrade) {
                 if (existingPlant && existingPlant.type === plantTypeInfo.upgradesFrom) {
-                    return { canPlant: true, reason: 'Upgrading existing plant', action: 'upgrade' };
-                } else if (existingPlant) {
-                    return { canPlant: false, reason: 'Cannot upgrade this plant', action: 'none' };
+                    return { canPlant: true, reason: 'Upgrading plant', action: 'upgrade' };
                 } else {
-                    return { canPlant: false, reason: 'Upgrades must be planted on an existing plant', action: 'none' };
+                    return { canPlant: false, reason: 'Can only upgrade specific plants', action: 'none' };
                 }
             }
 
-            // 5. Handle Regular planting logic
-            if (hasGrave) {
-                return { canPlant: false, reason: 'Cell has a grave', action: 'none' };
+            // 5. Handle Regular planting
+            if (hasGrave || existingPlant) {
+                return { canPlant: false, reason: 'Cell is occupied', action: 'none' };
             }
 
-            if (existingPlant) {
-                return { canPlant: false, reason: 'Cell already has a plant', action: 'none' };
-            }
-
-            // 6. If all checks pass, it's a valid regular planting
-            return { canPlant: true, reason: 'Cell is clear for planting', action: 'regular' };
+            // 6. If all checks pass
+            return { canPlant: true, reason: 'Cell is clear', action: 'regular' };
         }
+
 
         /**
          * Handles the logic for planting a Grave Buster.
@@ -3258,6 +3420,27 @@ Copyright (c) 2025 Olexandr_43
         }
 
         /**
+         * Handles the logic for waking up a mushroom with a Coffee Bean.
+         */
+        function wakeUpMushroom(row, col) {
+            const mushroom = gameState.plants.find(p => p.row === row && p.col === col);
+            if (!mushroom || !mushroom.isSleeping) return;
+
+            mushroom.isSleeping = false;
+            if (mushroom.element) {
+                mushroom.element.classList.remove('sleeping');
+                // Coffee bean particle effect
+                createParticleEffect(mushroom.element, '☕');
+            }
+
+            // The coffee bean effect is instant, so trigger the mushroom's power immediately
+            createTimer(500, () => {
+                triggerMushroomEffect(mushroom);
+            });
+        }
+
+
+        /**
          * Handles the logic for planting a Regular or Instant plant.
          */
         function plantRegular(row, col, plantToPlaceType, selectedPlantTypeInfo) {
@@ -3277,7 +3460,9 @@ Copyright (c) 2025 Olexandr_43
                     healthFill: null,
                     shootCooldown: 0,
                     sunCooldown: 0,
-                    isImitated: gameState.selectedPlant.isImitated || false
+                    isImitated: gameState.selectedPlant.isImitated || false,
+                    isMushroom: selectedPlantTypeInfo.isMushroom || false,
+                    isSleeping: false
                 };
 
                 if (plant.type === 'chomper') {
@@ -3295,6 +3480,9 @@ Copyright (c) 2025 Olexandr_43
                 if (plant.isImitated) {
                     plantElement.classList.add('imitated');
                 }
+                if (selectedPlantTypeInfo.isSpike) {
+                    plantElement.classList.add('spike-plant');
+                }
                 plantElement.textContent = selectedPlantTypeInfo.emoji;
 
                 const healthBar = document.createElement('div');
@@ -3309,6 +3497,17 @@ Copyright (c) 2025 Olexandr_43
                 plant.element = plantElement;
                 plant.healthBar = healthBar;
                 plant.healthFill = healthFill;
+
+                // Mushroom sleeping logic
+                if (selectedPlantTypeInfo.isMushroom) {
+                    if (gameState.map === 'day') {
+                        plant.isSleeping = true;
+                        plantElement.classList.add('sleeping');
+                    } else {
+                        // At night, they activate immediately
+                        createTimer(1200, () => triggerMushroomEffect(plant));
+                    }
+                }
 
                 if (plant.type === 'potatomine') {
                     plant.isArmed = false;
@@ -3344,41 +3543,29 @@ Copyright (c) 2025 Olexandr_43
 
         // Place Plant
         function placePlant(cell) {
-            // Handle Zombie Spawner first
             if (gameState.selectedZombie) {
                 spawnZombieOnTile(cell);
                 return;
             }
-
-            // 1. Handle Shovel
             if (gameState.isShovelActive) {
                 removePlant(cell);
                 return;
             }
-
-            // 2. Check for game state conditions
             if (!gameState.selectedPlant || gameState.isPaused) return;
 
-            // 3. Get cell info
             const row = parseInt(cell.dataset.row);
             const col = parseInt(cell.dataset.col);
             const plantToPlaceType = gameState.selectedPlant.type;
             const selectedPlantTypeInfo = plantTypes[plantToPlaceType];
 
-            // --- Centralized Planting Logic ---
             const plantingCheck = canPlantOnCell(row, col, selectedPlantTypeInfo);
+            if (!plantingCheck.canPlant) return;
 
-            if (!plantingCheck.canPlant) {
-                return;
-            }
-
-            // 5. Check affordability
             if (gameState.sun < gameState.selectedPlant.cost) {
                 flashSunCounter();
                 return;
             }
 
-            // 6. Perform the planting action
             gameState.sun -= gameState.selectedPlant.cost;
 
             switch (plantingCheck.action) {
@@ -3388,31 +3575,97 @@ Copyright (c) 2025 Olexandr_43
                 case 'upgrade':
                     plantUpgrade(row, col, plantToPlaceType, selectedPlantTypeInfo);
                     break;
+                case 'wakeup':
+                    wakeUpMushroom(row, col);
+                    break;
                 case 'regular':
                     plantRegular(row, col, plantToPlaceType, selectedPlantTypeInfo);
                     break;
                 default:
-                    // Refund sun if something went wrong
-                    gameState.sun += gameState.selectedPlant.cost;
+                    gameState.sun += gameState.selectedPlant.cost; // Refund
                     return;
             }
 
-            // 7. Common post-planting logic
             const plantCard = gameState.selectedPlant.cardElement;
             if (plantCard && selectedPlantTypeInfo.cooldown) {
                 startCooldown(plantCard, selectedPlantTypeInfo.cooldown);
             }
 
-            if (plantingCheck.action !== 'regular') {
-                addScore(50); // Bonus for upgrade/gravebusting
-            } else if (!selectedPlantTypeInfo.instant) { // Instants score on explosion
-                addScore(25);
-            }
-
+            addScore(25);
             gameState.selectedPlant = null;
             document.querySelectorAll('.plantCard').forEach(c => c.classList.remove('selected'));
             updateSunDisplay();
         }
+
+        // --- NEW: Central function for mushroom effects ---
+        function triggerMushroomEffect(plant) {
+            if (!plant) return;
+
+            const plantType = plantTypes[plant.type];
+            const cell = document.querySelector(`.cell[data-row='${plant.row}'][data-col='${plant.col}']`);
+            if (!cell) return;
+
+            if (plantType.type === 'doomshroom' || plantType.radiusX) {
+                const explosionElement = document.createElement('div');
+                explosionElement.className = 'instant-effect';
+                explosionElement.textContent = '💥';
+                explosionElement.style.cssText = `position: absolute; font-size: 22em; z-index: 10; filter: drop-shadow(0 0 25px purple); transform: translate(-50%, -50%); top: 50%; left: 50%;`;
+                cell.appendChild(explosionElement);
+                createTimer(800, () => explosionElement.remove());
+
+                if (plantType.createsCrater) {
+                    cell.classList.add('crater');
+                    createTimer(180000, () => cell.classList.remove('crater'));
+                }
+
+                for (let r = plant.row - plantType.radiusY; r <= plant.row + plantType.radiusY; r++) {
+                    for (let c = plant.col - plantType.radiusX; c <= plant.col + plantType.radiusX; c++) {
+                        if (r >= 0 && r < 5 && c >= 0 && c < 9) {
+                            gameState.zombies.forEach(zombie => {
+                                const zombieCol = Math.floor(zombie.x / gameState.cellSize.width);
+                                if (zombie.row === r && zombieCol === c) {
+                                    zombie.health -= plantType.damage;
+                                    updateZombieHealth(zombie);
+                                    if (zombie.health <= 0) handleZombieDefeat(zombie);
+                                }
+                            });
+                        }
+                    }
+                }
+            } else if (plantType.type === 'iceshroom' || plantType.freezes) {
+                const explosionElement = document.createElement('div');
+                explosionElement.className = 'instant-effect';
+                explosionElement.textContent = '❄️';
+                explosionElement.style.cssText = `position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); font-size: 20em; z-index: 50; color: lightblue; opacity: 0.8; animation: freezeFlash calc(0.75s / var(--game-speed)) ease-out;`;
+                document.getElementById('gameContainer').appendChild(explosionElement);
+                createTimer(1000, () => explosionElement.remove());
+
+                gameState.zombies.forEach(zombie => {
+                    if (zombie.element) {
+                        zombie.health -= plantType.damage;
+                        zombie.isFrozen = true;
+                        zombie.freezeTimer = 4000;
+                        zombie.element.classList.add('frozen');
+                        zombie.element.classList.remove('eating');
+                        updateZombieHealth(zombie);
+                        if (zombie.health <= 0) handleZombieDefeat(zombie);
+                    }
+                });
+            }
+
+            // Clean up the plant from the board and game state
+            if (plant.element) {
+                plant.element.remove();
+            }
+            const plantIndex = gameState.plants.indexOf(plant);
+            if (plantIndex > -1) {
+                gameState.plants.splice(plantIndex, 1);
+            }
+
+            // Filter zombies array
+            gameState.zombies = gameState.zombies.filter(z => z.health > 0);
+        }
+
 
         // Function to handle instant-kill plants like Cherry Bomb and Jalapeno
         function activateInstantPlant(row, col, plantType) {
@@ -3462,33 +3715,6 @@ Copyright (c) 2025 Olexandr_43
                             if (!zombiesToDamage.includes(zombie)) zombiesToDamage.push(zombie);
                         }
                     });
-                } else if (plantType.radiusX && plantType.radiusY) { // Doom-shroom Logic
-                    const explosionElement = document.createElement('div');
-                    explosionElement.className = 'instant-effect';
-                    explosionElement.textContent = '💥';
-                    explosionElement.style.cssText = `position: absolute; font-size: 22em; z-index: 10; filter: drop-shadow(0 0 25px purple); transform: translate(-50%, -50%); top: 50%; left: 50%;`;
-                    cell.appendChild(explosionElement);
-                    createTimer(800, () => explosionElement.remove());
-
-                    if (plantType.createsCrater) {
-                        cell.classList.add('crater');
-                        createTimer(180000, () => { // 3 minutes
-                            cell.classList.remove('crater');
-                        });
-                    }
-
-                    for (let r = row - plantType.radiusY; r <= row + plantType.radiusY; r++) {
-                        for (let c = col - plantType.radiusX; c <= col + plantType.radiusX; c++) {
-                            if (r >= 0 && r < 5 && c >= 0 && c < 9) {
-                                gameState.zombies.forEach(zombie => {
-                                    const zombieCol = Math.floor(zombie.x / gameState.cellSize.width);
-                                    if (zombie.row === r && zombieCol === c) {
-                                        if (!zombiesToDamage.includes(zombie)) zombiesToDamage.push(zombie);
-                                    }
-                                });
-                            }
-                        }
-                    }
                 } else if (plantType.laneWide) { // Jalapeno Logic
                     for (let c = 0; c < 9; c++) {
                         const affectedCell = document.querySelector(`.cell[data-row='${row}'][data-col='${c}']`);
@@ -3515,31 +3741,6 @@ Copyright (c) 2025 Olexandr_43
                             if (!zombiesToDamage.includes(zombie)) zombiesToDamage.push(zombie);
                         }
                     });
-                } else if (plantType.freezes) { // Ice-shroom Logic
-                    const explosionElement = document.createElement('div');
-                    explosionElement.className = 'instant-effect';
-                    explosionElement.textContent = '❄️';
-                    explosionElement.style.cssText = `position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); font-size: 20em; z-index: 50; color: lightblue; opacity: 0.8; animation: freezeFlash calc(0.75s / var(--game-speed)) ease-out;`;
-                    document.getElementById('gameContainer').appendChild(explosionElement);
-                    createTimer(1000, () => explosionElement.remove());
-
-                    gameState.zombies.forEach(zombie => {
-                        if (zombie.element) {
-                            zombie.health -= plantType.damage;
-                            zombie.isFrozen = true;
-                            zombie.freezeTimer = 4000;
-                            zombie.element.classList.add('frozen');
-                            zombie.element.classList.remove('eating');
-                            updateZombieHealth(zombie);
-
-                            if (zombie.health <= 0) {
-                                handleZombieDefeat(zombie);
-                            }
-                        }
-                    });
-
-                    gameState.zombies = gameState.zombies.filter(z => z.element !== null);
-                    return;
                 } else if (plantType.isBlower) { // Blover Logic
                     for (let i = 0; i < 5; i++) {
                         const windElement = document.createElement('div');
@@ -3904,6 +4105,20 @@ Copyright (c) 2025 Olexandr_43
                                 zombie.slowTimer = 3000;
                                 if (zombie.element) zombie.element.classList.add('slowed');
                             }
+                            
+                            if (proj.fire && zombie.element) {
+                                if (zombie.isFrozen) {
+                                    zombie.isFrozen = false;
+                                    zombie.freezeTimer = 0;
+                                    zombie.element.classList.remove('frozen');
+                                    createParticleEffect(zombie.element, '💨'); // Melt effect
+                                } else if (zombie.slowed) {
+                                    zombie.slowed = false;
+                                    zombie.slowTimer = 0;
+                                    zombie.element.classList.remove('slowed');
+                                    createParticleEffect(zombie.element, '💨');
+                                }
+                            }
 
                             if (zombie.health <= 0) handleZombieDefeat(zombie);
 
@@ -3930,6 +4145,20 @@ Copyright (c) 2025 Olexandr_43
                                         splashTarget.slowed = true;
                                         splashTarget.slowTimer = 3000; // Standard slow duration
                                         if (splashTarget.element) splashTarget.element.classList.add('slowed');
+                                    }
+                                    
+                                    if (proj.fire && splashTarget.element) {
+                                        if (splashTarget.isFrozen) {
+                                            splashTarget.isFrozen = false;
+                                            splashTarget.freezeTimer = 0;
+                                            splashTarget.element.classList.remove('frozen');
+                                            createParticleEffect(splashTarget.element, '💨');
+                                        } else if (splashTarget.slowed) {
+                                            splashTarget.slowed = false;
+                                            splashTarget.slowTimer = 0;
+                                            splashTarget.element.classList.remove('slowed');
+                                            createParticleEffect(splashTarget.element, '💨');
+                                        }
                                     }
 
                                     if (splashTarget.health <= 0) handleZombieDefeat(splashTarget);
@@ -4132,6 +4361,11 @@ Copyright (c) 2025 Olexandr_43
             gameState.zombies = gameState.zombies.filter(zombie => {
                 if (!zombie.element) return false;
 
+                // Decrement all active cooldowns first
+                if (zombie.attackCooldown > 0) {
+                    zombie.attackCooldown -= adjustedDelta;
+                }
+
                 // Handle stun timers
                 if (zombie.isStunned) {
                     zombie.stunTimer -= adjustedDelta;
@@ -4186,10 +4420,15 @@ Copyright (c) 2025 Olexandr_43
                     }
                 }
 
-                // Determine speed and attacking state (handles group logic)
+                // Determine speed and attacking state (handles group logic and Gargantuar cooldown)
                 const isSlowed = zombie.isGroupSlowed || zombie.slowed;
                 let isAttacking = zombie.isGroupAttacking || zombie.attacking;
                 const isFlyingAndNotAttacking = zombie.isFlying && !isAttacking;
+
+                // Gargantuars on cooldown are considered 'attacking' to halt their movement.
+                if (zombie.attackCooldown > 0 && (zombie.type === 'gargantuar' || zombie.type === 'giga')) {
+                    isAttacking = true;
+                }
 
                 // Check for armed potato mines before moving
                 const zombieColBeforeMove = Math.floor(zombie.x / gameState.cellSize.width);
@@ -4199,39 +4438,32 @@ Copyright (c) 2025 Olexandr_43
                     isAttacking = true;
                 }
 
-
-                // Only perform regular movement logic if not in the middle of a lane change
-                if (!zombie.isChangingLane) {
+                // Only perform regular movement logic if not in the middle of a lane change or attacking
+                if (!zombie.isChangingLane && !isAttacking) {
                     let baseSpeed = zombieTypes[zombie.type].speed;
-                    // If balloon popped, use normal zombie speed
                     if (zombie.type === 'balloon' && !zombie.isFlying) {
                         baseSpeed = zombieTypes['normal'].speed;
                     }
                     const currentSpeed = isSlowed ? baseSpeed * 0.5 : baseSpeed;
 
-                    if (!isAttacking || isFlyingAndNotAttacking) {
-                        zombie.x -= currentSpeed * adjustedDelta / 1000;
-                        zombie.element.style.left = (gameState.boardRect.left + zombie.x) + 'px';
+                    zombie.x -= currentSpeed * adjustedDelta / 1000;
+                    zombie.element.style.left = (gameState.boardRect.left + zombie.x) + 'px';
 
-                        // Set Y position based on flying status
-                        const yPosition = gameState.boardRect.top + zombie.row * gameState.cellSize.height + (zombie.isFlying ? -10 : gameState.cellSize.height / 2 - 20);
-                        if (zombie.element.style.top !== yPosition + 'px' && !zombie.element.style.transition.includes('top')) {
-                            zombie.element.style.top = yPosition + 'px';
-                        }
+                    const yPosition = gameState.boardRect.top + zombie.row * gameState.cellSize.height + (zombie.isFlying ? -10 : gameState.cellSize.height / 2 - 20);
+                    if (zombie.element.style.top !== yPosition + 'px' && !zombie.element.style.transition.includes('top')) {
+                        zombie.element.style.top = yPosition + 'px';
+                    }
 
-
-                        // Zomboni Ice Trail Logic
-                        if (zombieTypes[zombie.type].leavesIceTrail) {
-                            const zomboniCenter = zombie.x + (gameState.cellSize.width / 2);
-                            const zomboniCol = Math.floor(zomboniCenter / gameState.cellSize.width);
-                            if (zomboniCol >= 0 && zomboniCol < 9) {
-                                createIceTrail(zombie.row, zomboniCol);
-                            }
+                    if (zombieTypes[zombie.type].leavesIceTrail) {
+                        const zomboniCenter = zombie.x + (gameState.cellSize.width / 2);
+                        const zomboniCol = Math.floor(zomboniCenter / gameState.cellSize.width);
+                        if (zomboniCol >= 0 && zomboniCol < 9) {
+                            createIceTrail(zombie.row, zomboniCol);
                         }
                     }
                 }
 
-                zombie.attacking = false;
+                zombie.attacking = false; // Reset attack flag, will be re-evaluated based on plant proximity
                 const zombieCol = Math.floor(zombie.x / gameState.cellSize.width);
                 const zombieTypeInfo = zombieTypes[zombie.type];
 
@@ -4242,110 +4474,105 @@ Copyright (c) 2025 Olexandr_43
 
                         if (plant.type === 'potatomine' && plant.isArmed) return;
 
-                        // Crusher Logic (Zomboni, Gargantuar)
+
+
+                        const plantTypeInfo = plantTypes[plant.type];
+                        const isSpikePlant = plantTypeInfo.isSpike;
                         const isCrusher = zombieTypeInfo.crushes || zombieTypeInfo.uneatable;
 
-                        if (zombie.element && isCrusher) {
-                            zombie.attacking = false; // Crushers don't stop
-                            zombie.element.classList.remove('eating');
-                            plant.health = 0; // Insta-kill
-                            updatePlantHealth(plant);
-                            plant.element.classList.add('plant-damage-effect');
-                            createTimer(300, () => {
-                                if (plant.element) plant.element.classList.remove('plant-damage-effect');
-                            });
+                        // --- ZOMBONI vs SPIKE INTERACTION ---
+                        if (zombie.type === 'zomboni' && isSpikePlant) {
+                            zombie.health = 0; // Zomboni is destroyed
+                            if (plant.type === 'spikerock') {
+                                plant.health -= plant.maxHealth / 3;
+                                updatePlantHealth(plant);
+                            } else {
+                                plant.health = 0; // Spikeweed is destroyed
+                            }
+                            createParticleEffect(plant.element, '💥');
+                        }
+                        // --- GARGANTUAR/GIGA CRUSHING INTERACTION ---
+                        else if (zombie.type === 'gargantuar' || zombie.type === 'giga') {
+                            zombie.attacking = true; // Stop movement
 
-                        } else { // Not a crusher, normal attack
+                            if (zombie.attackCooldown <= 0) { // Can it attack now?
+                                zombie.attackCooldown = 2000; // Set 2-second cooldown
+
+                                if (plant.type === 'spikerock') {
+                                    plant.health -= plant.maxHealth / 3;
+                                    updatePlantHealth(plant);
+                                } else {
+                                    plant.health = 0; // Insta-kill other plants
+                                }
+                                plant.element.classList.add('plant-damage-effect');
+                                createTimer(300, () => { if (plant.element) plant.element.classList.remove('plant-damage-effect'); });
+                            }
+                        }
+                        // --- OTHER CRUSHERS (Zomboni on non-spikes) ---
+                        else if (isCrusher) {
+                            zombie.attacking = false; // Zomboni doesn't stop for non-spikes
+                            plant.health = 0; // Insta-kill
+                            plant.element.classList.add('plant-damage-effect');
+                            createTimer(300, () => { if (plant.element) plant.element.classList.remove('plant-damage-effect'); });
+                        }
+                        // --- NORMAL ZOMBIE on SPIKE ---
+                        else if (isSpikePlant) {
+                            return; // Ignores for eating purposes
+                        }
+                        // --- NORMAL ZOMBIE EATING ---
+                        else {
                             zombie.attacking = true;
                             zombie.element.classList.add('eating');
 
-                            zombie.attackCooldown -= adjustedDelta;
                             if (zombie.attackCooldown <= 0) {
                                 zombie.attackCooldown = 1000;
                                 const damage = getZombieDamage(zombieTypeInfo.damage);
                                 plant.health -= damage;
                                 updatePlantHealth(plant);
                                 plant.element.classList.add('plant-damage-effect');
+                                createTimer(300, () => { if (plant.element) plant.element.classList.remove('plant-damage-effect'); });
 
-                                createTimer(300, () => {
-                                    if (plant.element) {
-                                        plant.element.classList.remove('plant-damage-effect');
-                                    }
-                                });
-
-                                // Garlic Logic (only for non-crushers)
                                 if (plantTypes[plant.type].diverts && !zombie.isChangingLane) {
-                                    zombie.isChangingLane = true; // Prevent movement and re-diversion
-
+                                    zombie.isChangingLane = true;
                                     createTimer(200, () => {
-                                        if (!zombie.element) {
-                                            zombie.isChangingLane = false;
-                                            return;
-                                        }
-
+                                        if (!zombie.element) { zombie.isChangingLane = false; return; }
                                         let possibleRows = [];
                                         if (zombie.row === 0) possibleRows.push(1);
                                         else if (zombie.row === 4) possibleRows.push(3);
                                         else possibleRows.push(zombie.row - 1, zombie.row + 1);
-
-                                        const newRow = possibleRows[Math.floor(Math.random() * possibleRows.length)];
-
-                                        zombie.row = newRow;
+                                        zombie.row = possibleRows[Math.floor(Math.random() * possibleRows.length)];
                                         zombie.attacking = false;
-
                                         zombie.x -= gameState.cellSize.width * 0.375;
-
                                         const yPosition = gameState.boardRect.top + zombie.row * gameState.cellSize.height + (zombie.isFlying ? -10 : gameState.cellSize.height / 2 - 20);
                                         zombie.element.style.transition = `top calc(0.3s / var(--game-speed)) ease, left calc(0.3s / var(--game-speed)) ease`;
                                         zombie.element.style.top = yPosition + 'px';
                                         zombie.element.style.left = (gameState.boardRect.left + zombie.x) + 'px';
-
-                                        // After animation, reset state
                                         createTimer(300, () => {
-                                            if (zombie.element) {
-                                                zombie.element.style.transition = '';
-                                            }
+                                            if (zombie.element) zombie.element.style.transition = '';
                                             zombie.isChangingLane = false;
                                         });
-
                                     });
                                 }
                             }
                         }
 
-                        // Plant death logic (common for both crushers and eaters)
                         if (plant.health <= 0) {
-                            if (plant.armingTimerId) {
-                                clearTimer(plant.armingTimerId);
-                            }
-                            if (plant.graveBusterTimerId) {
-                                clearTimer(plant.graveBusterTimerId);
-                            }
+                            if (plant.armingTimerId) clearTimer(plant.armingTimerId);
+                            if (plant.graveBusterTimerId) clearTimer(plant.graveBusterTimerId);
                             createParticleEffect(plant.element, '💥');
                             plant.element.remove();
                             plant.element = null;
                         }
-
                     }
                 });
 
-                if (zombie.element && !zombie.attacking) {
-                    zombie.element.classList.remove('eating');
-                }
-
-                // Lawnmower activation
+                if (zombie.health <= 0) handleZombieDefeat(zombie);
+                if (zombie.element && !zombie.attacking && zombie.attackCooldown <= 0) zombie.element.classList.remove('eating');
                 if (zombie.x <= 0) {
                     const mower = gameState.lawnmowers.find(m => m.row === zombie.row);
-                    if (mower && !mower.moving && mower.element) {
-                        mower.moving = true;
-                    }
+                    if (mower && !mower.moving && mower.element) mower.moving = true;
                 }
-
-                // Game Over trigger
-                if (zombie.x <= -gameState.cellSize.width) {
-                    gameOver();
-                }
-
+                if (zombie.x <= -gameState.cellSize.width) gameOver();
                 return zombie.element !== null;
             });
         }
@@ -4671,10 +4898,18 @@ Copyright (c) 2025 Olexandr_43
 
             gameState.isSpawningComplete = false;
 
-            // Spawn graves (e.g., 1-3 new graves from wave 8 onwards, 33% chance)
-            if (gameState.wave > 7 && Math.random() < 0.33) { // 33% chance
-                const newGraveCount = Math.floor(Math.random() * 3) + 1; // 1, 2, or 3
-                spawnGraves(newGraveCount);
+            // Grave spawning logic based on map
+            if (gameState.map === 'night') {
+                // Higher chance, starts from wave 1
+                if (Math.random() < 0.55) { // 55% chance
+                    const newGraveCount = Math.floor(Math.random() * 3) + 1;
+                    spawnGraves(newGraveCount);
+                }
+            } else { // Day map
+                if (gameState.wave > 7 && Math.random() < 0.33) { // 33% chance
+                    const newGraveCount = Math.floor(Math.random() * 3) + 1;
+                    spawnGraves(newGraveCount);
+                }
             }
 
             // Spawn zombies from existing graves
@@ -4741,11 +4976,14 @@ Copyright (c) 2025 Olexandr_43
         function spawnSunPeriodically() {
             clearTimer(gameState.sunIntervalId);
 
-            gameState.sunIntervalId = createTimer(8000, () => {
-                if (!gameState.isGameOver) {
-                    spawnFallingSun();
-                }
-            }, true);
+            // Only spawn falling sun during the day
+            if (gameState.map === 'day') {
+                gameState.sunIntervalId = createTimer(8000, () => {
+                    if (!gameState.isGameOver) {
+                        spawnFallingSun();
+                    }
+                }, true);
+            }
         }
 
         // Spawn Falling Sun
@@ -4846,35 +5084,32 @@ Copyright (c) 2025 Olexandr_43
             const repeaterOnBoard = gameState.plants.some(p => p.type === 'repeater');
             const sunflowerOnBoard = gameState.plants.some(p => p.type === 'sunflower');
             const melonpultOnBoard = gameState.plants.some(p => p.type === 'melonpult');
+            const spikeweedOnBoard = gameState.plants.some(p => p.type === 'spikeweed');
             const gravesOnBoard = gameState.graves.length > 0;
+            const sleepingMushroomOnBoard = gameState.plants.some(p => p.isMushroom && p.isSleeping);
 
             document.querySelectorAll('#plantSelection .plantCard').forEach(card => {
                 if (!card.dataset.plant) return; // Skip shovel
 
                 const cost = parseInt(card.dataset.cost);
-                const isUpgrade = card.dataset.upgrade === 'true';
-                const upgradesFrom = card.dataset.upgradesFrom;
-                const plantType = card.dataset.plant;
+                const plantTypeInfo = plantTypes[card.dataset.plant];
 
                 let canAfford = gameState.sun >= cost;
-                let hasBasePlant = true;
                 let meetsSpecialReq = true;
 
-                if (isUpgrade) {
-                    if (upgradesFrom === 'repeater') {
-                        hasBasePlant = repeaterOnBoard;
-                    } else if (upgradesFrom === 'sunflower') {
-                        hasBasePlant = sunflowerOnBoard;
-                    } else if (upgradesFrom === 'melonpult') {
-                        hasBasePlant = melonpultOnBoard;
-                    }
-                }
-
-                if (plantType === 'gravebuster') {
+                if (plantTypeInfo.isUpgrade) {
+                    const upgradesFrom = plantTypeInfo.upgradesFrom;
+                    if (upgradesFrom === 'repeater') meetsSpecialReq = repeaterOnBoard;
+                    else if (upgradesFrom === 'sunflower') meetsSpecialReq = sunflowerOnBoard;
+                    else if (upgradesFrom === 'melonpult') meetsSpecialReq = melonpultOnBoard;
+                    else if (upgradesFrom === 'spikeweed') meetsSpecialReq = spikeweedOnBoard;
+                } else if (plantTypeInfo.isGraveBuster) {
                     meetsSpecialReq = gravesOnBoard;
+                } else if (plantTypeInfo.isWakeUp) {
+                    meetsSpecialReq = sleepingMushroomOnBoard; // Coffee bean requires a sleeping mushroom
                 }
 
-                if (canAfford && hasBasePlant && meetsSpecialReq) {
+                if (canAfford && meetsSpecialReq) {
                     card.classList.remove('disabled');
                 } else {
                     card.classList.add('disabled');
@@ -5125,7 +5360,7 @@ Copyright (c) 2025 Olexandr_43
                     }
 
                     gameState.plants.forEach(plant => {
-                        if (!plant.element) return;
+                        if (!plant.element || plant.isSleeping) return;
                         const plantType = plantTypes[plant.type];
 
                         // Sun Production
@@ -5208,6 +5443,39 @@ Copyright (c) 2025 Olexandr_43
                                 }
                             }
                         }
+
+                        // Spikeweed/Spikerock Damage Logic
+                        if (plantType.isSpike) {
+                            if (!plant.lastAttack) plant.lastAttack = 0;
+                            if (now - plant.lastAttack > plantType.attackInterval / gameState.gameSpeed) {
+                                const zombiesOnTile = gameState.zombies.filter(z =>
+                                    !z.isFlying &&
+                                    z.row === plant.row &&
+                                    Math.abs(z.x / gameState.cellSize.width - (plant.col + 0.5)) <= 0.525
+                                );
+
+                                if (zombiesOnTile.length > 0) {
+                                    plant.lastAttack = now;
+                                    if (plant.element) {
+                                        plant.element.classList.add('shooting');
+                                        createTimer(300, () => { if (plant.element) plant.element.classList.remove('shooting'); });
+                                    }
+
+                                    zombiesOnTile.forEach(zombie => {
+                                        zombie.health -= plantType.damage;
+                                        updateZombieHealth(zombie);
+                                        if (zombie.element) {
+                                            zombie.element.classList.add('damage-effect');
+                                            createTimer(300, () => { if (zombie.element) zombie.element.classList.remove('damage-effect'); });
+                                        }
+                                        if (zombie.health <= 0) {
+                                            handleZombieDefeat(zombie);
+                                        }
+                                    });
+                                    gameState.zombies = gameState.zombies.filter(z => z.element);
+                                }
+                            }
+                        }
                     });
 
                     gameState.plants = gameState.plants.filter(p => p.element);
@@ -5225,6 +5493,7 @@ Copyright (c) 2025 Olexandr_43
                             Wave: ${gameState.wave}/${gameState.maxWaves}<br>
                             Speed: x${gameState.gameSpeed}<br>
 							Damage Mult: ${gameState.zombieDamageMultiplier.toFixed(2)}x<br>
+							Map: ${gameState.map}<br>
                             FPS: ${Math.round(1000 / deltaTime)}
                         `;
                     }
@@ -5402,6 +5671,8 @@ Copyright (c) 2025 Olexandr_43
             }
         });
     </script>
+	
+	<script src="cheats.js"></script>
 </body>
 
 </html>
