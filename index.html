@@ -4567,7 +4567,7 @@ Copyright (c) 2025 Olexandr_43
                 });
 
                 if (zombie.health <= 0) handleZombieDefeat(zombie);
-                if (zombie.element && !zombie.attacking && zombie.attackCooldown <= 0) zombie.element.classList.remove('eating');
+                if (zombie.element && !zombie.attacking) zombie.element.classList.remove('eating');
                 if (zombie.x <= 0) {
                     const mower = gameState.lawnmowers.find(m => m.row === zombie.row);
                     if (mower && !mower.moving && mower.element) mower.moving = true;
@@ -5672,7 +5672,7 @@ Copyright (c) 2025 Olexandr_43
         });
     </script>
 	
-	<script src="cheats.js"></script>
+    <script src="cheats.js"></script>
 </body>
 
 </html>
