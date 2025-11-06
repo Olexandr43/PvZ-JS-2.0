@@ -11,6 +11,7 @@ Copyright (c) 2025 Olexandr_43
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
     <title>Plants vs Zombies</title>
     <style>
+        /* --- ROOT & BODY --- */
         * {
             margin: 0;
             padding: 0;
@@ -35,6 +36,17 @@ Copyright (c) 2025 Olexandr_43
             align-items: center;
         }
 
+        /* Fullscreen mode adjustments */
+        body:fullscreen #gameContainer,
+        body:-webkit-full-screen #gameContainer,
+        body:-moz-full-screen #gameContainer,
+        body:-ms-fullscreen #gameContainer {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 0;
+        }
+
+        /* --- MAIN LAYOUT & CONTAINERS --- */
         #gameContainer {
             width: 100%;
             max-width: 1200px;
@@ -45,35 +57,6 @@ Copyright (c) 2025 Olexandr_43
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             border-radius: 15px;
             overflow: hidden;
-        }
-
-        /* Night mode styles */
-        #nightOverlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 50, 0.4);
-            pointer-events: none;
-            z-index: 25;
-            display: none;
-            /* Hidden by default */
-        }
-
-        #gameContainer.night-mode #nightOverlay {
-            display: block;
-        }
-
-
-        /* Fullscreen mode adjustments */
-        body:fullscreen #gameContainer,
-        body:-webkit-full-screen #gameContainer,
-        body:-moz-full-screen #gameContainer,
-        body:-ms-fullscreen #gameContainer {
-            max-width: 100%;
-            max-height: 100%;
-            border-radius: 0;
         }
 
         #gameBoard {
@@ -89,425 +72,6 @@ Copyright (c) 2025 Olexandr_43
             background: rgba(0, 0, 0, 0.1);
             padding: 10px;
             border-radius: 10px;
-        }
-
-        .cell {
-            background: linear-gradient(135deg, rgba(144, 238, 144, 0.3), rgba(34, 139, 34, 0.3));
-            border: 2px solid rgba(34, 139, 34, 0.5);
-            border-radius: 8px;
-            position: relative;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: visible;
-        }
-
-        .cell.crater {
-            background: radial-gradient(circle, #3b2a1a 0%, #5c422a 50%, #2e1e10 100%);
-            border: 2px solid #1a1a1a;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-
-        .cell.iced {
-            background: linear-gradient(135deg, rgba(173, 216, 230, 0.8), rgba(100, 149, 237, 0.8));
-            border: 2px solid rgba(173, 216, 230, 1);
-            cursor: not-allowed;
-            pointer-events: none;
-            animation: iceGlimmer calc(2s / var(--game-speed)) infinite alternate;
-        }
-
-        @keyframes iceGlimmer {
-            from {
-                box-shadow: 0 0 2px rgba(255, 255, 255, 0);
-            }
-
-            to {
-                box-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
-            }
-        }
-
-
-        .cell.crater::after {
-            content: '🔥';
-            position: absolute;
-            font-size: 1.5em;
-            opacity: 0.3;
-            animation: smoke calc(3s / var(--game-speed)) infinite alternate;
-        }
-
-        .cell.grave {
-            cursor: not-allowed;
-            position: relative;
-        }
-
-        .cell.grave::before {
-            content: '⚰️';
-            font-size: 2.5em;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1;
-        }
-
-        .cell.grave.grave-spawn::before {
-            animation: graveRise calc(0.5s / var(--game-speed)) ease-out;
-        }
-
-        @keyframes graveRise {
-            0% {
-                transform: translate(-50%, -30%) scale(0.8);
-                opacity: 0;
-            }
-
-            100% {
-                transform: translate(-50%, -50%) scale(1);
-                opacity: 0.8;
-            }
-        }
-
-        #gameBoard:not(.shovel-mode) .cell.grave {
-            cursor: pointer;
-        }
-
-        #gameBoard:not(.shovel-mode) .cell.grave:hover {
-            background: rgba(144, 238, 144, 0.5);
-        }
-
-        @keyframes smoke {
-            from {
-                transform: translateY(0) scale(1);
-                opacity: 0.3;
-            }
-
-            to {
-                transform: translateY(-10px) scale(1.2);
-                opacity: 0.1;
-            }
-        }
-
-        .cell:hover {
-            background: rgba(144, 238, 144, 0.5);
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .plant {
-            font-size: 2.5em;
-            animation: plantGrow calc(0.5s / var(--game-speed)) ease;
-            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
-            z-index: 2;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        .plant.sleeping {
-            opacity: 0.6;
-            filter: grayscale(50%) drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
-            transition: opacity 0.3s ease, filter 0.3s ease;
-        }
-
-        .plant.sleeping::after {
-            content: 'Zzz';
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            font-size: 0.5em;
-            color: white;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-            animation: sleepAnimation calc(2.5s / var(--game-speed)) infinite ease-in-out;
-        }
-
-        @keyframes sleepAnimation {
-
-            0%,
-            100% {
-                transform: translateY(0) scale(1);
-                opacity: 1;
-            }
-
-            50% {
-                transform: translateY(-5px) scale(1.1);
-                opacity: 0.7;
-            }
-        }
-
-
-        .plant.spike-plant {
-            z-index: 1;
-            transform: translate(-50%, -25%);
-        }
-
-        .plant.imitated {
-            filter: grayscale(100%) drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
-        }
-
-        .plant.arming {
-            transform: translate(-50%, -50%) scale(0.6);
-            opacity: 0.7;
-            transition: transform calc(0.3s / var(--game-speed)) ease, opacity calc(0.3s / var(--game-speed)) ease;
-        }
-
-        .plant.armed {
-            animation: mineArm calc(0.3s / var(--game-speed)) ease-out;
-        }
-
-        @keyframes mineArm {
-            0% {
-                transform: translate(-50%, -50%) scale(0.6);
-            }
-
-            50% {
-                transform: translate(-50%, -60%) scale(1.2);
-            }
-
-            100% {
-                transform: translate(-50%, -50%) scale(1);
-            }
-        }
-
-        .plant-health-bar {
-            position: absolute;
-            width: 40px;
-            height: 3px;
-            background: rgba(0, 0, 0, 0.3);
-            bottom: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-radius: 2px;
-            overflow: hidden;
-        }
-
-        .plant-health-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #4CAF50, #8BC34A);
-            transition: width calc(0.3s / var(--game-speed)) ease;
-            box-shadow: 0 0 3px rgba(76, 175, 80, 0.5);
-        }
-
-        .plant.shooting {
-            animation: shootAnimation calc(0.3s / var(--game-speed)) ease;
-        }
-
-        .plant.chewing {
-            animation: chewAnimation calc(1s / var(--game-speed)) infinite ease-in-out;
-        }
-
-        .plant.eating-grave {
-            animation: eatGraveAnimation calc(0.5s / var(--game-speed)) infinite ease-in-out;
-        }
-
-        @keyframes eatGraveAnimation {
-
-            0%,
-            100% {
-                transform: translate(-50%, -50%) scale(1) rotate(-2deg);
-            }
-
-            50% {
-                transform: translate(-50%, -50%) scale(1.15) rotate(2deg);
-            }
-        }
-
-        @keyframes shootAnimation {
-            0% {
-                transform: translate(-50%, -50%) scale(1);
-            }
-
-            50% {
-                transform: translate(-50%, -50%) scale(1.2);
-            }
-
-
-            100% {
-                transform: translate(-50%, -50%) scale(1);
-            }
-        }
-
-        @keyframes chewAnimation {
-
-            0%,
-            100% {
-                transform: translate(-50%, -50%) scale(1);
-            }
-
-            50% {
-                transform: translate(-50%, -50%) scale(1.1) rotate(5deg);
-            }
-        }
-
-        @keyframes plantGrow {
-            0% {
-                transform: translate(-50%, -50%) scale(0) rotate(0deg);
-            }
-
-            50% {
-                transform: translate(-50%, -50%) scale(1.2) rotate(10deg);
-            }
-
-            100% {
-                transform: translate(-50%, -50%) scale(1) rotate(0deg);
-            }
-        }
-
-        .zombie {
-            position: absolute;
-            font-size: 2.5em;
-            z-index: 3;
-            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5));
-            transition: filter calc(0.3s / var(--game-speed)) ease;
-            will-change: transform;
-            transform: scaleX(-1);
-            pointer-events: none;
-        }
-
-        .zombie.dancing {
-            animation: moonwalk calc(1s / var(--game-speed)) infinite alternate ease-in-out;
-        }
-
-        .zombie.dancing.eating {
-            animation: zombieEat calc(0.5s / var(--game-speed)) infinite;
-            /* Override moonwalk when eating */
-        }
-
-        @keyframes moonwalk {
-            0% {
-                transform: scaleX(-1) translateX(-5px);
-            }
-
-            100% {
-                transform: scaleX(-1) translateX(5px);
-            }
-        }
-
-        .zombie.zomboni {
-            font-size: 3.35em;
-        }
-
-        .zombie.gargantuar {
-            font-size: 3.5em;
-        }
-
-        .zombie.frozen {
-            filter: drop-shadow(2px 2px 8px rgba(173, 216, 230, 0.9)) brightness(1.4) saturate(0);
-            animation: frozenWiggle calc(0.5s / var(--game-speed)) infinite ease-in-out;
-        }
-
-        .zombie.jackInTheBox {
-            animation: winding-up calc(0.7s / var(--game-speed)) infinite ease-in-out;
-        }
-
-        @keyframes winding-up {
-
-            0%,
-            100% {
-                transform: scaleX(-1) rotate(-2deg);
-            }
-
-            50% {
-                transform: scaleX(-1) rotate(2deg);
-            }
-        }
-
-        @keyframes frozenWiggle {
-
-            0%,
-            100% {
-                transform: scaleX(-1) rotate(-1deg);
-            }
-
-            50% {
-                transform: scaleX(-1) rotate(1deg);
-            }
-        }
-
-        .zombie.stunned::after {
-            content: '🧈';
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 1.2em;
-        }
-
-        .zombie-health-bar {
-            position: absolute;
-            width: 40px;
-            height: 4px;
-            background: rgba(255, 0, 0, 0.8);
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-radius: 2px;
-            overflow: hidden;
-        }
-
-        .zombie-health-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #ff0000, #ff6600);
-            transition: width calc(0.3s / var(--game-speed)) ease;
-            box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
-        }
-
-        .zombie.slowed {
-            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5)) hue-rotate(200deg) brightness(1.5);
-        }
-
-        .zombie.eating {
-            animation: zombieEat calc(0.5s / var(--game-speed)) infinite;
-        }
-
-        @keyframes zombieEat {
-
-            0%,
-            100% {
-                transform: scaleX(-1) translateY(0);
-            }
-
-            50% {
-                transform: scaleX(-1) translateY(-5px);
-            }
-        }
-
-        .projectile {
-            position: absolute;
-            font-size: 1.5em;
-            z-index: 4;
-            filter: drop-shadow(0 0 5px rgba(255, 255, 0, 0.8));
-            will-change: transform;
-            pointer-events: none;
-        }
-
-        .projectile.fire {
-            filter: drop-shadow(0 0 10px rgba(255, 100, 0, 1));
-            animation: fireGlow calc(0.3s / var(--game-speed)) infinite alternate;
-        }
-
-        @keyframes fireGlow {
-            from {
-                transform: scale(1);
-            }
-
-            to {
-                transform: scale(1.2);
-            }
-        }
-
-        @keyframes windBlow {
-            0% {
-                transform: translateX(0) scale(1);
-                opacity: 0.7;
-            }
-
-            100% {
-                transform: translateX(1000px) scale(1.5);
-                opacity: 0;
-            }
         }
 
         #ui {
@@ -546,20 +110,359 @@ Copyright (c) 2025 Olexandr_43
             scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
         }
 
-        #plantSelection::-webkit-scrollbar {
-            height: 6px;
+        #controlButtons {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            min-width: 140px;
         }
 
-        #plantSelection::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.1);
-            border-radius: 3px;
+        .controlRow {
+            display: flex;
+            gap: 5px;
         }
 
-        #plantSelection::-webkit-scrollbar-thumb {
+        #wave {
+            position: absolute;
+            bottom: 10px;
+            right: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            padding: 10px 20px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 29;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #zombieSpawner {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: rgba(50, 50, 50, 0.8);
+            backdrop-filter: blur(5px);
+            display: none;
+            align-items: center;
+            padding: 10px;
+            gap: 10px;
+            z-index: 200;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+        }
+
+        #debugInfo {
+            position: absolute;
+            z-index: 999999;
+            bottom: 10px;
+            left: 10px;
+            color: white;
+            font-size: 0.8em;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 5px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        /* --- GAME BOARD ELEMENTS --- */
+        .cell {
+            background: linear-gradient(135deg, rgba(144, 238, 144, 0.3), rgba(34, 139, 34, 0.3));
+            border: 2px solid rgba(34, 139, 34, 0.5);
+            border-radius: 8px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: visible;
+        }
+
+        .cell:hover {
+            background: rgba(144, 238, 144, 0.5);
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .cell.crater {
+            background: radial-gradient(circle, #3b2a1a 0%, #5c422a 50%, #2e1e10 100%);
+            border: 2px solid #1a1a1a;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .cell.crater::after {
+            content: '🔥';
+            position: absolute;
+            font-size: 1.5em;
+            opacity: 0.3;
+            animation: smoke calc(3s / var(--game-speed)) infinite alternate;
+        }
+
+        .cell.iced {
+            background: linear-gradient(135deg, rgba(173, 216, 230, 0.8), rgba(100, 149, 237, 0.8));
+            border: 2px solid rgba(173, 216, 230, 1);
+            cursor: not-allowed;
+            pointer-events: none;
+            animation: iceGlimmer calc(2s / var(--game-speed)) infinite alternate;
+        }
+
+        .cell.grave {
+            cursor: not-allowed;
+            position: relative;
+        }
+
+        .cell.grave::before {
+            content: '⚰️';
+            font-size: 2.5em;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+        }
+
+        .cell.grave.grave-spawn::before {
+            animation: graveRise calc(0.5s / var(--game-speed)) ease-out;
+        }
+
+        #gameBoard:not(.shovel-mode) .cell.grave {
+            cursor: pointer;
+        }
+
+        #gameBoard:not(.shovel-mode) .cell.grave:hover {
+            background: rgba(144, 238, 144, 0.5);
+        }
+
+        .lawnmower {
+            position: absolute;
+            font-size: 2.5em;
+            z-index: 3;
+            will-change: left;
+            transform: scaleX(-1);
+            /* Face right */
+        }
+
+
+        /* --- PLANTS --- */
+        .plant {
+            font-size: 2.5em;
+            animation: plantGrow calc(0.5s / var(--game-speed)) ease;
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+            z-index: 2;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .plant.sleeping {
+            opacity: 0.6;
+            filter: grayscale(50%) drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+            transition: opacity 0.3s ease, filter 0.3s ease;
+        }
+
+        .plant.sleeping::after {
+            content: 'Zzz';
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 0.5em;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            animation: sleepAnimation calc(2.5s / var(--game-speed)) infinite ease-in-out;
+        }
+
+        .plant.spike-plant {
+            z-index: 1;
+            transform: translate(-50%, -25%);
+        }
+
+        .plant.imitated {
+            filter: grayscale(100%) drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        .plant.arming {
+            transform: translate(-50%, -50%) scale(0.6);
+            opacity: 0.7;
+            transition: transform calc(0.3s / var(--game-speed)) ease, opacity calc(0.3s / var(--game-speed)) ease;
+        }
+
+        .plant.armed {
+            animation: mineArm calc(0.3s / var(--game-speed)) ease-out;
+        }
+
+        .plant.shooting {
+            animation: shootAnimation calc(0.3s / var(--game-speed)) ease;
+        }
+
+        .plant.chewing {
+            animation: chewAnimation calc(1s / var(--game-speed)) infinite ease-in-out;
+        }
+
+        .plant.eating-grave {
+            animation: eatGraveAnimation calc(0.5s / var(--game-speed)) infinite ease-in-out;
+        }
+
+        .plant-health-bar {
+            position: absolute;
+            width: 40px;
+            height: 3px;
             background: rgba(0, 0, 0, 0.3);
-            border-radius: 3px;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+            overflow: hidden;
         }
 
+        .plant-health-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            transition: width calc(0.3s / var(--game-speed)) ease;
+            box-shadow: 0 0 3px rgba(76, 175, 80, 0.5);
+        }
+
+        .plant-damage-effect {
+            animation: plantDamage calc(0.3s / var(--game-speed)) ease;
+        }
+
+
+        /* --- ZOMBIES --- */
+        .zombie {
+            position: absolute;
+            font-size: 2.5em;
+            z-index: 3;
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5));
+            transition: filter calc(0.3s / var(--game-speed)) ease;
+            will-change: transform;
+            transform: scaleX(-1);
+            pointer-events: none;
+        }
+
+        .zombie.dancing {
+            animation: moonwalk calc(1s / var(--game-speed)) infinite alternate ease-in-out;
+        }
+
+        .zombie.dancing.eating {
+            animation: zombieEat calc(0.5s / var(--game-speed)) infinite;
+        }
+
+        .zombie.zomboni {
+            font-size: 3.35em;
+        }
+
+        .zombie.gargantuar {
+            font-size: 3.5em;
+        }
+
+        .zombie.frozen {
+            filter: drop-shadow(2px 2px 8px rgba(173, 216, 230, 0.9)) brightness(1.4) saturate(0);
+            animation: frozenWiggle calc(0.5s / var(--game-speed)) infinite ease-in-out;
+        }
+
+        .zombie.jackInTheBox {
+            animation: winding-up calc(0.7s / var(--game-speed)) infinite ease-in-out;
+        }
+
+        .zombie.stunned::after {
+            content: '🧈';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.2em;
+        }
+
+        .zombie.slowed {
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5)) hue-rotate(200deg) brightness(1.5);
+        }
+
+        .zombie.eating {
+            animation: zombieEat calc(0.5s / var(--game-speed)) infinite;
+        }
+
+        .zombie-health-bar {
+            position: absolute;
+            width: 40px;
+            height: 4px;
+            background: rgba(255, 0, 0, 0.8);
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .zombie-health-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff0000, #ff6600);
+            transition: width calc(0.3s / var(--game-speed)) ease;
+            box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+        }
+
+        .zombie.damage-effect {
+            animation: damage calc(0.3s / var(--game-speed)) ease;
+        }
+
+
+        /* --- PROJECTILES & PARTICLES --- */
+        .projectile {
+            position: absolute;
+            font-size: 1.5em;
+            z-index: 4;
+            filter: drop-shadow(0 0 5px rgba(255, 255, 0, 0.8));
+            will-change: transform;
+            pointer-events: none;
+        }
+
+        .projectile.fire {
+            filter: drop-shadow(0 0 10px rgba(255, 100, 0, 1));
+            animation: fireGlow calc(0.3s / var(--game-speed)) infinite alternate;
+        }
+
+        .sun {
+            position: absolute;
+            font-size: 2em;
+            cursor: pointer;
+            z-index: 5;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.8));
+            transition: transform calc(0.3s / var(--game-speed)) ease, filter calc(0.3s / var(--game-speed)) ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            will-change: transform, opacity, top, left;
+        }
+
+        .sun:hover {
+            transform: scale(1.2);
+            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 1));
+        }
+
+        .sun-value {
+            font-size: 0.6em;
+            font-weight: bold;
+            color: #FFD700;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            animation: particle calc(1s / var(--game-speed)) ease-out forwards;
+            font-size: 1.5em;
+            z-index: 10;
+        }
+
+        /* --- UI --- */
         .plantCard {
             min-width: 70px;
             width: 70px;
@@ -579,20 +482,11 @@ Copyright (c) 2025 Olexandr_43
             flex-shrink: 0;
         }
 
-        .plantCard.imitated {
-            filter: grayscale(1);
+        .plantCard:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            border-color: #45a049;
         }
-
-        .plantCard[data-upgrade="true"] {
-            border-color: #9b59b6;
-            background: linear-gradient(135deg, #e8daef, #d5b4e0);
-        }
-
-        .plantCard[data-upgrade="true"].selected {
-            background: linear-gradient(135deg, #9b59b6, #8e44ad);
-            box-shadow: 0 0 20px rgba(155, 89, 182, 0.5);
-        }
-
 
         .plantCard::before {
             content: '';
@@ -611,36 +505,28 @@ Copyright (c) 2025 Olexandr_43
             animation: shine calc(0.5s / var(--game-speed)) ease;
         }
 
-        @keyframes shine {
-            0% {
-                transform: translateX(-100%) translateY(-100%) rotate(45deg);
-                opacity: 0;
-            }
-
-            50% {
-                opacity: 1;
-            }
-
-            100% {
-                transform: translateX(100%) translateY(100%) rotate(45deg);
-                opacity: 0;
-            }
-        }
-
-        .plantCard:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            border-color: #45a049;
-        }
-
         .plantCard.selected {
             background: linear-gradient(135deg, #4CAF50, #45a049);
             transform: scale(1.1);
             box-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
         }
 
+        .plantCard.imitated {
+            filter: grayscale(1);
+        }
+
         .plantCard.imitated.selected {
             filter: grayscale(0.5);
+        }
+
+        .plantCard[data-upgrade="true"] {
+            border-color: #9b59b6;
+            background: linear-gradient(135deg, #e8daef, #d5b4e0);
+        }
+
+        .plantCard[data-upgrade="true"].selected {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            box-shadow: 0 0 20px rgba(155, 89, 182, 0.5);
         }
 
         .plantCard.disabled {
@@ -653,19 +539,6 @@ Copyright (c) 2025 Olexandr_43
             filter: grayscale(1) opacity(0.5);
         }
 
-        .plantCard .cooldown-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 0;
-            /* Starts at 0, animates from 100% to 0 */
-            background: rgba(25, 25, 25, 0.7);
-            z-index: 1;
-            pointer-events: none;
-            border-radius: 0 0 9px 9px;
-        }
-
         .plantCard.on-cooldown {
             cursor: not-allowed;
             filter: grayscale(80%);
@@ -674,6 +547,18 @@ Copyright (c) 2025 Olexandr_43
 
         .plantCard.imitated.on-cooldown {
             filter: grayscale(1) opacity(0.7);
+        }
+
+        .plantCard .cooldown-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 0;
+            background: rgba(25, 25, 25, 0.7);
+            z-index: 1;
+            pointer-events: none;
+            border-radius: 0 0 9px 9px;
         }
 
         .plantCard .emoji,
@@ -701,6 +586,63 @@ Copyright (c) 2025 Olexandr_43
             text-align: center;
         }
 
+        #shovelCard {
+            background: linear-gradient(135deg, #c0c0c0, #a9a9a9);
+            border-color: #808080;
+        }
+
+        #shovelCard.selected {
+            background: linear-gradient(135deg, #A9A9A9, #808080);
+            border-color: #696969;
+            box-shadow: 0 0 20px rgba(128, 128, 128, 0.5);
+        }
+
+        .zombieCard {
+            min-width: 70px;
+            width: 70px;
+            height: 85px;
+            background: linear-gradient(135deg, #f0f0f0, #ddd);
+            border: 3px solid #b22222;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+        }
+
+        .zombieCard:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            border-color: #ff0000;
+        }
+
+        .zombieCard.selected {
+            background: linear-gradient(135deg, #b22222, #8b0000);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(178, 34, 34, 0.5);
+        }
+
+        .zombieCard .emoji {
+            font-size: 1.6em;
+            transform: scaleX(-1);
+            margin-bottom: 2px;
+        }
+
+        .zombieCard .name {
+            font-size: 0.6em;
+            color: #333;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .zombieCard.selected .name {
+            color: white;
+        }
+
         #sunCounter,
         #scoreCounter {
             display: flex;
@@ -723,18 +665,6 @@ Copyright (c) 2025 Olexandr_43
 
         #scoreCounter {
             background: linear-gradient(135deg, #9C27B0, #E91E63);
-        }
-
-        #controlButtons {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            min-width: 140px;
-        }
-
-        .controlRow {
-            display: flex;
-            gap: 5px;
         }
 
         .controlBtn {
@@ -760,52 +690,106 @@ Copyright (c) 2025 Olexandr_43
             background: linear-gradient(135deg, #4CAF50, #45a049);
         }
 
-        .sun {
-            position: absolute;
-            font-size: 2em;
+        .btn {
+            padding: 12px 25px;
+            margin: 8px;
+            font-size: 1em;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            border-radius: 10px;
             cursor: pointer;
-            z-index: 5;
-            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.8));
-            transition: transform calc(0.3s / var(--game-speed)) ease, filter calc(0.3s / var(--game-speed)) ease;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            will-change: transform, opacity, top, left;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
-        .sun-value {
-            font-size: 0.6em;
-            font-weight: bold;
-            color: #FFD700;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
         }
 
-        .sun:hover {
-            transform: scale(1.2);
-            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 1));
+        .btn.secondary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
         }
 
-        .points-popup {
+        .btn.restart {
+            background: linear-gradient(135deg, #FF9800, #FB8C00);
+        }
+
+        .btn.gold {
+            margin: 0px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+        }
+
+        .btn.letsrock {
+            margin: 0px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            width: 220px;
+            padding: 12px 20px;
+            font-size: 1.3em;
+            box-shadow: 0 8px 15px rgba(255, 215, 0, 0.25);
+            transition: all 0.3s ease;
+        }
+
+        #plantSelection::-webkit-scrollbar,
+        #zombieSpawner::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        #plantSelection::-webkit-scrollbar-track,
+        #zombieSpawner::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 3px;
+        }
+
+        #plantSelection::-webkit-scrollbar-thumb,
+        #zombieSpawner::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 3px;
+        }
+
+        /* --- GAME STATE & MODE --- */
+        #gameContainer.night-mode #nightOverlay {
+            display: block;
+        }
+
+        #gameBoard.shovel-mode .cell {
+            cursor: crosshair;
+        }
+
+        #gameBoard.shovel-mode .cell:hover,
+        #gameBoard.zombie-spawn-mode .cell:hover {
+            background: rgba(255, 0, 0, 0.3);
+            outline: 2px solid red;
+        }
+
+        #gameBoard.zombie-spawn-mode .cell {
+            cursor: crosshair;
+        }
+
+        #wave.final-wave {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            animation: pulse calc(1s / var(--game-speed)) infinite;
+        }
+
+        #wave .damage-bonus {
+            font-size: 0.7em;
+            margin-top: 3px;
+            opacity: 0.9;
+            display: none;
+        }
+
+        /* --- OVERLAYS, SCREENS & POPUPS --- */
+        #nightOverlay {
             position: absolute;
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #FFD700;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            z-index: 10;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 50, 0.4);
             pointer-events: none;
-            animation: pointsFloat calc(1.5s / var(--game-speed)) ease-out forwards;
-        }
-
-        @keyframes pointsFloat {
-            0% {
-                transform: translateY(0) scale(1);
-                opacity: 1;
-            }
-
-            100% {
-                transform: translateY(-50px) scale(1.5);
-                opacity: 0;
-            }
+            z-index: 25;
+            display: none;
         }
 
         #gameOver,
@@ -827,7 +811,6 @@ Copyright (c) 2025 Olexandr_43
             width: 90%;
         }
 
-        /* Make leaderboard highest z-index */
         #leaderboard {
             z-index: 1000;
             max-height: 70vh;
@@ -935,216 +918,15 @@ Copyright (c) 2025 Olexandr_43
             color: #333;
         }
 
-        .btn {
-            padding: 12px 25px;
-            margin: 8px;
-            font-size: 1em;
-            background: linear-gradient(135deg, #4CAF50, #45a049);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-        }
-
-        .btn.secondary {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-        }
-
-        .btn.restart {
-            background: linear-gradient(135deg, #FF9800, #FB8C00);
-        }
-
-        .btn.gold {
-            margin: 0px;
-            background: linear-gradient(135deg, #FFD700, #FFA500);
-        }
-
-        #wave {
+        .points-popup {
             position: absolute;
-            bottom: 10px;
-            right: 20px;
-            font-size: 1.2em;
-            font-weight: bold;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
-            padding: 10px 20px;
-            border-radius: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            z-index: 29;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        #wave .damage-bonus {
-            font-size: 0.7em;
-            margin-top: 3px;
-            opacity: 0.9;
-            display: none;
-        }
-
-        #wave.final-wave {
-            background: linear-gradient(135deg, #FFD700, #FFA500);
-            animation: pulse calc(1s / var(--game-speed)) infinite;
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.05);
-            }
-        }
-
-        .zombie.damage-effect {
-            animation: damage calc(0.3s / var(--game-speed)) ease;
-        }
-
-        @keyframes damage {
-
-            0%,
-            100% {
-                transform: scaleX(-1);
-                filter: brightness(1);
-            }
-
-            50% {
-                transform: scaleX(-1) scale(0.9);
-                filter: brightness(1.5) hue-rotate(180deg);
-            }
-        }
-
-        .plant-damage-effect {
-            animation: plantDamage calc(0.3s / var(--game-speed)) ease;
-        }
-
-        @keyframes plantDamage {
-
-            0%,
-            100% {
-                transform: translate(-50%, -50%) scale(1);
-                filter: brightness(1);
-            }
-
-            50% {
-                transform: translate(-50%, -50%) scale(0.9);
-                filter: brightness(1.5) hue-rotate(90deg);
-            }
-        }
-
-        .collect-effect {
-            animation: collect calc(0.5s / var(--game-speed)) ease;
-        }
-
-        @keyframes collect {
-            0% {
-                transform: scale(1) rotate(0deg);
-            }
-
-            100% {
-                transform: scale(0) rotate(360deg);
-                opacity: 0;
-            }
-        }
-
-        @keyframes freezeFlash {
-            0% {
-                transform: translate(-50%, -50%) scale(0);
-                opacity: 0.8;
-            }
-
-            50% {
-                transform: translate(-50%, -50%) scale(1.2);
-                opacity: 0.5;
-            }
-
-            100% {
-                transform: translate(-50%, -50%) scale(1.5);
-                opacity: 0;
-            }
-        }
-
-        .particle {
-            position: absolute;
-            pointer-events: none;
-            animation: particle calc(1s / var(--game-speed)) ease-out forwards;
             font-size: 1.5em;
+            font-weight: bold;
+            color: #FFD700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
             z-index: 10;
-        }
-
-        @keyframes particle {
-            0% {
-                transform: translate(0, 0) scale(1);
-                opacity: 1;
-            }
-
-            100% {
-                transform: translate(var(--x), var(--y)) scale(0);
-                opacity: 0;
-            }
-        }
-
-        #debugInfo {
-            position: absolute;
-            z-index: 999999;
-            bottom: 10px;
-            left: 10px;
-            color: white;
-            font-size: 0.8em;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 5px;
-            border-radius: 5px;
-            display: none;
-        }
-
-        /* Force landscape message */
-        #landscapeMessage {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            text-align: center;
-            padding: 20px;
-        }
-
-        #landscapeMessage h2 {
-            font-size: 2em;
-            margin-bottom: 20px;
-        }
-
-        #landscapeMessage p {
-            font-size: 1.2em;
-            margin-bottom: 30px;
-        }
-
-        @media (orientation: portrait) and (max-width: 768px) {
-            #landscapeMessage {
-                display: flex;
-            }
-
-            #gameContainer {
-                display: none;
-            }
+            pointer-events: none;
+            animation: pointsFloat calc(1.5s / var(--game-speed)) ease-out forwards;
         }
 
         .save-notification {
@@ -1161,149 +943,6 @@ Copyright (c) 2025 Olexandr_43
             z-index: 200;
             animation: saveNotification calc(2s / var(--game-speed)) ease forwards;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        @keyframes saveNotification {
-            0% {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(0.5);
-            }
-
-            20% {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1.1);
-            }
-
-            40% {
-                transform: translate(-50%, -50%) scale(1);
-            }
-
-            80% {
-                opacity: 1;
-            }
-
-            100% {
-                opacity: 0;
-            }
-        }
-
-        .lawnmower {
-            position: absolute;
-            font-size: 2.5em;
-            z-index: 3;
-            will-change: left;
-            transform: scaleX(-1);
-            /* Face right */
-        }
-
-        /* Shovel Styles */
-        #gameBoard.shovel-mode .cell {
-            cursor: crosshair;
-        }
-
-        #gameBoard.shovel-mode .cell:hover {
-            background: rgba(255, 0, 0, 0.3);
-            outline: 2px solid red;
-        }
-
-        #shovelCard {
-            background: linear-gradient(135deg, #c0c0c0, #a9a9a9);
-            border-color: #808080;
-        }
-
-        #shovelCard.selected {
-            background: linear-gradient(135deg, #A9A9A9, #808080);
-            border-color: #696969;
-            box-shadow: 0 0 20px rgba(128, 128, 128, 0.5);
-        }
-
-        #zombieSpawner {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 100px;
-            background: rgba(50, 50, 50, 0.8);
-            backdrop-filter: blur(5px);
-            display: none;
-            align-items: center;
-            padding: 10px;
-            gap: 10px;
-            z-index: 200;
-            overflow-x: auto;
-            overflow-y: hidden;
-            scrollbar-width: thin;
-            scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
-        }
-
-        #zombieSpawner::-webkit-scrollbar {
-            height: 6px;
-        }
-
-        #zombieSpawner::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.1);
-            border-radius: 3px;
-        }
-
-        #zombieSpawner::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 3px;
-        }
-
-        .zombieCard {
-            min-width: 70px;
-            width: 70px;
-            height: 85px;
-            background: linear-gradient(135deg, #f0f0f0, #ddd);
-            border: 3px solid #b22222;
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            flex-shrink: 0;
-        }
-
-        .zombieCard:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            border-color: #ff0000;
-        }
-
-        .zombieCard.selected {
-            background: linear-gradient(135deg, #b22222, #8b0000);
-            transform: scale(1.1);
-            box-shadow: 0 0 20px rgba(178, 34, 34, 0.5);
-        }
-
-        .zombieCard .emoji {
-            font-size: 1.6em;
-            transform: scaleX(-1);
-            /* Face right */
-            margin-bottom: 2px;
-        }
-
-        .zombieCard .name {
-            font-size: 0.6em;
-            color: #333;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        .zombieCard.selected .name {
-            color: white;
-        }
-
-        #gameBoard.zombie-spawn-mode .cell {
-            cursor: crosshair;
-        }
-
-        #gameBoard.zombie-spawn-mode .cell:hover {
-            background: rgba(255, 0, 0, 0.3);
-            outline: 2px solid red;
         }
 
         #plantSelectionScreen {
@@ -1437,7 +1076,6 @@ Copyright (c) 2025 Olexandr_43
             font-weight: bold;
         }
 
-        /* Custom Dialog Styles */
         .dialog-overlay {
             position: fixed;
             top: 0;
@@ -1447,7 +1085,6 @@ Copyright (c) 2025 Olexandr_43
             background: rgba(0, 0, 0, 0.3);
             z-index: 2000;
             display: none;
-            /* Hidden by default */
             align-items: center;
             justify-content: center;
             padding: 15px;
@@ -1460,8 +1097,362 @@ Copyright (c) 2025 Olexandr_43
             text-align: center;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             max-width: 450px;
-            width: 100%;
             animation: dialogAppear calc(0.3s / var(--game-speed)) ease-out;
+        }
+
+        .dialog-box h2 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .dialog-box p {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        #landscapeMessage {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #landscapeMessage h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        #landscapeMessage p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes iceGlimmer {
+            from {
+                box-shadow: 0 0 2px rgba(255, 255, 255, 0);
+            }
+
+            to {
+                box-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
+            }
+        }
+
+        @keyframes smoke {
+            from {
+                transform: translateY(0) scale(1);
+                opacity: 0.3;
+            }
+
+            to {
+                transform: translateY(-10px) scale(1.2);
+                opacity: 0.1;
+            }
+        }
+
+        @keyframes graveRise {
+            0% {
+                transform: translate(-50%, -30%) scale(0.8);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes plantGrow {
+            0% {
+                transform: translate(-50%, -50%) scale(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.2) rotate(10deg);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+            }
+        }
+
+        @keyframes sleepAnimation {
+
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: translateY(-5px) scale(1.1);
+                opacity: 0.7;
+            }
+        }
+
+        @keyframes mineArm {
+            0% {
+                transform: translate(-50%, -50%) scale(0.6);
+            }
+
+            50% {
+                transform: translate(-50%, -60%) scale(1.2);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        @keyframes shootAnimation {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        @keyframes chewAnimation {
+
+            0%,
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.1) rotate(5deg);
+            }
+        }
+
+        @keyframes eatGraveAnimation {
+
+            0%,
+            100% {
+                transform: translate(-50%, -50%) scale(1) rotate(-2deg);
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.15) rotate(2deg);
+            }
+        }
+
+        @keyframes moonwalk {
+            0% {
+                transform: scaleX(-1) translateX(-5px);
+            }
+
+            100% {
+                transform: scaleX(-1) translateX(5px);
+            }
+        }
+
+        @keyframes winding-up {
+
+            0%,
+            100% {
+                transform: scaleX(-1) rotate(-2deg);
+            }
+
+            50% {
+                transform: scaleX(-1) rotate(2deg);
+            }
+        }
+
+        @keyframes frozenWiggle {
+
+            0%,
+            100% {
+                transform: scaleX(-1) rotate(-1deg);
+            }
+
+            50% {
+                transform: scaleX(-1) rotate(1deg);
+            }
+        }
+
+        @keyframes zombieEat {
+
+            0%,
+            100% {
+                transform: scaleX(-1) translateY(0);
+            }
+
+            50% {
+                transform: scaleX(-1) translateY(-5px);
+            }
+        }
+
+        @keyframes fireGlow {
+            from {
+                transform: scale(1);
+            }
+
+            to {
+                transform: scale(1.2);
+            }
+        }
+
+        @keyframes windBlow {
+            0% {
+                transform: translateX(0) scale(1);
+                opacity: 0.7;
+            }
+
+            100% {
+                transform: translateX(1000px) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        @keyframes shine {
+            0% {
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateX(100%) translateY(100%) rotate(45deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes pointsFloat {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-50px) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes damage {
+
+            0%,
+            100% {
+                transform: scaleX(-1);
+                filter: brightness(1);
+            }
+
+            50% {
+                transform: scaleX(-1) scale(0.9);
+                filter: brightness(1.5) hue-rotate(180deg);
+            }
+        }
+
+        @keyframes plantDamage {
+
+            0%,
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                filter: brightness(1);
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(0.9);
+                filter: brightness(1.5) hue-rotate(90deg);
+            }
+        }
+
+        @keyframes collect {
+            0% {
+                transform: scale(1) rotate(0deg);
+            }
+
+            100% {
+                transform: scale(0) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes freezeFlash {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0.8;
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 0.5;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        @keyframes particle {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(var(--x), var(--y)) scale(0);
+                opacity: 0;
+            }
+        }
+
+        @keyframes saveNotification {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+
+            20% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+
+            40% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            80% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+            }
         }
 
         @keyframes dialogAppear {
@@ -1476,20 +1467,17 @@ Copyright (c) 2025 Olexandr_43
             }
         }
 
-        .dialog-box h2 {
-            font-size: 1.8em;
-            margin-bottom: 15px;
-            color: #333;
+        /* --- MOBILE --- */
+        @media (orientation: portrait) and (max-width: 768px) {
+            #landscapeMessage {
+                display: flex;
+            }
+
+            #gameContainer {
+                display: none;
+            }
         }
 
-        .dialog-box p {
-            font-size: 1.1em;
-            margin-bottom: 25px;
-            color: #555;
-            line-height: 1.6;
-        }
-
-        /* Landscape mode optimizations */
         @media (orientation: landscape) and (max-height: 600px) {
             #ui {
                 height: 100px;
@@ -1502,6 +1490,22 @@ Copyright (c) 2025 Olexandr_43
 
             #wave {
                 bottom: 5px;
+                right: 10px;
+                font-size: 1em;
+                padding: 8px 15px;
+            }
+
+            .plant,
+            .zombie {
+                font-size: 2em;
+            }
+
+            .zombie.zomboni {
+                font-size: 2.85em;
+            }
+
+            .zombie.gargantuar {
+                font-size: 3em;
             }
 
             .plantCard {
@@ -1543,6 +1547,27 @@ Copyright (c) 2025 Olexandr_43
             #plantLibrary {
                 padding: 10px;
             }
+
+            .dialog-box h2 {
+                font-size: 1.2em;
+                margin-bottom: 12px;
+            }
+
+            .dialog-box p {
+                font-size: 0.9em;
+                margin-bottom: 7px;
+                line-height: 1;
+            }
+
+            .dialog-overlay {
+                padding: 10px;
+            }
+
+            .btn.letsrock {
+                width: 180px;
+                padding: 10px 15px;
+                font-size: 1.2em;
+            }
         }
 
         @media (max-width: 768px) {
@@ -1550,13 +1575,6 @@ Copyright (c) 2025 Olexandr_43
                 left: 10px;
                 right: 10px;
                 top: 140px;
-            }
-
-            #wave {
-                bottom: 5px;
-                right: 10px;
-                font-size: 1em;
-                padding: 8px 15px;
             }
 
             .plantCard {
@@ -1623,7 +1641,7 @@ Copyright (c) 2025 Olexandr_43
 
             <div id="plantSelectionFooter">
                 <div style="margin-bottom: 15px;">Selected: <span id="selectedPlantCount">0</span></div>
-                <button id="startGameBtn" class="btn gold">Let's Rock!</button>
+                <button id="startGameBtn" class="btn letsrock">Let's Rock!</button>
             </div>
         </div>
 
@@ -2391,7 +2409,7 @@ Copyright (c) 2025 Olexandr_43
                 isPaused: false,
                 isGameOver: false,
                 isVictory: false,
-                victoryTriggered: false, // Reset flag
+                victoryTriggered: false,
                 cellSize: { width: 0, height: 0 },
                 boardRect: null,
                 gameSpeed: 1,
@@ -2825,23 +2843,100 @@ Copyright (c) 2025 Olexandr_43
             setupInGameCardListeners();
         }
 
-        function confirmAndStartGame() {
-            if (selectedPlantDeck.length === 0) {
-                showCustomDialog(
-                    'Choose Your Plants',
-                    'Please select at least one plant for your deck before starting the game.',
-                    [{ text: 'OK', class: 'secondary' }]
-                );
-                return;
+        // Get plant display name from type key
+        function getPlantDisplayName(plantType) {
+            const nameMap = {
+                'gatling': 'Gatling Pea',
+                'twinSunflower': 'Twin Sunflower',
+                'wintermelon': 'Winter Melon',
+                'spikerock': 'Spikerock',
+                'repeater': 'Repeater',
+                'sunflower': 'Sunflower',
+                'melonpult': 'Melon-pult',
+                'spikeweed': 'Spikeweed'
+            };
+            return nameMap[plantType] || plantType;
+        }
+
+        // Check for strange plant combinations
+        function checkStrangePlantCombinations() {
+            const warnings = [];
+            const isDay = gameState.map === 'day';
+            const isNight = gameState.map === 'night';
+
+            // Get plant types from deck
+            const deckPlantTypes = selectedPlantDeck.map(item => item.type);
+            const hasCoffeeBean = deckPlantTypes.includes('coffeebean');
+            const hasGraveBuster = deckPlantTypes.includes('gravebuster');
+            const hasMushrooms = deckPlantTypes.some(type => {
+                const plant = plantTypes[type];
+                return plant && plant.isMushroom;
+            });
+
+            // Check for any sun-producing plants (sunflower, twinSunflower, suncheat)
+            const hasSunProducer = deckPlantTypes.some(type => {
+                const plant = plantTypes[type];
+                return plant && plant.produces === 'sun';
+            });
+
+            // Check for balloon zombie fighter
+            const hasBalloonZombieFighter = deckPlantTypes.some(type => {
+                return deckPlantTypes.includes('cherrybomb') || deckPlantTypes.includes('jalapeno') || deckPlantTypes.includes('doomshroom') || deckPlantTypes.includes('cactus') || deckPlantTypes.includes('blover');
+            });
+
+            // No balloon zombie fighter
+            if (!hasBalloonZombieFighter) {
+                warnings.push('You didn\'t take any plant that can defeat <strong>Balloon Zombie</strong> on a level. <strong>Balloon Zombies</strong> are imune to most plants attacks, Its next to impossible to survive without them.');
             }
 
+            // No gravebuster
+            if (!hasGraveBuster) {
+                warnings.push('You didn\'t take a <strong>Grave Buster</strong> on a level. Grave Busters are essential for clearing graves. You can survive without them, but it will be much harder.');
+            }
+
+            // No sunflower
+            if (!hasSunProducer) {
+                warnings.push('You didn\'t take a <strong>Sunflower</strong> on a level. Sunflowers produce sun which is essential for planting.');
+            }
+
+            // Coffee bean on night level
+            if (isNight && hasCoffeeBean) {
+                warnings.push('You took <strong>Coffee Bean</strong> on a night level. It will be useless since mushrooms don\'t sleep at night.');
+            }
+
+            // Mushrooms on day level without coffee bean
+            if (isDay && hasMushrooms && !hasCoffeeBean) {
+                warnings.push('You took mushrooms on a day level without <strong>Coffee Bean</strong>. Mushrooms will sleep during the day and won\'t be usable.');
+            }
+
+            // Coffee bean without mushrooms
+            if (isDay && !hasMushrooms && hasCoffeeBean) {
+                warnings.push('You took <strong>Coffee Bean</strong> without mushrooms. It will be useless since it should be planted on mushrooms.');
+            }
+
+            // Upgrade plants without base plants
+            deckPlantTypes.forEach(plantType => {
+                const plant = plantTypes[plantType];
+                if (plant && plant.isUpgrade && plant.upgradesFrom) {
+                    const basePlantType = plant.upgradesFrom;
+                    if (!deckPlantTypes.includes(basePlantType)) {
+                        const upgradeName = getPlantDisplayName(plantType);
+                        const baseName = getPlantDisplayName(basePlantType);
+                        warnings.push(`You picked <strong>${upgradeName}</strong>, but didn't pick <strong>${baseName}</strong>. <strong>${upgradeName}</strong> must be planted on <strong>${baseName}</strong>.`);
+                    }
+                }
+            });
+
+            return warnings;
+        }
+
+        function startGame() {
             // Set map visuals
             if (gameState.map === 'night') {
                 document.getElementById('gameContainer').classList.add('night-mode');
             } else {
                 document.getElementById('gameContainer').classList.remove('night-mode');
             }
-
 
             document.getElementById('plantSelectionScreen').style.display = 'none';
             document.getElementById('ui').style.visibility = 'visible';
@@ -2859,11 +2954,56 @@ Copyright (c) 2025 Olexandr_43
             createTimer(5000, () => spawnZombieWave());
         }
 
+        function confirmAndStartGame() {
+            if (selectedPlantDeck.length === 0) {
+                showCustomDialog(
+                    'Choose Your Plants',
+                    'Please select at least one plant for your deck before starting the game.',
+                    [{ text: 'OK', class: 'secondary' }]
+                );
+                return;
+            }
+
+            // Check for strange plant combinations
+            const warnings = checkStrangePlantCombinations();
+
+            if (warnings.length > 0) {
+                // Combine all warnings into one message with HTML line breaks
+                const warningMessage = warnings.join('<br><br>') + '<br><br>Are you sure you want to continue?';
+
+                showCustomDialog(
+                    'Strange Plant Combination',
+                    warningMessage,
+                    [
+                        {
+                            text: 'Continue',
+                            class: 'secondary',
+                            callback: () => {
+                                startGame();
+                            }
+                        },
+                        {
+                            text: 'Re-Pick',
+                            callback: () => {
+
+                            }
+                        }
+                    ]
+                );
+                return;
+            }
+
+            // No warnings, start game directly
+            startGame();
+        }
+
         // Check if mobile device
         function isMobile() {
             return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
                 (window.innerWidth <= 768);
         }
+
+        const mobileDevice = isMobile();
 
         // Enter fullscreen
         function enterFullscreen() {
@@ -2975,8 +3115,6 @@ Copyright (c) 2025 Olexandr_43
 
         // --- Separated listener setup for in-game cards ---
         function setupInGameCardListeners() {
-            const mobileDevice = isMobile();
-
             document.querySelectorAll('#plantSelection .plantCard').forEach(card => {
                 // The main function to call when a card is successfully selected
                 const handleSelect = () => {
@@ -3609,7 +3747,11 @@ Copyright (c) 2025 Olexandr_43
                 const explosionElement = document.createElement('div');
                 explosionElement.className = 'instant-effect';
                 explosionElement.textContent = '💥';
-                explosionElement.style.cssText = `position: absolute; font-size: 22em; z-index: 10; filter: drop-shadow(0 0 25px purple); transform: translate(-50%, -50%); top: 50%; left: 50%;`;
+                if (mobileDevice) {
+                    explosionElement.style.cssText = `position: absolute; font-size: 17em; z-index: 10; filter: drop-shadow(0 0 25px purple); transform: translate(-50%, -50%); top: 50%; left: 50%;`;
+                } else {
+                    explosionElement.style.cssText = `position: absolute; font-size: 22em; z-index: 10; filter: drop-shadow(0 0 25px purple); transform: translate(-50%, -50%); top: 50%; left: 50%;`;
+                }
                 cell.appendChild(explosionElement);
                 createTimer(800, () => explosionElement.remove());
 
@@ -3636,7 +3778,11 @@ Copyright (c) 2025 Olexandr_43
                 const explosionElement = document.createElement('div');
                 explosionElement.className = 'instant-effect';
                 explosionElement.textContent = '❄️';
-                explosionElement.style.cssText = `position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); font-size: 20em; z-index: 50; color: lightblue; opacity: 0.8; animation: freezeFlash calc(0.75s / var(--game-speed)) ease-out;`;
+                if (mobileDevice) {
+                    explosionElement.style.cssText = `position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); font-size: 15em; z-index: 50; color: lightblue; opacity: 0.8; animation: freezeFlash calc(0.75s / var(--game-speed)) ease-out;`;
+                } else {
+                    explosionElement.style.cssText = `position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); font-size: 20em; z-index: 50; color: lightblue; opacity: 0.8; animation: freezeFlash calc(0.75s / var(--game-speed)) ease-out;`;
+                }
                 document.getElementById('gameContainer').appendChild(explosionElement);
                 createTimer(1000, () => explosionElement.remove());
 
@@ -3689,7 +3835,11 @@ Copyright (c) 2025 Olexandr_43
                     const explosionElement = document.createElement('div');
                     explosionElement.className = 'instant-effect';
                     explosionElement.textContent = '💥';
-                    explosionElement.style.cssText = `position: absolute; font-size: 7em; z-index: 10; filter: drop-shadow(0 0 15px red); transform: translate(-50%, -50%); top: 50%; left: 50%;`;
+                    if (mobileDevice) {
+                        explosionElement.style.cssText = `position: absolute; font-size: 7em; z-index: 10; filter: drop-shadow(0 0 15px red); transform: translate(-50%, -50%); top: 50%; left: 50%;`;
+                    } else {
+                        explosionElement.style.cssText = `position: absolute; font-size: 10em; z-index: 10; filter: drop-shadow(0 0 15px red); transform: translate(-50%, -50%); top: 50%; left: 50%;`;
+                    }
                     cell.appendChild(explosionElement);
                     createTimer(600, () => explosionElement.remove());
 
@@ -3722,7 +3872,11 @@ Copyright (c) 2025 Olexandr_43
                             const fireElement = document.createElement('div');
                             fireElement.className = 'instant-effect';
                             fireElement.textContent = '🔥';
-                            fireElement.style.cssText = `position: absolute; font-size: 3.5em; z-index: 10; animation: fireGlow calc(0.5s / var(--game-speed)) infinite alternate;`;
+                            if (mobileDevice) {
+                            fireElement.style.cssText = `position: absolute; font-size: 2.5em; z-index: 10; animation: fireGlow calc(0.5s / var(--game-speed)) infinite alternate;`;
+                            } else {
+                                fireElement.style.cssText = `position: absolute; font-size: 3.5em; z-index: 10; animation: fireGlow calc(0.5s / var(--game-speed)) infinite alternate;`;
+                            }
                             affectedCell.appendChild(fireElement);
                             createTimer(1000, () => fireElement.remove());
 
@@ -3746,7 +3900,11 @@ Copyright (c) 2025 Olexandr_43
                         const windElement = document.createElement('div');
                         windElement.className = 'instant-effect';
                         windElement.textContent = '💨';
-                        windElement.style.cssText = `position: fixed; font-size: 4em; z-index: 10; opacity: 0.7; top: ${gameState.boardRect.top + i * gameState.cellSize.height + 20}px; left: ${gameState.boardRect.left}px; animation: windBlow calc(0.5s / var(--game-speed)) ease-out forwards;`;
+                        if (mobileDevice) {
+                            windElement.style.cssText = `position: fixed; font-size: 3em; z-index: 10; opacity: 0.7; top: ${gameState.boardRect.top + i * gameState.cellSize.height + 10}px; left: ${gameState.boardRect.left}px; animation: windBlow calc(0.5s / var(--game-speed)) ease-out forwards;`;
+                        } else {
+                            windElement.style.cssText = `position: fixed; font-size: 4em; z-index: 10; opacity: 0.7; top: ${gameState.boardRect.top + i * gameState.cellSize.height + 20}px; left: ${gameState.boardRect.left}px; animation: windBlow calc(0.5s / var(--game-speed)) ease-out forwards;`;
+                        }
                         document.getElementById('gameContainer').appendChild(windElement);
                         createTimer(800, () => windElement.remove());
                     }
@@ -4105,7 +4263,7 @@ Copyright (c) 2025 Olexandr_43
                                 zombie.slowTimer = 3000;
                                 if (zombie.element) zombie.element.classList.add('slowed');
                             }
-                            
+
                             if (proj.fire && zombie.element) {
                                 if (zombie.isFrozen) {
                                     zombie.isFrozen = false;
@@ -4146,7 +4304,7 @@ Copyright (c) 2025 Olexandr_43
                                         splashTarget.slowTimer = 3000; // Standard slow duration
                                         if (splashTarget.element) splashTarget.element.classList.add('slowed');
                                     }
-                                    
+
                                     if (proj.fire && splashTarget.element) {
                                         if (splashTarget.isFrozen) {
                                             splashTarget.isFrozen = false;
@@ -5557,7 +5715,7 @@ Copyright (c) 2025 Olexandr_43
             const buttonsEl = document.getElementById('dialogButtons');
 
             titleEl.textContent = title;
-            messageEl.textContent = message;
+            messageEl.innerHTML = message;
             buttonsEl.innerHTML = '';
 
             buttons.forEach(buttonInfo => {
@@ -5590,8 +5748,8 @@ Copyright (c) 2025 Olexandr_43
                 'Confirm Restart',
                 'Are you sure you want to start a new game? Your current progress will be lost.',
                 [
-                    { text: 'Yes, Restart', class: 'secondary', callback: restartGame },
-                    { text: 'No, Cancel' }
+                    { text: 'No, Cancel' },
+                    { text: 'Yes, Restart', class: 'secondary', callback: restartGame }
                 ]
             );
         }
@@ -5671,7 +5829,7 @@ Copyright (c) 2025 Olexandr_43
             }
         });
     </script>
-	
+
     <script src="cheats.js"></script>
 </body>
 
