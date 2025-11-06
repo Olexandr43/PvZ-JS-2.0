@@ -123,3 +123,7 @@ This project is released under the MIT License. Feel free to use, modify, and di
 ## 🙏 Acknowledgments
 
 Inspired by the beloved tower defense game *Plants vs. Zombies* by PopCap Games and the [original HTML game](https://github.com/plantsvszombiesjs/plantsvszombiesjs.github.io).
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome!
