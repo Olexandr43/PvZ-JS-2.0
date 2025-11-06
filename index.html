@@ -1568,6 +1568,9 @@ Copyright (c) 2025 Olexandr_43
                 padding: 10px 15px;
                 font-size: 1.2em;
             }
+            .projectile {
+                font-size: 1.2em;
+            }
         }
 
         @media (max-width: 768px) {
@@ -2631,7 +2634,9 @@ Copyright (c) 2025 Olexandr_43
             document.querySelectorAll('.cell').forEach(cell => {
                 cell.addEventListener('click', () => placePlant(cell));
                 cell.addEventListener('touchstart', (e) => {
-                    e.preventDefault();
+                    if (e.cancelable) {
+                        e.preventDefault();
+                    }
                     placePlant(cell);
                 });
             });
@@ -2710,34 +2715,37 @@ Copyright (c) 2025 Olexandr_43
                     if (plantTypes[lastSelectedPlantForImitater.type].isUpgrade) {
                         showCustomDialog(
                             'Imitater Plant',
-                            'The Imitater cannot copy upgrade plants like Gatling Pea or Twin Sunflower.',
+                            `The Imitater cannot copy upgrade plants like <strong>${getPlantDisplayName(lastSelectedPlantForImitater.type)}</strong>.`,
                             [{ text: 'OK', class: 'secondary' }]
                         );
                         return;
                     }
 
                     const targetInfo = plantTypes[lastSelectedPlantForImitater.type];
+                    const targetCost = lastSelectedPlantForImitater.cost;
+                    const targetName = lastSelectedPlantForImitater.name;
 
                     const imitaterCardClone = clickedCard.cloneNode(true);
                     imitaterCardClone.dataset.plant = lastSelectedPlantForImitater.type;
-                    imitaterCardClone.dataset.cost = targetInfo.cost;
+                    imitaterCardClone.dataset.cost = targetCost;
                     imitaterCardClone.dataset.isImitated = 'true';
                     imitaterCardClone.classList.add('imitated');
 
                     imitaterCardClone.querySelector('.emoji').textContent = targetInfo.emoji;
-                    imitaterCardClone.querySelector('.cost').textContent = targetInfo.cost;
-                    imitaterCardClone.querySelector('.name').textContent = targetInfo.name;
+                    imitaterCardClone.querySelector('.cost').textContent = targetCost;
+                    imitaterCardClone.querySelector('.name').textContent = targetName;
 
                     deckBar.appendChild(imitaterCardClone);
-                    selectedPlantDeck.push({ type: lastSelectedPlantForImitater.type, isImitated: true });
+                    selectedPlantDeck.push({ type: lastSelectedPlantForImitater.type, cost: targetCost, isImitated: true });
 
                     clickedCard.classList.add('in-library-hidden');
                 } else {
                     // --- REGULAR PLANT LOGIC ---
                     const newDeckCard = clickedCard.cloneNode(true);
+                    const plantNameText = clickedCard.querySelector('.name').textContent;
                     deckBar.appendChild(newDeckCard);
-                    selectedPlantDeck.push({ type: plantName, isImitated: false });
-                    lastSelectedPlantForImitater = { type: plantName };
+                    selectedPlantDeck.push({ type: plantName, cost: clickedCard.dataset.cost, isImitated: false });
+                    lastSelectedPlantForImitater = { type: plantName, cost: clickedCard.dataset.cost, name: plantNameText };
 
                     clickedCard.classList.add('in-library-hidden');
                 }
@@ -3153,7 +3161,9 @@ Copyright (c) 2025 Olexandr_43
                     card.addEventListener('touchend', (e) => {
                         // If the touch ended without being flagged as a drag, it's a tap.
                         if (!isDragging) {
-                            e.preventDefault();
+                            if (e.cancelable) {
+                                e.preventDefault();
+                            }
                             handleSelect();
                         }
                     });
@@ -3414,7 +3424,7 @@ Copyright (c) 2025 Olexandr_43
 
             // 3. Handle Grave Buster
             if (plantTypeInfo.isGraveBuster) {
-                return hasGrave ? { canPlant: true, reason: 'Planting Grave Buster', action: 'gravebust' } :
+                return hasGrave && !existingPlant ? { canPlant: true, reason: 'Planting Grave Buster', action: 'gravebust' } :
                     { canPlant: false, reason: 'Must be planted on a grave', action: 'none' };
             }
 
@@ -3458,6 +3468,9 @@ Copyright (c) 2025 Olexandr_43
 
             const plantElement = document.createElement('div');
             plantElement.className = 'plant eating-grave';
+            if (gameState.selectedPlant.isImitated) {
+                plantElement.classList.add('imitated');
+            }
             plantElement.textContent = selectedPlantTypeInfo.emoji;
             plantElement.style.zIndex = '2'; // Ensure it's above the grave emoji
 
@@ -3553,6 +3566,12 @@ Copyright (c) 2025 Olexandr_43
                 plantToUpgrade.element.appendChild(plantToUpgrade.healthBar); // Re-append health bar
             }
             updatePlantHealth(plantToUpgrade);
+
+            // If the upgraded plant was an imitater, remove the grayscale effect
+            if (plantToUpgrade.isImitated && plantToUpgrade.element) {
+                plantToUpgrade.element.classList.remove('imitated');
+                plantToUpgrade.isImitated = false;
+            }
 
             createParticleEffect(cell, '🌟');
         }
@@ -3791,6 +3810,7 @@ Copyright (c) 2025 Olexandr_43
                         zombie.health -= plantType.damage;
                         zombie.isFrozen = true;
                         zombie.freezeTimer = 4000;
+                        zombie.element.classList.remove('slowed');
                         zombie.element.classList.add('frozen');
                         zombie.element.classList.remove('eating');
                         updateZombieHealth(zombie);
@@ -4258,7 +4278,7 @@ Copyright (c) 2025 Olexandr_43
                             if (zombie.element) zombie.element.classList.add('damage-effect');
                             createTimer(300, () => { if (zombie.element) zombie.element.classList.remove('damage-effect'); });
 
-                            if (proj.slow) {
+                            if (proj.slow && !zombie.isFrozen) {
                                 zombie.slowed = true;
                                 zombie.slowTimer = 3000;
                                 if (zombie.element) zombie.element.classList.add('slowed');
@@ -4299,7 +4319,7 @@ Copyright (c) 2025 Olexandr_43
                                     createTimer(300, () => { if (splashTarget.element) splashTarget.element.classList.remove('damage-effect'); });
 
                                     // Apply slow effect if projectile has it
-                                    if (proj.slow) {
+                                    if (proj.slow && !splashTarget.isFrozen) {
                                         splashTarget.slowed = true;
                                         splashTarget.slowTimer = 3000; // Standard slow duration
                                         if (splashTarget.element) splashTarget.element.classList.add('slowed');
@@ -4328,7 +4348,7 @@ Copyright (c) 2025 Olexandr_43
                             updateZombieHealth(zombie);
                             zombie.element.classList.add('damage-effect');
 
-                            if (proj.slow) {
+                            if (proj.slow && !zombie.isFrozen) {
                                 zombie.slowed = true;
                                 zombie.slowTimer = 3000;
                                 zombie.element.classList.add('slowed');
@@ -4383,17 +4403,12 @@ Copyright (c) 2025 Olexandr_43
                 mower.x += mowerSpeed * deltaTime / 1000 * gameState.gameSpeed;
                 mower.element.style.left = (gameState.boardRect.left + mower.x) + 'px';
 
-                const mowerRect = mower.element.getBoundingClientRect();
-
                 // Check for collision with zombies in the same lane
                 gameState.zombies.forEach(zombie => {
-                    if (zombie.element && zombie.row === mower.row) {
-                        const zombieRect = zombie.element.getBoundingClientRect();
-                        if (mowerRect.right > zombieRect.left && mowerRect.left < zombieRect.right) {
-                            zombie.health = 0; // Mark as dead
-                            handleZombieDefeat(zombie, '💥');
-                            zombiesKilledByMower = true;
-                        }
+                    if (zombie.element && zombie.row === mower.row && zombie.x < mower.x + mower.element.offsetWidth) {
+                        zombie.health = 0;
+                        handleZombieDefeat(zombie, '💥');
+                        zombiesKilledByMower = true;
                     }
                 });
 
@@ -4592,7 +4607,7 @@ Copyright (c) 2025 Olexandr_43
                 const zombieColBeforeMove = Math.floor(zombie.x / gameState.cellSize.width);
                 const mineOnTile = gameState.plants.find(p => p.type === 'potatomine' && p.isArmed && p.row === zombie.row && p.col === zombieColBeforeMove);
 
-                if (mineOnTile) {
+                if (mineOnTile && !zombie.isFlying) {
                     isAttacking = true;
                 }
 
@@ -5474,7 +5489,21 @@ Copyright (c) 2025 Olexandr_43
                                 zombie.row === mine.row && Math.floor(zombie.x / gameState.cellSize.width) === mine.col
                             );
 
-                            if (mine.element) createParticleEffect(mine.element, '💥');
+                            if (mine.element) {
+                                const cell = mine.element.parentElement;
+                                if (cell) {
+                                    const explosionElement = document.createElement('div');
+                                    explosionElement.className = 'instant-effect';
+                                    explosionElement.textContent = '💥';
+                                    if (mobileDevice) {
+                                        explosionElement.style.cssText = `position: absolute; font-size: 6em; z-index: 10; filter: drop-shadow(0 0 10px orange); transform: translate(-50%, -50%); top: 50%; left: 50%;`;
+                                    } else {
+                                        explosionElement.style.cssText = `position: absolute; font-size: 9em; z-index: 10; filter: drop-shadow(0 0 10px orange); transform: translate(-50%, -50%); top: 50%; left: 50%;`;
+                                    }
+                                    cell.appendChild(explosionElement);
+                                    createTimer(600, () => explosionElement.remove());
+                                }
+                            }
 
                             zombiesToDamage.forEach(zombie => {
                                 zombie.health -= plantTypes.potatomine.damage;
