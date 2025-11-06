@@ -2822,6 +2822,17 @@ Copyright (c) 2025 Olexandr_43
                 libraryGrid.appendChild(libraryCard);
             });
 
+            // Mobile-only tip: recommend fullscreen when not already in fullscreen
+            if (mobileDevice && !document.fullscreenElement) {
+                showCustomDialog(
+                    'Fullscreen Recommended',
+                    'For the best experience on mobile, it\'s better to play in fullscreen.',
+                    [
+                        { text: 'Go Fullscreen', class: 'secondary', callback: enterFullscreen },
+                        { text: 'Maybe later' }
+                    ]
+                );
+            }
         }
 
 
@@ -2849,6 +2860,37 @@ Copyright (c) 2025 Olexandr_43
             }
 
             setupInGameCardListeners();
+        }
+
+        function applyInitialCooldowns() {
+            // A list of all plants that must recharge at the start of a level.
+            const plantsToRecharge = [
+                'cherrybomb',
+                'wallnut',
+                'potatomine',
+                'iceshroom',
+                'doomshroom',
+                'jalapeno',
+                'tallnut',
+                'marigold'
+            ];
+
+            const inGameCards = document.querySelectorAll('#plantSelection .plantCard');
+
+            inGameCards.forEach(card => {
+                const plantName = card.dataset.plant;
+                if (!plantName) return;
+
+                const isUpgrade = card.dataset.upgrade === 'true';
+                const isInList = plantsToRecharge.includes(plantName);
+
+                if (isUpgrade || isInList) {
+                    const plantInfo = plantTypes[plantName];
+                    if (plantInfo && plantInfo.cooldown) {
+                        startCooldown(card, plantInfo.cooldown);
+                    }
+                }
+            });
         }
 
         // Get plant display name from type key
@@ -2951,6 +2993,7 @@ Copyright (c) 2025 Olexandr_43
             document.getElementById('wave').style.visibility = 'visible';
 
             populateInGameUI();
+            applyInitialCooldowns();
             updatePlantCardAvailability();
 
             updateBoardDimensions();
@@ -5258,8 +5301,6 @@ Copyright (c) 2025 Olexandr_43
             const sunflowerOnBoard = gameState.plants.some(p => p.type === 'sunflower');
             const melonpultOnBoard = gameState.plants.some(p => p.type === 'melonpult');
             const spikeweedOnBoard = gameState.plants.some(p => p.type === 'spikeweed');
-            const gravesOnBoard = gameState.graves.length > 0;
-            const sleepingMushroomOnBoard = gameState.plants.some(p => p.isMushroom && p.isSleeping);
 
             document.querySelectorAll('#plantSelection .plantCard').forEach(card => {
                 if (!card.dataset.plant) return; // Skip shovel
@@ -5276,10 +5317,6 @@ Copyright (c) 2025 Olexandr_43
                     else if (upgradesFrom === 'sunflower') meetsSpecialReq = sunflowerOnBoard;
                     else if (upgradesFrom === 'melonpult') meetsSpecialReq = melonpultOnBoard;
                     else if (upgradesFrom === 'spikeweed') meetsSpecialReq = spikeweedOnBoard;
-                } else if (plantTypeInfo.isGraveBuster) {
-                    meetsSpecialReq = gravesOnBoard;
-                } else if (plantTypeInfo.isWakeUp) {
-                    meetsSpecialReq = sleepingMushroomOnBoard; // Coffee bean requires a sleeping mushroom
                 }
 
                 if (canAfford && meetsSpecialReq) {
