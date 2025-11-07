@@ -63,6 +63,8 @@ A lightweight, browser-based implementation of the classic lane defense game, Pl
 The arsenal of plants has more than doubled, adding significant strategic variety.
 
 *   **Blover (🍀):** Costs 125 sun. An instant-use plant that creates a strong gust of wind, blowing away all flying Balloon Zombies from the screen instantly.
+*   **Snapdragon (🐲):** Costs 225 sun. A stationary plant that breathes fire in a 3x2 area, dealing 1.5 damage every 2 seconds and thawing any frozen or chilled zombies.
+*   **Hurrikale (🌬️):** Costs 100 sun. An instant-use plant that pushes all zombies in a single lane backward and applies a chilled effect, instantly defeating any Balloon Zombies blown off-screen.
 *   **Cabbage-pult (🥬):** Costs 100 sun. Lobs cabbages at zombies, dealing twice the damage of a standard pea.
 *   **Cherry Bomb (💣):** Costs 150 sun. An instant-use plant that explodes, dealing massive damage (90) to all zombies in a 3x3 area. It is consumed on use.
 *   **Coffee Bean (☕):** Costs 75 sun. An instant-use plant placed on top of sleeping mushrooms to wake them up for use during the day.
