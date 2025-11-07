@@ -1140,6 +1140,50 @@ Copyright (c) 2025 Olexandr_43
             margin-bottom: 30px;
         }
 
+        .plant-tooltip {
+            position: fixed;
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            line-height: 1.4;
+            max-width: 200px;
+            text-align: center;
+            z-index: 3000;
+            pointer-events: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .plant-tooltip.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .plant-tooltip::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+        }
+
+        .plant-tooltip.bottom::after {
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 0 6px 6px 6px;
+            border-color: transparent transparent rgba(0, 0, 0, 0.85) transparent;
+        }
+
+        .plant-tooltip.top::after {
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 6px 6px 0 6px;
+            border-color: rgba(0, 0, 0, 0.85) transparent transparent transparent;
+        }
+
         /* --- ANIMATIONS --- */
         @keyframes iceGlimmer {
             from {
@@ -1989,6 +2033,17 @@ Copyright (c) 2025 Olexandr_43
 
         // Plant Types
         const plantTypes = { // 🌴Umbrella Leaf \ 🧲Magnet-shroom
+            peashooter: {
+                emoji: '🌱',
+                health: 3.6,
+                maxHealth: 3.6,
+                shoots: true,
+                damage: 1,
+                shootInterval: 1500,
+                projectile: '🟢',
+                description: 'Basic shooter',
+                cooldown: 7500 // Fast
+            },
             sunflower: {
                 emoji: '🌻',
                 health: 3.6,
@@ -2000,92 +2055,15 @@ Copyright (c) 2025 Olexandr_43
                 description: 'Produces sun',
                 cooldown: 7500 // Fast
             },
-            cabbagepult: {
-                emoji: '🥬',
-                health: 3.6,
-                maxHealth: 3.6,
-                shoots: true,
-                damage: 2,
-                shootInterval: 3000,
-                projectile: '🥬',
-                description: 'Lobs cabbages at zombies.',
-                cooldown: 7500 // Fast
-            },
-            melonpult: {
-                emoji: '🍉',
-                health: 3.6,
-                maxHealth: 3.6,
-                shoots: true,
-                damage: 4, // High direct damage
-                splashDamage: 1.3, // Lower splash damage
-                splashRadiusY: 1, // 3 rows total (target row +/- 1)
-                shootInterval: 3000,
-                projectile: '🍈',
-                description: 'Splash damage',
-                cooldown: 7500 // Fast
-            },
-            kernelpult: {
-                emoji: '🌽',
-                health: 3.6,
-                maxHealth: 3.6,
-                shoots: true,
-                damage: 1,
-                shootInterval: 3000,
-                projectile: '🟡',
-                hasButter: true,
-                description: 'Lobs kernels and butter that stuns.',
-                cooldown: 7500, // Fast
-            },
-            wintermelon: {
-                emoji: '🥶',
-                health: 4.8,
-                maxHealth: 4.8,
-                shoots: true,
-                damage: 4,
-                splashDamage: 1.3,
-                splashRadiusY: 1,
-                slow: true,
-                shootInterval: 3000,
-                projectile: '🧊',
-                description: 'Upgrade: Freezes and damages zombies.',
-                isUpgrade: true,
-                upgradesFrom: 'melonpult',
-                cooldown: 50000 // Very Slow
-            },
-            suncheat: {
-                emoji: '☀️',
-                health: 1,
-                maxHealth: 1,
-                produces: 'sun',
-                sunAmount: 9990,
-                baseInterval: 99900,
+            cherrybomb: {
+                emoji: '💣',
+                health: Infinity,
                 shoots: false,
-                description: 'Cheats sun',
-                cooldown: 0
-            },
-            twinSunflower: {
-                emoji: '🌻🌻',
-                health: 3.6,
-                maxHealth: 3.6,
-                produces: 'sun',
-                sunAmount: 100,
-                baseInterval: 24000,
-                shoots: false,
-                description: 'Upgrade: Produces more sun',
-                isUpgrade: true,
-                upgradesFrom: 'sunflower',
+                instant: true,
+                damage: 90,
+                radius: 1, // 3x3 area (radius of 1 from center)
+                description: 'Explodes in an area',
                 cooldown: 50000 // Very Slow
-            },
-            peashooter: {
-                emoji: '🌱',
-                health: 3.6,
-                maxHealth: 3.6,
-                shoots: true,
-                damage: 1,
-                shootInterval: 1500,
-                projectile: '🟢',
-                description: 'Basic shooter',
-                cooldown: 7500 // Fast
             },
             wallnut: {
                 emoji: '🥥',
@@ -2103,17 +2081,8 @@ Copyright (c) 2025 Olexandr_43
                 isMine: true,
                 damage: 90,
                 armTime: 14000,
-                description: 'Explodes on contact after arming.',
+                description: 'Explodes on contact after arming',
                 cooldown: 30000 // Slow
-            },
-            garlic: {
-                emoji: '🧄',
-                health: 18,
-                maxHealth: 18,
-                shoots: false,
-                diverts: true,
-                description: 'Diverts zombies to other lanes',
-                cooldown: 7500 // Fast
             },
             snowpea: {
                 emoji: '❄️',
@@ -2150,6 +2119,39 @@ Copyright (c) 2025 Olexandr_43
                 description: 'Shoots twice',
                 cooldown: 7500 // Fast
             },
+            gravebuster: {
+                emoji: '🦇',
+                health: 3.6,
+                maxHealth: 3.6,
+                shoots: false,
+                isGraveBuster: true,
+                description: 'Eats graves, single use',
+                cooldown: 7500 // Fast
+            },
+            iceshroom: {
+                emoji: '🧊',
+                health: 3.6,
+                maxHealth: 3.6,
+                shoots: false,
+                isMushroom: true,
+                damage: 1,
+                freezes: true,
+                description: 'Freezes all zombies on screen. <br>Sleeps during day',
+                cooldown: 50000 // Very Slow
+            },
+            doomshroom: {
+                emoji: '🍄',
+                health: 3.6,
+                maxHealth: 3.6,
+                shoots: false,
+                isMushroom: true,
+                damage: 90,
+                radiusX: 3, // 7 wide
+                radiusY: 2, // 5 high
+                createsCrater: true,
+                description: 'Huge explosion, leaves crater. <br>Sleeps during day',
+                cooldown: 50000 // Very Slow
+            },
             threepeater: {
                 emoji: '🎋',
                 health: 3.6,
@@ -2162,33 +2164,42 @@ Copyright (c) 2025 Olexandr_43
                 description: 'Shoots 3 lanes',
                 cooldown: 7500 // Fast
             },
-            gatling: {
-                emoji: '🔫',
-                health: 3.6,
-                maxHealth: 3.6,
-                shoots: true,
-                damage: 1,
-                quad: true,
-                shootInterval: 1500,
-                projectile: '🟢',
-                description: 'Shoots 4 peas',
-                isUpgrade: true,
-                upgradesFrom: 'repeater',
+            jalapeno: {
+                emoji: '🌶️',
+                health: Infinity,
+                shoots: false,
+                instant: true,
+                damage: 90,
+                laneWide: true,
+                description: 'Destroys an entire lane',
                 cooldown: 50000 // Very Slow
             },
-            firepea: {
-                emoji: '🔥',
-                health: 3.6,
-                maxHealth: 3.6,
-                shoots: true,
-                damage: 2,
-                splashDamage: 0.65,
-                splashRadiusY: 0, // 3x1 radius
-                fire: true,
-                shootInterval: 1500,
-                projectile: '🔥',
-                description: 'Splash fire damage',
+            spikeweed: {
+                emoji: '📌',
+                health: 4.8,
+                maxHealth: 4.8,
+                shoots: false,
+                isSpike: true,
+                damage: 0.5,
+                attackInterval: 1000,
+                description: 'Hurts zombies that step on it',
                 cooldown: 7500 // Fast
+            },
+            torchwood: {
+                emoji: '🪔',
+                health: 4.8,
+                maxHealth: 4.8,
+                shoots: false,
+                description: 'Ignites peas',
+                cooldown: 7500 // Fast
+            },
+            tallnut: {
+                emoji: '🌰',
+                health: 48,
+                maxHealth: 48,
+                shoots: false,
+                description: 'Great defensive wall',
+                cooldown: 30000 // Slow
             },
             cactus: {
                 emoji: '🌵',
@@ -2211,24 +2222,146 @@ Copyright (c) 2025 Olexandr_43
                 description: 'Blows away flying zombies',
                 cooldown: 7500, // Fast
             },
-            torchwood: {
-                emoji: '🪔',
-                health: 4.8,
-                maxHealth: 4.8,
-                shoots: false,
-                description: 'Ignites peas',
+            cabbagepult: {
+                emoji: '🥬',
+                health: 3.6,
+                maxHealth: 3.6,
+                shoots: true,
+                damage: 2,
+                shootInterval: 3000,
+                projectile: '🥬',
+                description: 'Lobs cabbages',
                 cooldown: 7500 // Fast
             },
-            spikeweed: {
-                emoji: '📌',
+            kernelpult: {
+                emoji: '🌽',
+                health: 3.6,
+                maxHealth: 3.6,
+                shoots: true,
+                damage: 1,
+                shootInterval: 3000,
+                projectile: '🟡',
+                hasButter: true,
+                description: 'Lobs kernels and butter that stuns',
+                cooldown: 7500, // Fast
+            },
+            coffeebean: {
+                emoji: '☕',
+                health: Infinity,
+                shoots: false,
+                isWakeUp: true,
+                description: 'Wakes up sleeping mushrooms',
+                cooldown: 7500 // Fast
+            },
+            garlic: {
+                emoji: '🧄',
+                health: 18,
+                maxHealth: 18,
+                shoots: false,
+                diverts: true,
+                description: 'Diverts zombies to other lanes',
+                cooldown: 7500 // Fast
+            },
+            marigold: {
+                emoji: '🌼',
+                health: 3.6,
+                maxHealth: 3.6,
+                produces: 'coin',
+                baseInterval: 15000,
+                shoots: false,
+                description: 'Produces coins(little suns)',
+                cooldown: 30000 // Slow
+            },
+            melonpult: {
+                emoji: '🍉',
+                health: 3.6,
+                maxHealth: 3.6,
+                shoots: true,
+                damage: 4, // High direct damage
+                splashDamage: 1.3, // Lower splash damage
+                splashRadiusY: 1, // 3 rows total (target row +/- 1)
+                shootInterval: 3000,
+                projectile: '🍈',
+                description: 'High direct, 3x3 splash damage',
+                cooldown: 7500 // Fast
+            },
+            firepea: {
+                emoji: '🔥',
+                health: 3.6,
+                maxHealth: 3.6,
+                shoots: true,
+                damage: 2,
+                splashDamage: 0.65,
+                splashRadiusY: 0, // 3x1 radius
+                fire: true,
+                shootInterval: 1500,
+                projectile: '🔥',
+                description: 'Splash fire damage',
+                cooldown: 7500 // Fast
+            },
+            snapdragon: {
+                emoji: '🐲',
                 health: 4.8,
                 maxHealth: 4.8,
                 shoots: false,
-                isSpike: true,
-                damage: 0.5,
-                attackInterval: 1000,
-                description: 'Damages zombies that walk over it.',
+                isSnapdragon: true,
+                damage: 1.5,
+                shootInterval: 2000,
+                description: 'Breathes fire in a 3x2 area',
                 cooldown: 7500 // Fast
+            },
+            hurrikale: {
+                emoji: '🌬️',
+                health: Infinity,
+                shoots: false,
+                instant: true,
+                laneWide: true,
+                isPusher: true,
+                description: 'Pushes zombies back and slows them',
+                cooldown: 15000 // Medium
+            },
+            gatling: {
+                emoji: '🔫',
+                health: 3.6,
+                maxHealth: 3.6,
+                shoots: true,
+                damage: 1,
+                quad: true,
+                shootInterval: 1500,
+                projectile: '🟢',
+                description: 'Shoots 4 peas. <br>Has to be planted on <strong>Repeater',
+                isUpgrade: true,
+                upgradesFrom: 'repeater',
+                cooldown: 50000 // Very Slow
+            },
+            twinSunflower: {
+                emoji: '🌻🌻',
+                health: 3.6,
+                maxHealth: 3.6,
+                produces: 'sun',
+                sunAmount: 100,
+                baseInterval: 24000,
+                shoots: false,
+                description: 'Produces double sun. <br>Has to be planted on <strong>Sunflower',
+                isUpgrade: true,
+                upgradesFrom: 'sunflower',
+                cooldown: 50000 // Very Slow
+            },
+            wintermelon: {
+                emoji: '🥶',
+                health: 4.8,
+                maxHealth: 4.8,
+                shoots: true,
+                damage: 4,
+                splashDamage: 1.3,
+                splashRadiusY: 1,
+                slow: true,
+                shootInterval: 3000,
+                projectile: '🧊',
+                description: 'Splash freezes and damages zombies. <br>Has to be planted on <strong>Melon-pult',
+                isUpgrade: true,
+                upgradesFrom: 'melonpult',
+                cooldown: 50000 // Very Slow
             },
             spikerock: {
                 emoji: '📍',
@@ -2239,120 +2372,31 @@ Copyright (c) 2025 Olexandr_43
                 isSpikerock: true,
                 damage: 1,
                 attackInterval: 750,
-                description: 'Upgrade: Tougher and deals more damage.',
+                description: 'Damages zombies that walk over it. <br>Has to be planted on <strong>Spikeweed',
                 isUpgrade: true,
                 upgradesFrom: 'spikeweed',
                 cooldown: 50000 // Very Slow
-            },
-            cherrybomb: {
-                emoji: '💣',
-                health: Infinity,
-                shoots: false,
-                instant: true,
-                damage: 90,
-                radius: 1, // 3x3 area (radius of 1 from center)
-                description: 'Explodes in an area',
-                cooldown: 50000 // Very Slow
-            },
-            jalapeno: {
-                emoji: '🌶️',
-                health: Infinity,
-                shoots: false,
-                instant: true,
-                damage: 90,
-                laneWide: true,
-                description: 'Destroys an entire lane',
-                cooldown: 50000 // Very Slow
-            },
-            doomshroom: {
-                emoji: '🍄',
-                health: 3.6,
-                maxHealth: 3.6,
-                shoots: false,
-                isMushroom: true,
-                damage: 90,
-                radiusX: 3, // 7 wide
-                radiusY: 2, // 5 high
-                createsCrater: true,
-                description: 'Huge explosion, leaves crater. Sleeps in day.',
-                cooldown: 50000 // Very Slow
-            },
-            iceshroom: {
-                emoji: '🧊',
-                health: 3.6,
-                maxHealth: 3.6,
-                shoots: false,
-                isMushroom: true,
-                damage: 1,
-                freezes: true,
-                description: 'Freezes all zombies on screen. Sleeps in day.',
-                cooldown: 50000 // Very Slow
-            },
-            coffeebean: {
-                emoji: '☕',
-                health: Infinity,
-                shoots: false,
-                isWakeUp: true,
-                description: 'Wakes up sleeping mushrooms.',
-                cooldown: 7500 // Fast
-            },
-            tallnut: {
-                emoji: '🌰',
-                health: 48,
-                maxHealth: 48,
-                shoots: false,
-                description: 'Great defensive wall',
-                cooldown: 30000 // Slow
-            },
-            marigold: {
-                emoji: '🌼',
-                health: 3.6,
-                maxHealth: 3.6,
-                produces: 'coin',
-                baseInterval: 15000,
-                shoots: false,
-                description: 'Produces coins(useless)',
-                cooldown: 30000 // Slow
-            },
-            gravebuster: {
-                emoji: '🦇',
-                health: 3.6,
-                maxHealth: 3.6,
-                shoots: false,
-                isGraveBuster: true,
-                description: 'Eats graves, single use',
-                cooldown: 7500 // Fast
             },
             imitater: {
                 emoji: '🎭',
                 health: 0, // Health is copied from target
                 isImitater: true,
-                description: 'Copies the previously selected plant.',
+                description: 'Copies the previously selected plant',
                 cooldown: 1000 // Cooldown is on the transformed card
             },
-            snapdragon: {
-                emoji: '🐲',
-                health: 4.8,
-                maxHealth: 4.8,
+            suncheat: {
+                emoji: '☀️',
+                health: 1,
+                maxHealth: 1,
+                produces: 'sun',
+                sunAmount: 9990,
+                baseInterval: 99900,
                 shoots: false,
-                isSnapdragon: true,
-                damage: 1.5,
-                shootInterval: 2000,
-                description: 'Breathes fire in a 3x2 area.',
-                cooldown: 7500 // Fast
-            },
-            hurrikale: {
-                emoji: '🌬️',
-                health: Infinity,
-                shoots: false,
-                instant: true,
-                laneWide: true,
-                isPusher: true,
-                description: 'Pushes zombies back and chills them.',
-                cooldown: 15000 // Medium
+                description: 'Cheats sun',
+                cooldown: 0
             },
         };
-
+        
         // Zombies
         const zombieTypes = {
             normal: { name: 'Zombie', emoji: '🧟', health: 10, maxHealth: 10, speed: 13, damage: 1, points: 100 },
@@ -2368,6 +2412,9 @@ Copyright (c) 2025 Olexandr_43
             zomboni: { name: 'Zomboni', emoji: '🚚', health: 65, maxHealth: 65, speed: 10, damage: 99, points: 1000, uneatable: true, crushes: true, leavesIceTrail: true },
             balloon: { name: 'Balloon', emoji: '🎈', health: 11, maxHealth: 11, speed: 25, damage: 1, points: 250, isFlying: true }
         };
+
+        // --- Global variable for the active tooltip
+        let activeTooltip = null;
 
         // --- NEW TIMER SYSTEM ---
         function createTimer(delay, callback, isInterval = false) {
@@ -2715,6 +2762,65 @@ Copyright (c) 2025 Olexandr_43
             });
         }
 
+        // Function to handle mouseover event for plant cards
+        function handlePlantCardMouseOver(event) {
+            const card = event.target.closest('.plantCard');
+            if (!card || activeTooltip) return;
+
+            if (card.classList.contains('in-library-hidden')) return;
+
+            const plantName = card.dataset.plant;
+            if (!plantName || !plantTypes[plantName] || !plantTypes[plantName].description) return;
+
+            const description = plantTypes[plantName].description;
+
+            activeTooltip = document.createElement('div');
+            activeTooltip.className = 'plant-tooltip';
+            activeTooltip.innerHTML = description; 
+            document.body.appendChild(activeTooltip);
+
+            const cardRect = card.getBoundingClientRect();
+            const tooltipRect = activeTooltip.getBoundingClientRect();
+            const libraryContainer = document.getElementById('plantLibrary');
+            const libraryRect = libraryContainer.getBoundingClientRect();
+            const arrowSize = 8;
+            const margin = 5;
+
+            let top, left;
+            left = cardRect.left + (cardRect.width / 2) - (tooltipRect.width / 2);
+
+            if (cardRect.bottom + tooltipRect.height + arrowSize + margin < libraryRect.bottom) {
+                top = cardRect.bottom + arrowSize;
+                activeTooltip.classList.add('bottom');
+            } else {
+                top = cardRect.top - tooltipRect.height - arrowSize;
+                activeTooltip.classList.add('top');
+            }
+
+            if (left < margin) left = margin;
+            if (left + tooltipRect.width > window.innerWidth - margin) {
+                left = window.innerWidth - tooltipRect.width - margin;
+            }
+
+            activeTooltip.style.top = `${top}px`;
+            activeTooltip.style.left = `${left}px`;
+
+            if (mobileDevice) {
+                document.addEventListener('touchstart', handlePlantCardMouseOut, { once: true });
+            }
+        }
+
+        // Function to handle mouseout event for plant cards
+        function handlePlantCardMouseOut() {
+            if (activeTooltip) {
+                activeTooltip.remove();
+                activeTooltip = null;
+            }
+            if (mobileDevice) {
+                document.removeEventListener('touchstart', handlePlantCardMouseOut);
+            }
+        }
+
         // Sets up the plant selection listeners ONCE
         function setupPlantSelectionListeners() {
             const libraryGrid = document.getElementById('plantLibraryGrid');
@@ -2795,6 +2901,50 @@ Copyright (c) 2025 Olexandr_43
                     handleRemoveFromDeck(clickedCard);
                 }
             });
+
+            // --- LOGIC FOR TOOLTIPS ---
+            if (mobileDevice) {
+                let touchStartX = 0;
+                let touchStartY = 0;
+                let isDragging = false;
+                const dragThreshold = 10;
+
+                libraryGrid.addEventListener('touchstart', (e) => {
+                    const touch = e.touches[0];
+                    touchStartX = touch.clientX;
+                    touchStartY = touch.clientY;
+                    isDragging = false;
+                }, { passive: true });
+
+                libraryGrid.addEventListener('touchmove', (e) => {
+                    if (isDragging) return;
+                    const touch = e.touches[0];
+                    const deltaX = Math.abs(touch.clientX - touchStartX);
+                    const deltaY = Math.abs(touch.clientY - touchStartY);
+                    if (deltaX > dragThreshold || deltaY > dragThreshold) {
+                        isDragging = true;
+                        // If it's a drag, hide any tooltip that might be visible
+                        handlePlantCardMouseOut();
+                    }
+                }, { passive: true });
+
+                libraryGrid.addEventListener('touchend', (e) => {
+                    if (isDragging) return;
+
+                    // If it was not a drag, it's a tap
+                    const card = e.target.closest('.plantCard');
+                    if (card) {
+                        handlePlantCardMouseOut();
+                        e.stopPropagation();
+                        handlePlantCardMouseOver({ target: card });
+                    }
+                });
+
+            } else {
+                // On desktop, use the existing mouse hover behavior
+                libraryGrid.addEventListener('mouseover', handlePlantCardMouseOver);
+                libraryGrid.addEventListener('mouseout', handlePlantCardMouseOut);
+            }
         }
 
 
