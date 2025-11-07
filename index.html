@@ -1568,6 +1568,7 @@ Copyright (c) 2025 Olexandr_43
                 padding: 10px 15px;
                 font-size: 1.2em;
             }
+
             .projectile {
                 font-size: 1.2em;
             }
@@ -1885,6 +1886,18 @@ Copyright (c) 2025 Olexandr_43
             <div class="cost">250</div>
             <div class="name">Fire Pea</div>
         </div>
+        <div class="plantCard" data-plant="snapdragon" data-cost="225">
+            <div class="cooldown-overlay"></div>
+            <div class="emoji">🐲</div>
+            <div class="cost">225</div>
+            <div class="name">Snapdragon</div>
+        </div>
+        <div class="plantCard" data-plant="hurrikale" data-cost="100">
+            <div class="cooldown-overlay"></div>
+            <div class="emoji">🌬️</div>
+            <div class="cost">100</div>
+            <div class="name">Hurrikale</div>
+        </div>
         <div class="plantCard" data-plant="gatling" data-cost="250" data-upgrade="true" data-upgrades-from="repeater">
             <div class="cooldown-overlay"></div>
             <div class="emoji">🔫</div>
@@ -1935,6 +1948,7 @@ Copyright (c) 2025 Olexandr_43
     <script>
         let selectedPlantDeck = [];
         let lastSelectedPlantForImitater = null;
+        const hurrikalePushSpeed = 600;
 
         // Game State
         let gameState = {
@@ -2315,6 +2329,27 @@ Copyright (c) 2025 Olexandr_43
                 isImitater: true,
                 description: 'Copies the previously selected plant.',
                 cooldown: 1000 // Cooldown is on the transformed card
+            },
+            snapdragon: {
+                emoji: '🐲',
+                health: 4.8,
+                maxHealth: 4.8,
+                shoots: false,
+                isSnapdragon: true,
+                damage: 1.5,
+                shootInterval: 2000,
+                description: 'Breathes fire in a 3x2 area.',
+                cooldown: 7500 // Fast
+            },
+            hurrikale: {
+                emoji: '🌬️',
+                health: Infinity,
+                shoots: false,
+                instant: true,
+                laneWide: true,
+                isPusher: true,
+                description: 'Pushes zombies back and chills them.',
+                cooldown: 15000 // Medium
             },
         };
 
@@ -2931,7 +2966,7 @@ Copyright (c) 2025 Olexandr_43
 
             // Check for balloon zombie fighter
             const hasBalloonZombieFighter = deckPlantTypes.some(type => {
-                return deckPlantTypes.includes('cherrybomb') || deckPlantTypes.includes('jalapeno') || deckPlantTypes.includes('doomshroom') || deckPlantTypes.includes('cactus') || deckPlantTypes.includes('blover');
+                return deckPlantTypes.includes('cherrybomb') || deckPlantTypes.includes('jalapeno') || deckPlantTypes.includes('doomshroom') || deckPlantTypes.includes('cactus') || deckPlantTypes.includes('blover') || deckPlantTypes.includes('hurrikale');
             });
 
             // No balloon zombie fighter
@@ -3928,7 +3963,42 @@ Copyright (c) 2025 Olexandr_43
                             if (!zombiesToDamage.includes(zombie)) zombiesToDamage.push(zombie);
                         }
                     });
-                } else if (plantType.laneWide) { // Jalapeno Logic
+                } else if (plantType.laneWide) { // Jalapeno AND Hurrikale Logic
+
+                    // --- HURRIKALE ---
+                    if (plantType.isPusher) {
+                        const windElement = document.createElement('div');
+                        windElement.className = 'instant-effect';
+                        windElement.textContent = '💨';
+                        if (mobileDevice) {
+                            windElement.style.cssText = `position: fixed; font-size: 3em; z-index: 10; opacity: 0.7; top: ${gameState.boardRect.top + row * gameState.cellSize.height + 10}px; left: ${gameState.boardRect.left}px; animation: windBlow calc(0.8s / var(--game-speed)) ease-out forwards;`;
+                        } else {
+                            windElement.style.cssText = `position: fixed; font-size: 4em; z-index: 10; opacity: 0.7; top: ${gameState.boardRect.top + row * gameState.cellSize.height + 20}px; left: ${gameState.boardRect.left}px; animation: windBlow calc(0.8s / var(--game-speed)) ease-out forwards;`;
+                        }
+                        document.getElementById('gameContainer').appendChild(windElement);
+                        createTimer(800, () => windElement.remove());
+
+                        const zombiesToPush = gameState.zombies.filter(zombie => zombie.row === row);
+
+                        zombiesToPush.forEach(zombie => {
+                            if (!zombie.element) return;
+
+                            zombie.isBeingPushed = true;
+                            zombie.element.classList.remove('eating');
+
+                            if (!zombie.isFrozen) {
+                                zombie.slowed = true;
+                                zombie.slowTimer = 8000;
+                                if (zombie.element) {
+                                    zombie.element.classList.add('slowed');
+                                }
+                            }
+                        });
+
+                        return;
+                    }
+
+                    // --- JALAPENO ---
                     for (let c = 0; c < 9; c++) {
                         const affectedCell = document.querySelector(`.cell[data-row='${row}'][data-col='${c}']`);
                         if (affectedCell) {
@@ -3936,7 +4006,7 @@ Copyright (c) 2025 Olexandr_43
                             fireElement.className = 'instant-effect';
                             fireElement.textContent = '🔥';
                             if (mobileDevice) {
-                            fireElement.style.cssText = `position: absolute; font-size: 2.5em; z-index: 10; animation: fireGlow calc(0.5s / var(--game-speed)) infinite alternate;`;
+                                fireElement.style.cssText = `position: absolute; font-size: 2.5em; z-index: 10; animation: fireGlow calc(0.5s / var(--game-speed)) infinite alternate;`;
                             } else {
                                 fireElement.style.cssText = `position: absolute; font-size: 3.5em; z-index: 10; animation: fireGlow calc(0.5s / var(--game-speed)) infinite alternate;`;
                             }
@@ -4577,6 +4647,24 @@ Copyright (c) 2025 Olexandr_43
             gameState.zombies = gameState.zombies.filter(zombie => {
                 if (!zombie.element) return false;
 
+                if (zombie.isBeingPushed) {
+                    zombie.x += hurrikalePushSpeed * adjustedDelta / 1000;
+
+                    if (zombie.x >= gameState.boardRect.width) {
+                        if (zombie.isFlying) {
+                            zombie.health = 0;
+                            handleZombieDefeat(zombie, '💨');
+                            return false;
+                        } else {
+                            zombie.x = gameState.boardRect.width;
+                            zombie.isBeingPushed = false;
+                        }
+                    }
+
+                    zombie.element.style.left = (gameState.boardRect.left + zombie.x) + 'px';
+                    return true;
+                }
+
                 // Decrement all active cooldowns first
                 if (zombie.attackCooldown > 0) {
                     zombie.attackCooldown -= adjustedDelta;
@@ -4712,7 +4800,7 @@ Copyright (c) 2025 Olexandr_43
                             zombie.attacking = true; // Stop movement
 
                             if (zombie.attackCooldown <= 0) { // Can it attack now?
-                                zombie.attackCooldown = 2000; // Set 2-second cooldown
+                                zombie.attackCooldown = isSlowed ? 4000 : 2000;  // Set 2-second cooldown
 
                                 if (plant.type === 'spikerock') {
                                     plant.health -= plant.maxHealth / 3;
@@ -4739,9 +4827,10 @@ Copyright (c) 2025 Olexandr_43
                         else {
                             zombie.attacking = true;
                             zombie.element.classList.add('eating');
+                            zombie.element.style.animationDuration = isSlowed ? 'calc(1s / var(--game-speed))' : 'calc(0.5s / var(--game-speed))';
 
                             if (zombie.attackCooldown <= 0) {
-                                zombie.attackCooldown = 1000;
+                                zombie.attackCooldown = isSlowed ? 2000 : 1000;
                                 const damage = getZombieDamage(zombieTypeInfo.damage);
                                 plant.health -= damage;
                                 updatePlantHealth(plant);
@@ -4783,7 +4872,7 @@ Copyright (c) 2025 Olexandr_43
                 });
 
                 if (zombie.health <= 0) handleZombieDefeat(zombie);
-                if (zombie.element && !zombie.attacking) zombie.element.classList.remove('eating');
+                if (zombie.element && !zombie.attacking) { zombie.element.classList.remove('eating'); zombie.element.style.animationDuration = ''; }
                 if (zombie.x <= 0) {
                     const mower = gameState.lawnmowers.find(m => m.row === zombie.row);
                     if (mower && !mower.moving && mower.element) mower.moving = true;
@@ -4913,7 +5002,8 @@ Copyright (c) 2025 Olexandr_43
                 lastChomped: 0,
                 isChangingLane: false,
                 isStunned: false,
-                stunTimer: 0
+                stunTimer: 0,
+                isBeingPushed: false
             };
 
             // Add special properties for Dancing Zombie
@@ -5014,7 +5104,8 @@ Copyright (c) 2025 Olexandr_43
                 lastChomped: 0,
                 isChangingLane: false,
                 isStunned: false,
-                stunTimer: 0
+                stunTimer: 0,
+                isBeingPushed: false
             };
 
             // Add special properties for Dancing Zombie
@@ -5373,6 +5464,31 @@ Copyright (c) 2025 Olexandr_43
             }
         }
 
+        function createFireBreathEffect(cell) {
+            if (!cell) return;
+            const fireEffect = document.createElement('div');
+            fireEffect.className = 'instant-effect';
+            fireEffect.textContent = '🔥';
+            fireEffect.style.cssText = `
+                position: absolute;
+                font-size: 3em;
+                z-index: 5;
+                opacity: 0.8;
+                transform: scale(0.5);
+                filter: drop-shadow(0 0 10px orange);
+                transition: transform calc(0.3s / var(--game-speed)) ease-out, opacity calc(0.3s / var(--game-speed)) ease-out;
+            `;
+            cell.appendChild(fireEffect);
+            setTimeout(() => {
+                fireEffect.style.transform = 'scale(1.2)';
+            }, 10);
+            createTimer(300, () => {
+                fireEffect.style.opacity = '0';
+                fireEffect.style.transform = 'scale(0)';
+                createTimer(100, () => fireEffect.remove());
+            });
+        }
+
         function updateCooldownVisuals() {
             document.querySelectorAll('#plantSelection .plantCard').forEach(card => {
                 const overlay = card.querySelector('.cooldown-overlay');
@@ -5697,6 +5813,71 @@ Copyright (c) 2025 Olexandr_43
                                         }
                                     });
                                     gameState.zombies = gameState.zombies.filter(z => z.element);
+                                }
+                            }
+                        }
+                    });
+
+                    // --- SNAPDRAGON LOGIC ---
+                    gameState.plants.forEach(plant => {
+                        if (plant.type === 'snapdragon') {
+                            if (!plant.shootCooldown) plant.shootCooldown = 0;
+                            plant.shootCooldown -= adjustedDelta;
+                            if (plant.shootCooldown <= 0) {
+                                const attackRows = [plant.row - 1, plant.row, plant.row + 1];
+
+                                const startBoundaryX = (plant.col + 2 / 3) * gameState.cellSize.width;
+                                const endBoundaryX = (plant.col + 3) * gameState.cellSize.width;
+
+                                const zombiesToAttack = gameState.zombies.filter(zombie => {
+                                    if (!zombie.element) return false;
+
+                                    const isInYRange = attackRows.includes(zombie.row);
+                                    const isInXRange = zombie.x >= startBoundaryX && zombie.x < endBoundaryX;
+
+                                    return isInYRange && isInXRange && !zombie.isFlying;
+                                });
+
+                                if (zombiesToAttack.length > 0) {
+                                    plant.shootCooldown = plantTypes.snapdragon.shootInterval;
+                                    if (plant.element) {
+                                        plant.element.classList.add('shooting');
+                                        createTimer(300, () => { if (plant.element) plant.element.classList.remove('shooting'); });
+                                    }
+
+                                    attackRows.forEach(r => {
+                                        if (r >= 0 && r < 5) {
+                                            const cell1 = document.querySelector(`.cell[data-row='${r}'][data-col='${plant.col + 1}']`);
+                                            const cell2 = document.querySelector(`.cell[data-row='${r}'][data-col='${plant.col + 2}']`);
+
+                                            if (cell1) createFireBreathEffect(cell1);
+                                            if (cell2) createFireBreathEffect(cell2);
+                                        }
+                                    });
+
+                                    zombiesToAttack.forEach(zombie => {
+                                        zombie.health -= plantTypes.snapdragon.damage;
+                                        updateZombieHealth(zombie);
+
+                                        if (zombie.isFrozen) {
+                                            zombie.isFrozen = false;
+                                            zombie.freezeTimer = 0;
+                                            zombie.element.classList.remove('frozen');
+                                        } else if (zombie.slowed) {
+                                            zombie.slowed = false;
+                                            zombie.slowTimer = 0;
+                                            zombie.element.classList.remove('slowed');
+                                        }
+
+                                        if (zombie.element) {
+                                            zombie.element.classList.add('damage-effect');
+                                            createTimer(300, () => { if (zombie.element) zombie.element.classList.remove('damage-effect'); });
+                                        }
+
+                                        if (zombie.health <= 0) {
+                                            handleZombieDefeat(zombie);
+                                        }
+                                    });
                                 }
                             }
                         }
