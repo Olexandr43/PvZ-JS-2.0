@@ -348,12 +348,26 @@ Copyright (c) 2025 Olexandr_43
             pointer-events: none;
         }
 
+        .zombie-attachment,
+        .zombie-card-attachment {
+            position: absolute;
+            transform: scaleX(-1);
+            /* Un-flip the attachment */
+            font-size: 0.65em;
+            z-index: 1;
+            pointer-events: none;
+        }
+
         .zombie.dancing {
             animation: moonwalk calc(1s / var(--game-speed)) infinite alternate ease-in-out;
         }
 
         .zombie.dancing.eating {
             animation: zombieEat calc(0.5s / var(--game-speed)) infinite;
+        }
+
+        .zombie.enraged {
+            filter: drop-shadow(2px 2px 4px rgba(255, 0, 0, 0.7)) hue-rotate(-25deg) brightness(1.3);
         }
 
         .zombie.zomboni {
@@ -380,6 +394,7 @@ Copyright (c) 2025 Olexandr_43
             left: 50%;
             transform: translateX(-50%);
             font-size: 1.2em;
+            z-index: 2;
         }
 
         .zombie.slowed {
@@ -400,6 +415,7 @@ Copyright (c) 2025 Olexandr_43
             transform: translateX(-50%);
             border-radius: 2px;
             overflow: hidden;
+            z-index: 3;
         }
 
         .zombie-health-fill {
@@ -626,17 +642,12 @@ Copyright (c) 2025 Olexandr_43
             box-shadow: 0 0 20px rgba(178, 34, 34, 0.5);
         }
 
-        .zombieCard .emoji {
-            font-size: 1.6em;
-            transform: scaleX(-1);
-            margin-bottom: 2px;
-        }
-
         .zombieCard .name {
             font-size: 0.6em;
             color: #333;
             text-align: center;
             font-weight: bold;
+            margin-top: 2px;
         }
 
         .zombieCard.selected .name {
@@ -1544,6 +1555,12 @@ Copyright (c) 2025 Olexandr_43
                 font-size: 2em;
             }
 
+            .zombie-attachment,
+            .zombie-card-attachment {
+                position: absolute;
+                transform: scaleX(-1) translateX(-2px) translateY(3px);
+            }
+
             .zombie.zomboni {
                 font-size: 2.85em;
             }
@@ -1556,6 +1573,12 @@ Copyright (c) 2025 Olexandr_43
                 min-width: 55px;
                 width: 55px;
                 height: 75px;
+            }
+
+            .zombieCard {
+                min-width: 60px;
+                width: 60px;
+                height: 80px;
             }
 
             .plantCard .emoji {
@@ -2396,11 +2419,13 @@ Copyright (c) 2025 Olexandr_43
                 cooldown: 0
             },
         };
-        
+
         // Zombies
         const zombieTypes = {
             normal: { name: 'Zombie', emoji: '🧟', health: 10, maxHealth: 10, speed: 13, damage: 1, points: 100 },
-            cone: { name: 'Conehead', emoji: '🧟‍♂️', health: 28, maxHealth: 28, speed: 13, damage: 1, points: 200 },
+            flag: { name: 'Flag Zombie', emoji: '🧟', health: 10, maxHealth: 10, speed: 17, damage: 1, points: 125, attachments: [{ emoji: '🚩', offset: { x: 3, y: 0 } }] },
+            newspaper: { name: 'Newspaper', emoji: '🧟', health: 17.5, maxHealth: 17.5, speed: 10, rageSpeedMultiplier: 4.57, damage: 1, points: 175, attachments: [{ emoji: '📰', offset: { x: 9, y: 16 } }] },
+            cone: { name: 'Conehead', emoji: '🧟‍♂️', health: 28, maxHealth: 28, speed: 13, damage: 1, points: 200, attachments: [{ emoji: '⚠️', offset: { x: 9, y: -13 } }] },
             bucket: { name: 'Buckethead', emoji: '🧟‍♀️', health: 65, maxHealth: 65, speed: 10, damage: 1, points: 400 },
             fast: { name: 'Pole Vault', emoji: '💀', health: 17, maxHealth: 17, speed: 25, damage: 1, points: 150 },
             jackInTheBox: { name: 'Jack-in-the-Box', emoji: '🤡', health: 17, maxHealth: 17, speed: 25, damage: 1, points: 450, isExplosive: true },
@@ -2409,7 +2434,7 @@ Copyright (c) 2025 Olexandr_43
             giga: { name: 'Giga-Garg', emoji: '👺', health: 300, maxHealth: 300, speed: 5, damage: 99, points: 6000, uneatable: true, crushes: true },
             dancing: { name: 'Dancing', emoji: '🕺', health: 17, maxHealth: 17, speed: 13, damage: 1, points: 500, summons: true, summonCooldown: 10000 },
             backupDancer: { name: 'Backup', emoji: '💃', health: 10, maxHealth: 10, speed: 13, damage: 1, points: 150, isSummoned: true },
-            zomboni: { name: 'Zomboni', emoji: '🚚', health: 65, maxHealth: 65, speed: 10, damage: 99, points: 1000, uneatable: true, crushes: true, leavesIceTrail: true },
+            zomboni: { name: 'Zomboni', emoji: '🚚', health: 65, maxHealth: 65, speed: 10, damage: 99, points: 1000, uneatable: true, crushes: true, leavesIceTrail: true, attachments: [{ emoji: '🧟‍♀️', offset: { x: 30, y: 3 } }] },
             balloon: { name: 'Balloon', emoji: '🎈', health: 11, maxHealth: 11, speed: 25, damage: 1, points: 250, isFlying: true }
         };
 
@@ -2720,7 +2745,7 @@ Copyright (c) 2025 Olexandr_43
                         e.preventDefault();
                     }
                     placePlant(cell);
-                });
+                }, { passive: true });
             });
 
             document.getElementById('startGameBtn').addEventListener('click', confirmAndStartGame);
@@ -2776,7 +2801,7 @@ Copyright (c) 2025 Olexandr_43
 
             activeTooltip = document.createElement('div');
             activeTooltip.className = 'plant-tooltip';
-            activeTooltip.innerHTML = description; 
+            activeTooltip.innerHTML = description;
             document.body.appendChild(activeTooltip);
 
             const cardRect = card.getBoundingClientRect();
@@ -3343,7 +3368,7 @@ Copyright (c) 2025 Olexandr_43
             // Update existing zombie and projectile positions
             gameState.zombies.forEach(zombie => {
                 if (zombie.element) {
-                    const yPosition = gameState.boardRect.top + zombie.row * gameState.cellSize.height + (zombie.isFlying ? -10 : gameState.cellSize.height / 2 - 20);
+                    const yPosition = gameState.boardRect.top + zombie.row * gameState.cellSize.height + (zombie.isFlying ? -10 : gameState.cellSize.height / 2 - 20) + (zombie.row * 2.5);
                     zombie.element.style.top = yPosition + 'px';
                 }
             });
@@ -3464,10 +3489,38 @@ Copyright (c) 2025 Olexandr_43
                 card.className = 'zombieCard';
                 card.dataset.zombieType = typeKey;
 
-                card.innerHTML = `
-                    <div class="emoji">${zombieType.emoji}</div>
-                    <div class="name">${zombieType.name || typeKey}</div>
-                `;
+                const zombieVisual = document.createElement('div');
+                zombieVisual.className = 'zombie';
+
+                if (typeKey === 'zomboni') zombieVisual.classList.add('zomboni');
+                if (typeKey === 'gargantuar' || typeKey === 'giga') zombieVisual.classList.add('gargantuar');
+
+                zombieVisual.style.position = 'relative';
+                zombieVisual.style.transform = 'scale(0.64) scaleX(-1)';
+                zombieVisual.style.margin = '-10px 0';
+                zombieVisual.style.pointerEvents = 'none';
+
+                const baseEmoji = document.createElement('span');
+                baseEmoji.textContent = zombieType.emoji;
+                zombieVisual.appendChild(baseEmoji);
+
+                if (zombieType.attachments) {
+                    zombieType.attachments.forEach(att => {
+                        const attachmentEl = document.createElement('span');
+                        attachmentEl.className = 'zombie-attachment';
+                        attachmentEl.textContent = att.emoji;
+                        attachmentEl.style.right = `${att.offset.x}px`;
+                        attachmentEl.style.top = `${att.offset.y}px`;
+                        zombieVisual.appendChild(attachmentEl);
+                    });
+                }
+
+                const nameDiv = document.createElement('div');
+                nameDiv.className = 'name';
+                nameDiv.textContent = zombieType.name || typeKey;
+
+                card.appendChild(zombieVisual);
+                card.appendChild(nameDiv);
 
                 card.addEventListener('click', () => selectZombie(card, typeKey));
                 spawner.appendChild(card);
@@ -3745,7 +3798,7 @@ Copyright (c) 2025 Olexandr_43
                 document.getElementById('gameContainer').appendChild(sun);
 
                 sun.addEventListener('click', () => collectSun(sun, sunValue));
-                sun.addEventListener('touchstart', (e) => { e.preventDefault(); collectSun(sun, sunValue); });
+                sun.addEventListener('touchstart', (e) => { e.preventDefault(); collectSun(sun, sunValue); }, { passive: false });
 
                 // Auto-fade sun
                 createTimer(7000, () => {
@@ -4014,6 +4067,7 @@ Copyright (c) 2025 Olexandr_43
                                 const zombieCol = Math.floor(zombie.x / gameState.cellSize.width);
                                 if (zombie.row === r && zombieCol === c) {
                                     zombie.health -= plantType.damage;
+                                    checkZombieStateChange(zombie);
                                     updateZombieHealth(zombie);
                                     if (zombie.health <= 0) handleZombieDefeat(zombie);
                                 }
@@ -4036,6 +4090,7 @@ Copyright (c) 2025 Olexandr_43
                 gameState.zombies.forEach(zombie => {
                     if (zombie.element) {
                         zombie.health -= plantType.damage;
+                        checkZombieStateChange(zombie);
                         zombie.isFrozen = true;
                         zombie.freezeTimer = 4000;
                         zombie.element.classList.remove('slowed');
@@ -4206,6 +4261,7 @@ Copyright (c) 2025 Olexandr_43
                 // Apply damage to all targeted zombies
                 zombiesToDamage.forEach(zombie => {
                     zombie.health -= plantType.damage;
+                    checkZombieStateChange(zombie);
 
                     // Unfreeze or unslow zombies hit by explosion
                     if (zombie.isFrozen) {
@@ -4308,10 +4364,7 @@ Copyright (c) 2025 Olexandr_43
             }, 10);
 
             sun.addEventListener('click', () => collectSun(sun, sunValue));
-            sun.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                collectSun(sun, sunValue);
-            });
+            sun.addEventListener('touchstart', (e) => { e.preventDefault(); collectSun(sun, sunValue); }, { passive: false });
 
             createTimer(7000, () => {
                 if (sun.parentElement && !sun.dataset.collecting) {
@@ -4537,6 +4590,7 @@ Copyright (c) 2025 Olexandr_43
 
                             // Damage primary target
                             zombie.health -= proj.damage;
+                            checkZombieStateChange(zombie);
                             updateZombieHealth(zombie);
                             if (zombie.element) zombie.element.classList.add('damage-effect');
                             createTimer(300, () => { if (zombie.element) zombie.element.classList.remove('damage-effect'); });
@@ -4577,6 +4631,7 @@ Copyright (c) 2025 Olexandr_43
                                 if (isHorizontallyClose && isVerticallyClose) {
                                     // Apply splash damage
                                     splashTarget.health -= proj.splashDamage;
+                                    checkZombieStateChange(splashTarget);
                                     updateZombieHealth(splashTarget);
                                     if (splashTarget.element) splashTarget.element.classList.add('damage-effect');
                                     createTimer(300, () => { if (splashTarget.element) splashTarget.element.classList.remove('damage-effect'); });
@@ -4608,6 +4663,7 @@ Copyright (c) 2025 Olexandr_43
 
                         } else { // --- STANDARD/PIERCING DAMAGE LOGIC ---
                             zombie.health -= proj.damage;
+                            checkZombieStateChange(zombie);
                             updateZombieHealth(zombie);
                             zombie.element.classList.add('damage-effect');
 
@@ -4694,6 +4750,34 @@ Copyright (c) 2025 Olexandr_43
 
             const healthPercent = Math.max(0, zombie.health / zombieTypes[zombie.type].maxHealth);
             zombie.healthFill.style.width = (healthPercent * 100) + '%';
+        }
+
+        // Check for zombie state changes after taking damage (e.g., armor breaking)
+        function checkZombieStateChange(zombie) {
+            if (!zombie.element) return;
+
+            // Logic for Conehead and Newspaper Zombies
+            const isConehead = zombie.type === 'cone';
+            const isNewspaper = zombie.type === 'newspaper';
+
+            if ((isConehead || isNewspaper) && !zombie.armorBroken && zombie.health <= zombieTypes.normal.maxHealth) {
+                zombie.armorBroken = true;
+
+                const attachment = zombie.element.querySelector('.zombie-attachment');
+
+                if (isNewspaper) {
+                    if (attachment) {
+                        createParticleEffect(attachment, '💢');
+                        attachment.remove();
+                    }
+                    zombie.element.classList.add('enraged');
+                } else {
+                    if (attachment) {
+                        createParticleEffect(attachment, '⚠️');
+                        attachment.remove();
+                    }
+                }
+            }
         }
 
         // Create Ice Trail
@@ -4895,6 +4979,11 @@ Copyright (c) 2025 Olexandr_43
                 // Only perform regular movement logic if not in the middle of a lane change or attacking
                 if (!zombie.isChangingLane && !isAttacking) {
                     let baseSpeed = zombieTypes[zombie.type].speed;
+
+                    if (zombie.type === 'newspaper' && zombie.armorBroken) {
+                        baseSpeed *= zombieTypes.newspaper.rageSpeedMultiplier;
+                    }
+
                     if (zombie.type === 'balloon' && !zombie.isFlying) {
                         baseSpeed = zombieTypes['normal'].speed;
                     }
@@ -4903,7 +4992,7 @@ Copyright (c) 2025 Olexandr_43
                     zombie.x -= currentSpeed * adjustedDelta / 1000;
                     zombie.element.style.left = (gameState.boardRect.left + zombie.x) + 'px';
 
-                    const yPosition = gameState.boardRect.top + zombie.row * gameState.cellSize.height + (zombie.isFlying ? -10 : gameState.cellSize.height / 2 - 20);
+                    const yPosition = gameState.boardRect.top + zombie.row * gameState.cellSize.height + (zombie.isFlying ? -10 : gameState.cellSize.height / 2 - 20) + (zombie.row * 2.5);
                     if (zombie.element.style.top !== yPosition + 'px' && !zombie.element.style.transition.includes('top')) {
                         zombie.element.style.top = yPosition + 'px';
                     }
@@ -4977,10 +5066,18 @@ Copyright (c) 2025 Olexandr_43
                         else {
                             zombie.attacking = true;
                             zombie.element.classList.add('eating');
-                            zombie.element.style.animationDuration = isSlowed ? 'calc(1s / var(--game-speed))' : 'calc(0.5s / var(--game-speed))';
+                            let animationSpeed = isSlowed ? 1 : 0.5;
+                            if (zombie.type === 'newspaper' && zombie.armorBroken) {
+                                animationSpeed /= zombieTypes.newspaper.rageSpeedMultiplier;
+                            }
+                            zombie.element.style.animationDuration = `calc(${animationSpeed}s / var(--game-speed))`;
 
                             if (zombie.attackCooldown <= 0) {
-                                zombie.attackCooldown = isSlowed ? 2000 : 1000;
+                                let baseCooldown = isSlowed ? 2000 : 1000;
+                                if (zombie.type === 'newspaper' && zombie.armorBroken) {
+                                    baseCooldown /= zombieTypes.newspaper.rageSpeedMultiplier;
+                                }
+                                zombie.attackCooldown = baseCooldown;
                                 const damage = getZombieDamage(zombieTypeInfo.damage);
                                 plant.health -= damage;
                                 updatePlantHealth(plant);
@@ -4998,7 +5095,7 @@ Copyright (c) 2025 Olexandr_43
                                         zombie.row = possibleRows[Math.floor(Math.random() * possibleRows.length)];
                                         zombie.attacking = false;
                                         zombie.x -= gameState.cellSize.width * 0.375;
-                                        const yPosition = gameState.boardRect.top + zombie.row * gameState.cellSize.height + (zombie.isFlying ? -10 : gameState.cellSize.height / 2 - 20);
+                                        const yPosition = gameState.boardRect.top + zombie.row * gameState.cellSize.height + (zombie.isFlying ? -10 : gameState.cellSize.height / 2 - 20) + (zombie.row * 2.5);
                                         zombie.element.style.transition = `top calc(0.3s / var(--game-speed)) ease, left calc(0.3s / var(--game-speed)) ease`;
                                         zombie.element.style.top = yPosition + 'px';
                                         zombie.element.style.left = (gameState.boardRect.left + zombie.x) + 'px';
@@ -5098,7 +5195,21 @@ Copyright (c) 2025 Olexandr_43
 
             const zombie = document.createElement('div');
             zombie.className = 'zombie';
-            zombie.textContent = zombieType.emoji;
+
+            const baseEmoji = document.createElement('span');
+            baseEmoji.textContent = zombieType.emoji;
+            zombie.appendChild(baseEmoji);
+
+            if (zombieType.attachments) {
+                zombieType.attachments.forEach(att => {
+                    const attachmentEl = document.createElement('span');
+                    attachmentEl.className = 'zombie-attachment';
+                    attachmentEl.textContent = att.emoji;
+                    attachmentEl.style.right = `${att.offset.x}px`;
+                    attachmentEl.style.top = `${att.offset.y}px`;
+                    zombie.appendChild(attachmentEl);
+                });
+            }
 
             // Add classes for specific zombie styles
             if (typeKey === 'dancing') zombie.classList.add('dancing');
@@ -5116,7 +5227,7 @@ Copyright (c) 2025 Olexandr_43
 
             // Spawn *at* the cell's column
             const startX = col * gameState.cellSize.width + (gameState.cellSize.width * 0.2);
-            const yPosition = gameState.boardRect.top + row * gameState.cellSize.height + (zombieType.isFlying ? -10 : gameState.cellSize.height / 2 - 20);
+            const yPosition = gameState.boardRect.top + row * gameState.cellSize.height + (zombieType.isFlying ? -10 : gameState.cellSize.height / 2 - 20) + (row * 2.5);
 
             zombie.style.position = 'fixed';
             zombie.style.left = (gameState.boardRect.left + startX) + 'px';
@@ -5156,6 +5267,10 @@ Copyright (c) 2025 Olexandr_43
                 isBeingPushed: false
             };
 
+            if (typeKey === 'cone' || typeKey === 'newspaper') {
+                zombieObj.armorBroken = false;
+            }
+
             // Add special properties for Dancing Zombie
             if (typeKey === 'dancing') {
                 zombieObj.dancers = [];
@@ -5173,44 +5288,65 @@ Copyright (c) 2025 Olexandr_43
         }
 
         // Spawn Zombie with Health Bar (from edge)
-        function spawnZombie() {
+        function spawnZombie(forceType = null) {
             const row = Math.floor(Math.random() * 5);
 
             // Filter out summoned zombies from natural spawn pool
             const zombieTypeKeys = Object.keys(zombieTypes).filter(k => !zombieTypes[k].isSummoned);
             let typeKey;
-            const rand = Math.random();
 
-            // Updated spawn logic with new zombies
-            if (gameState.wave > 15 && rand > 0.95) {
-                typeKey = 'giga';
-            } else if (gameState.wave > 12 && rand > 0.9) {
-                typeKey = 'gargantuar';
-            } else if (gameState.wave > 10 && rand > 0.8) {
-                typeKey = 'zomboni';
-            } else if (gameState.wave > 9 && rand > 0.75) {
-                typeKey = 'football';
-            } else if (gameState.wave > 8 && rand > 0.65) {
-                typeKey = 'dancing';
-            } else if (gameState.wave > 7 && rand > 0.6) {
-                typeKey = 'balloon';
-            } else if (gameState.wave > 6 && rand > 0.55) {
-                typeKey = 'jackInTheBox';
-            } else if (gameState.wave > 5 && rand > 0.4) {
-                typeKey = 'bucket';
-            } else if (gameState.wave > 3 && rand > 0.3) {
-                typeKey = 'fast';
-            } else if (gameState.wave > 1 && rand > 0.2) {
-                typeKey = 'cone';
+            if (forceType) {
+                typeKey = forceType;
             } else {
-                typeKey = 'normal';
+                const rand = Math.random();
+
+                if (gameState.wave > 15 && rand > 0.95) {
+                    typeKey = 'giga';
+                } else if (gameState.wave > 12 && rand > 0.9) {
+                    typeKey = 'gargantuar';
+                } else if (gameState.wave > 10 && rand > 0.8) {
+                    typeKey = 'zomboni';
+                } else if (gameState.wave > 9 && rand > 0.75) {
+                    typeKey = 'football';
+                } else if (gameState.wave > 8 && rand > 0.65) {
+                    typeKey = 'dancing';
+                } else if (gameState.wave > 7 && rand > 0.6) {
+                    typeKey = 'balloon';
+                } else if (gameState.wave > 6 && rand > 0.55) {
+                    typeKey = 'jackInTheBox';
+                } else if (gameState.wave > 5 && rand > 0.4) {
+                    typeKey = 'bucket';
+                } else if (gameState.wave > 3 && rand > 0.3) {
+                    typeKey = 'fast';
+                } else if (gameState.wave > 4 && rand > 0.25) {
+                    typeKey = 'newspaper';
+                } else if (gameState.wave > 1 && rand > 0.2) {
+                    typeKey = 'cone';
+                } else {
+                    typeKey = 'normal';
+                }
             }
+
 
             const zombieType = zombieTypes[typeKey];
 
             const zombie = document.createElement('div');
             zombie.className = 'zombie';
-            zombie.textContent = zombieType.emoji;
+
+            const baseEmoji = document.createElement('span');
+            baseEmoji.textContent = zombieType.emoji;
+            zombie.appendChild(baseEmoji);
+
+            if (zombieType.attachments) {
+                zombieType.attachments.forEach(att => {
+                    const attachmentEl = document.createElement('span');
+                    attachmentEl.className = 'zombie-attachment';
+                    attachmentEl.textContent = att.emoji;
+                    attachmentEl.style.right = `${att.offset.x}px`;
+                    attachmentEl.style.top = `${att.offset.y}px`;
+                    zombie.appendChild(attachmentEl);
+                });
+            }
 
             // Add classes for specific zombie styles
             if (typeKey === 'dancing') zombie.classList.add('dancing');
@@ -5228,7 +5364,7 @@ Copyright (c) 2025 Olexandr_43
             zombie.appendChild(healthBar);
 
             const startX = gameState.boardRect.width;
-            const yPosition = gameState.boardRect.top + row * gameState.cellSize.height + (zombieType.isFlying ? -10 : gameState.cellSize.height / 2 - 20);
+            const yPosition = gameState.boardRect.top + row * gameState.cellSize.height + (zombieType.isFlying ? -10 : gameState.cellSize.height / 2 - 20) + (row * 2.5);
 
             zombie.style.position = 'fixed';
             zombie.style.left = (gameState.boardRect.left + startX) + 'px';
@@ -5257,6 +5393,10 @@ Copyright (c) 2025 Olexandr_43
                 stunTimer: 0,
                 isBeingPushed: false
             };
+
+            if (typeKey === 'cone' || typeKey === 'newspaper') {
+                zombieObj.armorBroken = false;
+            }
 
             // Add special properties for Dancing Zombie
             if (typeKey === 'dancing') {
@@ -5378,18 +5518,25 @@ Copyright (c) 2025 Olexandr_43
                 });
             });
 
+            // 1. Spawn the Flag Zombie first.
+            if (!gameState.isGameOver && !gameState.isVictory) {
+                spawnZombie('flag'); // Force spawn a flag zombie
+            }
+
             const zombieCount = Math.min(3 + Math.floor(gameState.wave / 2), 15);
             const spawnDelay = Math.max(3000 - gameState.wave * 100, 1000);
 
+            // 2. Spawn the rest of the wave after a delay.
             for (let i = 0; i < zombieCount; i++) {
-                createTimer(i * spawnDelay, () => {
+                // Start the loop with an initial delay to let the Flag Zombie get on screen.
+                createTimer(spawnDelay + (i * spawnDelay), () => {
                     if (!gameState.isGameOver && !gameState.isVictory) {
-                        spawnZombie();
+                        spawnZombie(); // This will now spawn a random, non-flag zombie
                     }
                 });
             }
 
-            const totalSpawnDuration = (zombieCount - 1) * spawnDelay;
+            const totalSpawnDuration = spawnDelay + ((zombieCount - 1) * spawnDelay);
 
             createTimer(totalSpawnDuration, () => {
                 gameState.isSpawningComplete = true;
@@ -5487,10 +5634,7 @@ Copyright (c) 2025 Olexandr_43
             sun.style.top = endTop + 'px';
 
             sun.addEventListener('click', () => collectSun(sun, 50));
-            sun.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                collectSun(sun, 50);
-            });
+            sun.addEventListener('touchstart', (e) => { e.preventDefault(); collectSun(sun, 50); }, { passive: false });
 
             const timeToFall = 10000;
             const lifeOnGround = 7000;
@@ -5810,6 +5954,7 @@ Copyright (c) 2025 Olexandr_43
 
                             zombiesToDamage.forEach(zombie => {
                                 zombie.health -= plantTypes.potatomine.damage;
+                                checkZombieStateChange(zombie);
                                 updateZombieHealth(zombie);
                                 if (zombie.element) {
                                     zombie.element.classList.add('damage-effect');
@@ -5953,6 +6098,7 @@ Copyright (c) 2025 Olexandr_43
 
                                     zombiesOnTile.forEach(zombie => {
                                         zombie.health -= plantType.damage;
+                                        checkZombieStateChange(zombie);
                                         updateZombieHealth(zombie);
                                         if (zombie.element) {
                                             zombie.element.classList.add('damage-effect');
@@ -6007,6 +6153,7 @@ Copyright (c) 2025 Olexandr_43
 
                                     zombiesToAttack.forEach(zombie => {
                                         zombie.health -= plantTypes.snapdragon.damage;
+                                        checkZombieStateChange(zombie);
                                         updateZombieHealth(zombie);
 
                                         if (zombie.isFrozen) {
@@ -6161,6 +6308,8 @@ Copyright (c) 2025 Olexandr_43
 
             // Only need to re-attach listeners to the newly created cells.
             setupGameBoardListeners();
+
+            setupZombieSpawner()
 
             selectedPlantDeck = [];
             document.getElementById('selectedPlantCount').textContent = '0';
