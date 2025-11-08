@@ -91,6 +91,8 @@ The arsenal of plants has more than doubled, adding significant strategic variet
 
 The horde has grown much more dangerous and unpredictable.
 
+*   **Flag Zombie (🚩):** The herald of the coming horde. While possessing the health of a standard zombie, it moves at a quicker pace. This zombie always leads the charge, appearing as the very first enemy of each new wave to announce the attack.
+*   **Newspaper Zombie (📰):** An initially slow zombie shielded by his morning paper. The newspaper acts as armor, absorbing 7.5 points of damage from its total 21 health. Once the paper is destroyed, he flies into a rage, increasing his movement and eating speed by a massive 4.57 times, making him suddenly very dangerous.
 *   **Football Zombie (👹):** An extremely fast and durable zombie with 80 health. It acts as a battering ram, capable of absorbing a large amount of damage while quickly closing the distance to your house.
 *   **Jack-in-the-Box Zombie (🤡):** It moves quickly and has a chance to explode, destroying plants in a 3x3 area around it.
 *   **Dancing Zombie (🕺):** A tricky zombie with 17 health. It moves forward with a unique dancing animation and periodically summons four Backup Dancers in the tiles surrounding it, quickly overwhelming a lane.
