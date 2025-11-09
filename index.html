@@ -145,7 +145,6 @@ Copyright (c) 2025 Olexandr_43
             bottom: 0;
             left: 0;
             right: 0;
-            height: 100px;
             background: rgba(50, 50, 50, 0.8);
             backdrop-filter: blur(5px);
             display: none;
@@ -378,6 +377,10 @@ Copyright (c) 2025 Olexandr_43
             font-size: 3.5em;
         }
 
+        .zombie.imp {
+            font-size: 2em;
+        }
+
         .zombie.frozen {
             filter: drop-shadow(2px 2px 8px rgba(173, 216, 230, 0.9)) brightness(1.4) saturate(0);
             animation: frozenWiggle calc(0.5s / var(--game-speed)) infinite ease-in-out;
@@ -427,6 +430,22 @@ Copyright (c) 2025 Olexandr_43
 
         .zombie.damage-effect {
             animation: damage calc(0.3s / var(--game-speed)) ease;
+        }
+
+        .zombie.gargantuar-throwing {
+            animation: gargantuarThrow calc(1s / var(--game-speed)) ease-in-out;
+        }
+
+        .flying-imp {
+            position: fixed;
+            font-size: 2em;
+            z-index: 5;
+            pointer-events: none;
+            will-change: transform;
+            transform: scaleX(-1);
+            animation-name: impThrowArc;
+            animation-duration: calc(0.7s / var(--game-speed));
+            animation-timing-function: ease-out;
         }
 
 
@@ -1522,6 +1541,40 @@ Copyright (c) 2025 Olexandr_43
             }
         }
 
+        @keyframes gargantuarThrow {
+            0% {
+                transform: scaleX(-1) rotate(0deg);
+            }
+
+            40% {
+                transform: scaleX(-1) rotate(-15deg) translateY(-10px);
+            }
+
+            80% {
+                transform: scaleX(-1) rotate(10deg);
+            }
+
+            100% {
+                transform: scaleX(-1) rotate(0deg);
+            }
+        }
+
+        @keyframes impThrowArc {
+            0% {
+                transform: scaleX(1) translate(0, 0) scale(0.5) rotate(0deg);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scaleX(1) translate(-100px, -80px) scale(1) rotate(360deg);
+            }
+
+            100% {
+                transform: scaleX(1) translate(-200px, 0) scale(0.8) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
         /* --- MOBILE --- */
         @media (orientation: portrait) and (max-width: 768px) {
             #landscapeMessage {
@@ -1567,6 +1620,10 @@ Copyright (c) 2025 Olexandr_43
 
             .zombie.gargantuar {
                 font-size: 3em;
+            }
+
+            .zombie.imp {
+                font-size: 1.5em;
             }
 
             .plantCard {
@@ -2432,10 +2489,12 @@ Copyright (c) 2025 Olexandr_43
             football: { name: 'Football', emoji: '👹', health: 80, maxHealth: 80, speed: 25, damage: 2, points: 600 },
             gargantuar: { name: 'Gargantuar', emoji: '🗿', health: 150, maxHealth: 150, speed: 5, damage: 99, points: 2000, uneatable: true, crushes: true },
             giga: { name: 'Giga-Garg', emoji: '👺', health: 300, maxHealth: 300, speed: 5, damage: 99, points: 6000, uneatable: true, crushes: true },
+            imp: { name: 'Imp', emoji: '👿', health: 10, maxHealth: 10, speed: 20, damage: 1, points: 75 },
             dancing: { name: 'Dancing', emoji: '🕺', health: 17, maxHealth: 17, speed: 13, damage: 1, points: 500, summons: true, summonCooldown: 10000 },
             backupDancer: { name: 'Backup', emoji: '💃', health: 10, maxHealth: 10, speed: 13, damage: 1, points: 150, isSummoned: true },
             zomboni: { name: 'Zomboni', emoji: '🚚', health: 65, maxHealth: 65, speed: 10, damage: 99, points: 1000, uneatable: true, crushes: true, leavesIceTrail: true, attachments: [{ emoji: '🧟‍♀️', offset: { x: 30, y: 3 } }] },
-            balloon: { name: 'Balloon', emoji: '🎈', health: 11, maxHealth: 11, speed: 25, damage: 1, points: 250, isFlying: true }
+            balloon: { name: 'Balloon', emoji: '🎈', health: 11, maxHealth: 11, speed: 25, damage: 1, points: 250, isFlying: true },
+			zomboss: { name: 'Dr. zomboss', emoji: '🤖', health: 2000, maxHealth: 2000, speed: 1, damage: 99, points: 40000, uneatable: true, crushes: true },
         };
 
         // --- Global variable for the active tooltip
@@ -3494,6 +3553,7 @@ Copyright (c) 2025 Olexandr_43
 
                 if (typeKey === 'zomboni') zombieVisual.classList.add('zomboni');
                 if (typeKey === 'gargantuar' || typeKey === 'giga') zombieVisual.classList.add('gargantuar');
+                if (typeKey === 'imp') zombieVisual.classList.add('imp');
 
                 zombieVisual.style.position = 'relative';
                 zombieVisual.style.transform = 'scale(0.64) scaleX(-1)';
@@ -4950,6 +5010,37 @@ Copyright (c) 2025 Olexandr_43
                     return true;
                 }
 
+                if ((zombie.type === 'gargantuar' || zombie.type === 'giga') && !zombie.hasThrownImp && zombie.health <= zombieTypes[zombie.type].maxHealth / 2) {
+                    zombie.hasThrownImp = true;
+                    zombie.isThrowingImp = true;
+
+                    if (zombie.element) {
+                        zombie.element.classList.add('gargantuar-throwing');
+                    }
+
+                    createTimer(400, () => {
+                        if (zombie.element) {
+                            createFlyingImpVisual(zombie.element);
+                        }
+                    });
+
+                    createTimer(1000, () => {
+                        if (!zombie.element) {
+                            return;
+                        }
+
+                        zombie.element.classList.remove('gargantuar-throwing');
+
+                        const gargCol = Math.floor(zombie.x / gameState.cellSize.width);
+                        const impSpawnCol = gargCol - 2;
+                        if (impSpawnCol >= 0) {
+                            spawnZombieAt(zombie.row, impSpawnCol, 'imp');
+                        }
+
+                        zombie.isThrowingImp = false;
+                    });
+                }
+
                 if (zombie.slowTimer > 0) {
                     zombie.slowTimer -= adjustedDelta;
                     if (zombie.slowTimer <= 0) {
@@ -4977,7 +5068,7 @@ Copyright (c) 2025 Olexandr_43
                 }
 
                 // Only perform regular movement logic if not in the middle of a lane change or attacking
-                if (!zombie.isChangingLane && !isAttacking) {
+                if (!zombie.isChangingLane && !isAttacking && !zombie.isThrowingImp) {
                     let baseSpeed = zombieTypes[zombie.type].speed;
 
                     if (zombie.type === 'newspaper' && zombie.armorBroken) {
@@ -5215,6 +5306,7 @@ Copyright (c) 2025 Olexandr_43
             if (typeKey === 'dancing') zombie.classList.add('dancing');
             if (typeKey === 'zomboni') zombie.classList.add('zomboni');
             if (typeKey === 'gargantuar' || typeKey === 'giga') zombie.classList.add('gargantuar');
+            if (typeKey === 'imp') zombie.classList.add('imp');
             if (typeKey === 'jackInTheBox') zombie.classList.add('jackInTheBox');
 
             const healthBar = document.createElement('div');
@@ -5269,6 +5361,11 @@ Copyright (c) 2025 Olexandr_43
 
             if (typeKey === 'cone' || typeKey === 'newspaper') {
                 zombieObj.armorBroken = false;
+            }
+
+            if (typeKey === 'gargantuar' || typeKey === 'giga') {
+                zombieObj.hasThrownImp = false;
+                zombieObj.isThrowingImp = false;
             }
 
             // Add special properties for Dancing Zombie
@@ -5352,6 +5449,7 @@ Copyright (c) 2025 Olexandr_43
             if (typeKey === 'dancing') zombie.classList.add('dancing');
             if (typeKey === 'zomboni') zombie.classList.add('zomboni');
             if (typeKey === 'gargantuar' || typeKey === 'giga') zombie.classList.add('gargantuar');
+            if (typeKey === 'imp') zombie.classList.add('imp');
             if (typeKey === 'jackInTheBox') zombie.classList.add('jackInTheBox');
 
 
@@ -5396,6 +5494,11 @@ Copyright (c) 2025 Olexandr_43
 
             if (typeKey === 'cone' || typeKey === 'newspaper') {
                 zombieObj.armorBroken = false;
+            }
+
+            if (typeKey === 'gargantuar' || typeKey === 'giga') {
+                zombieObj.hasThrownImp = false;
+                zombieObj.isThrowingImp = false;
             }
 
             // Add special properties for Dancing Zombie
@@ -5756,6 +5859,25 @@ Copyright (c) 2025 Olexandr_43
 
                 setTimeout(() => particle.remove(), 1000);
             }
+        }
+
+        function createFlyingImpVisual(gargantuarElement) {
+            if (!gargantuarElement) return;
+
+            const rect = gargantuarElement.getBoundingClientRect();
+            const flyingImp = document.createElement('div');
+            flyingImp.className = 'flying-imp';
+            flyingImp.textContent = '👿';
+
+            flyingImp.style.left = rect.left + 'px';
+            flyingImp.style.top = rect.top + 'px';
+
+            document.getElementById('gameContainer').appendChild(flyingImp);
+
+            const animationDuration = 700;
+            createTimer(animationDuration, () => {
+                flyingImp.remove();
+            });
         }
 
         function createFireBreathEffect(cell) {
