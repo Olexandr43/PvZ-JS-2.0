@@ -4619,7 +4619,7 @@ Copyright (c) 2025 Olexandr_43
 
                             const zombieEmoji = zombie.element.firstChild;
                             if (zombieEmoji) {
-                                zombieEmoji.nodeValue = '🧟';
+                               zombieEmoji.textContent = '🧟';
                             }
                             zombie.element.style.transition = `top calc(0.3s / var(--game-speed)) ease-in`;
                             const yPosition = gameState.boardRect.top + zombie.row * gameState.cellSize.height + gameState.cellSize.height / 2 - 20;
