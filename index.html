@@ -942,6 +942,131 @@ Copyright (c) 2025 Olexandr_43
             color: rgba(255, 255, 255, 0.9);
         }
 
+        .almanac-card {
+            background: linear-gradient(135deg, #4a4a4a, #333333);
+            border: 2px solid #222;
+            border-radius: 15px;
+            padding: 15px;
+            color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-align: left;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5), 0 5px 15px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .almanac-card.hidden {
+            background: linear-gradient(135deg, #404040, #282828);
+        }
+
+        .almanac-card.hidden .almanac-visual {
+            filter: brightness(0);
+            opacity: 0.5;
+        }
+
+        .almanac-card.hidden .almanac-details {
+            align-items: center;
+        }
+
+        .almanac-card.hidden .almanac-name {
+            font-size: 1.5em;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .almanac-card:not(.hidden):hover {
+            transform: translateY(-5px);
+            background: linear-gradient(135deg, #5a5a5a, #404040);
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5), 0 8px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .almanac-visual {
+            flex-shrink: 0;
+            width: 80px;
+            height: 80px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px;
+        }
+
+        .almanac-details {
+            flex-grow: 1;
+        }
+
+        .almanac-name {
+            font-family: 'Segoe UI Black', Impact, sans-serif;
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #d4cba7;
+            text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .almanac-stats {
+            width: 100%;
+            font-size: 0.8em;
+            margin-bottom: 8px;
+        }
+
+        .almanac-stats div {
+            display: flex;
+            justify-content: space-between;
+            padding: 2px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .almanac-stats div:last-child {
+            border-bottom: none;
+        }
+
+        .almanac-stats span:first-child {
+            font-weight: bold;
+            opacity: 0.8;
+        }
+
+        .almanac-desc {
+            font-size: 0.8em;
+            line-height: 1.4;
+            opacity: 0.9;
+        }
+
+        .almanac-health-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+            border: 1px solid rgba(0, 0, 0, 0.7);
+            overflow: hidden;
+            margin-top: 4px;
+        }
+
+        .almanac-health-fill {
+            height: 100%;
+            border-radius: 4px;
+            box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.3);
+            transition: width 0.5s ease-in-out;
+        }
+
+        .almanac-health-fill.low {
+            background: linear-gradient(to right, #8BC34A, #4CAF50);
+        }
+
+        .almanac-health-fill.medium {
+            background: linear-gradient(to right, #FFD700, #FFA500);
+        }
+
+        .almanac-health-fill.high {
+            background: linear-gradient(to right, #ff6600, #ff0000);
+        }
+
+        .almanac-health-fill.extreme {
+            background: linear-gradient(to right, #E91E63, #9C27B0);
+        }
+
         .stats {
             margin: 20px 0;
             font-size: 1.1em;
@@ -1768,7 +1893,11 @@ Copyright (c) 2025 Olexandr_43
             </div>
 
             <div id="plantSelectionFooter">
-                <div style="margin-bottom: 15px;">Selected: <span id="selectedPlantCount">0</span></div>
+                <div style="margin-bottom: 15px;">
+                    Selected: <span id="selectedPlantCount">0</span>
+                    <button class="btn secondary" id="almanacBtn" style="margin: 0; padding: 8px 15px;">📖
+                        Almanac</button>
+                </div>
                 <button id="startGameBtn" class="btn letsrock">Let's Rock!</button>
             </div>
         </div>
@@ -1841,6 +1970,16 @@ Copyright (c) 2025 Olexandr_43
                 <button class="btn gold" onclick="showLeaderboard()">View Top 10</button>
                 <button class="btn" onclick="restartGame()">Play Again</button>
             </div>
+        </div>
+
+        <div id="almanacScreen"
+            style="display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: #3d2a15; backdrop-filter: blur(10px); z-index: 1000; flex-direction: column; align-items: center; padding: 20px;">
+            <h2 style="color: white; font-size: 2.5em; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">Zombie Almanac</h2>
+            <div id="almanacGrid"
+                style="width: 100%; max-width: 900px; flex-grow: 1; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; padding: 20px;">
+                <!-- Zombie cards will be generated here by JavaScript -->
+            </div>
+            <button class="btn" onclick="closeAlmanac()">Close</button>
         </div>
 
         <div id="zombieSpawner">
@@ -2479,22 +2618,22 @@ Copyright (c) 2025 Olexandr_43
 
         // Zombies
         const zombieTypes = {
-            normal: { name: 'Zombie', emoji: '🧟', health: 10, maxHealth: 10, speed: 13, damage: 1, points: 100 },
-            flag: { name: 'Flag Zombie', emoji: '🧟', health: 10, maxHealth: 10, speed: 17, damage: 1, points: 125, attachments: [{ emoji: '🚩', offset: { x: 3, y: 0 } }] },
-            newspaper: { name: 'Newspaper', emoji: '🧟', health: 17.5, maxHealth: 17.5, speed: 10, rageSpeedMultiplier: 4.57, damage: 1, points: 175, attachments: [{ emoji: '📰', offset: { x: 9, y: 16 } }] },
-            cone: { name: 'Conehead', emoji: '🧟‍♂️', health: 28, maxHealth: 28, speed: 13, damage: 1, points: 200, attachments: [{ emoji: '⚠️', offset: { x: 9, y: -13 } }] },
-            bucket: { name: 'Buckethead', emoji: '🧟‍♀️', health: 65, maxHealth: 65, speed: 10, damage: 1, points: 400 },
-            fast: { name: 'Pole Vault', emoji: '💀', health: 17, maxHealth: 17, speed: 25, damage: 1, points: 150 },
-            jackInTheBox: { name: 'Jack-in-the-Box', emoji: '🤡', health: 17, maxHealth: 17, speed: 25, damage: 1, points: 450, isExplosive: true },
-            football: { name: 'Football', emoji: '👹', health: 80, maxHealth: 80, speed: 25, damage: 2, points: 600 },
-            gargantuar: { name: 'Gargantuar', emoji: '🗿', health: 150, maxHealth: 150, speed: 5, damage: 99, points: 2000, uneatable: true, crushes: true },
-            giga: { name: 'Giga-Garg', emoji: '👺', health: 300, maxHealth: 300, speed: 5, damage: 99, points: 6000, uneatable: true, crushes: true },
-            imp: { name: 'Imp', emoji: '👿', health: 10, maxHealth: 10, speed: 20, damage: 1, points: 75 },
-            dancing: { name: 'Dancing', emoji: '🕺', health: 17, maxHealth: 17, speed: 13, damage: 1, points: 500, summons: true, summonCooldown: 10000 },
-            backupDancer: { name: 'Backup', emoji: '💃', health: 10, maxHealth: 10, speed: 13, damage: 1, points: 150, isSummoned: true },
-            zomboni: { name: 'Zomboni', emoji: '🚚', health: 65, maxHealth: 65, speed: 10, damage: 99, points: 1000, uneatable: true, crushes: true, leavesIceTrail: true, attachments: [{ emoji: '🧟‍♀️', offset: { x: 30, y: 3 } }] },
-            balloon: { name: 'Balloon', emoji: '🎈', health: 11, maxHealth: 11, speed: 25, damage: 1, points: 250, isFlying: true },
-			zomboss: { name: 'Dr. zomboss', emoji: '🤖', health: 2000, maxHealth: 2000, speed: 1, damage: 99, points: 40000, uneatable: true, crushes: true },
+            normal: { emoji: '🧟', health: 10, maxHealth: 10, speed: 13, damage: 1, points: 100 },
+            flag: { emoji: '🧟', health: 10, maxHealth: 10, speed: 17, damage: 1, points: 125, attachments: [{ emoji: '🚩', offset: { x: 3, y: 0 } }] },
+            cone: { emoji: '🧟‍♂️', health: 28, maxHealth: 28, speed: 13, damage: 1, points: 200, attachments: [{ emoji: '⚠️', offset: { x: 9, y: -13 } }] },
+            fast: { emoji: '💀', health: 17, maxHealth: 17, speed: 25, damage: 1, points: 150 },
+            newspaper: { emoji: '🧟', health: 17.5, maxHealth: 17.5, speed: 10, rageSpeedMultiplier: 4.57, damage: 1, points: 175, attachments: [{ emoji: '📰', offset: { x: 9, y: 16 } }] },
+            bucket: { emoji: '🧟‍♀️', health: 65, maxHealth: 65, speed: 10, damage: 1, points: 400 },
+            jackInTheBox: { emoji: '🤡', health: 17, maxHealth: 17, speed: 25, damage: 1, points: 450, isExplosive: true },
+            balloon: { emoji: '🎈', health: 11, maxHealth: 11, speed: 25, damage: 1, points: 250, isFlying: true },
+            dancing: { emoji: '🕺', health: 17, maxHealth: 17, speed: 13, damage: 1, points: 500, summons: true, summonCooldown: 10000 },
+            backupDancer: { emoji: '💃', health: 10, maxHealth: 10, speed: 13, damage: 1, points: 150, isSummoned: true },
+            football: { emoji: '👹', health: 80, maxHealth: 80, speed: 25, damage: 2, points: 600 },
+            zomboni: { emoji: '🚚', health: 65, maxHealth: 65, speed: 10, damage: 99, points: 1000, uneatable: true, crushes: true, leavesIceTrail: true, attachments: [{ emoji: '🧟‍♀️', offset: { x: 30, y: 3 } }] },
+            gargantuar: { emoji: '🗿', health: 150, maxHealth: 150, speed: 5, damage: 99, points: 2000, uneatable: true, crushes: true },
+            imp: { emoji: '👿', health: 10, maxHealth: 10, speed: 20, damage: 1, points: 75 },
+            giga: { emoji: '👺', health: 300, maxHealth: 300, speed: 5, damage: 99, points: 6000, uneatable: true, crushes: true },
+            zomboss: { emoji: '🤖', health: 2000, maxHealth: 2000, speed: 1, damage: 99, points: 40000, uneatable: true, crushes: true },
         };
 
         // --- Global variable for the active tooltip
@@ -2795,6 +2934,161 @@ Copyright (c) 2025 Olexandr_43
             document.getElementById('leaderboard').style.display = 'none';
         }
 
+        // --- ALMANAC FUNCTIONS ---
+
+        function showAlmanac() {
+            populateAlmanac();
+            document.getElementById('almanacScreen').style.display = 'flex';
+        }
+
+        function closeAlmanac() {
+            document.getElementById('almanacScreen').style.display = 'none';
+        }
+
+        function getSpeedText(speedValue) {
+            if (speedValue <= 5) return 'Very Slow';
+            if (speedValue <= 13) return 'Normal';
+            if (speedValue <= 20) return 'Fast';
+            return 'Very Fast';
+        }
+
+        const almanacData = {
+            normal: { name: 'Zombie', description: 'A standard, run-of-the-mill zombie.', spawnWave: 1 },
+            flag: { name: 'Flag Zombie', description: 'Moves faster, heralding a new wave of zombies.', spawnWave: 1 },
+            cone: { name: 'Conehead', description: 'His cone provides extra protection.', spawnWave: 2 },
+            fast: { name: 'Pole Vault', description: 'A speedy zombie that can be tricky to hit.', spawnWave: 3 },
+            newspaper: { name: 'Newspaper', description: 'Enraged and moves much faster after losing his newspaper.', spawnWave: 4 },
+            bucket: { name: 'Buckethead', description: 'His bucket provides significant protection.', spawnWave: 5 },
+            jackInTheBox: { name: 'Jack-in-the-Box', description: 'Explodes after a random duration, destroying plants in a 3x3 area.', spawnWave: 6 },
+            balloon: { name: 'Balloon', description: 'Floats over most plants and projectiles. Can be popped by specific plants.', spawnWave: 7 },
+            dancing: { name: 'Dancing', description: 'Summons a squad of Backup Dancers around him.', spawnWave: 8 },
+            backupDancer: { name: 'Backup', description: 'Appears alongside the Dancing Zombie.', spawnWave: 'Summoned' },
+            football: { name: 'Football', description: 'Very fast and extremely tough.', spawnWave: 9 },
+            zomboni: { name: 'Zomboni', description: 'Crushes plants and leaves a trail of ice, preventing planting.', spawnWave: 10 },
+            gargantuar: { name: 'Gargantuar', description: 'A massive zombie that crushes plants. Throws an Imp when heavily damaged.', spawnWave: 12 },
+            imp: { name: 'Imp', description: 'A small, fast zombie often thrown by Gargantuars.', spawnWave: 'Thrown' },
+            giga: { name: 'Giga-Garg', description: 'An even more powerful version of the Gargantuar.', spawnWave: 15 },
+            zomboss: { name: 'Dr. Zomboss', description: 'Dr. Zomboss himself. Extremely tough and dangerous.', spawnWave: 'Boss Wave' }
+        };
+
+        function getHealthText(health) {
+            if (health <= 10) return 'Very Low';
+            if (health <= 20) return 'Low';
+            if (health <= 70) return 'Medium';
+            if (health <= 150) return 'High';
+            if (health <= 300) return 'Very High';
+            return 'Extreme';
+        }
+
+        function getHealthBarHTML(health) {
+            let barClass = 'low';
+            if (health > 20) barClass = 'medium';
+            if (health > 70) barClass = 'high';
+            if (health > 300) barClass = 'extreme';
+
+            const maxHealthValue = 300; // Cap for visual representation, giga is 300, zomboss is 2000
+            const widthPercent = Math.min(100, (health / maxHealthValue) * 100);
+
+            return `
+                <div class="almanac-health-bar">
+                    <div class="almanac-health-fill ${barClass}" style="width: ${widthPercent}%"></div>
+                </div>
+            `;
+        }
+
+        // Reusable zombie visual creator
+        function createZombieVisual(typeKey) {
+            const zombieType = zombieTypes[typeKey];
+            if (!zombieType) return null;
+
+            const zombieVisual = document.createElement('div');
+            zombieVisual.className = 'zombie';
+
+            // Apply specific classes for sizing and styling
+            if (typeKey === 'zomboni') zombieVisual.classList.add('zomboni');
+            if (typeKey === 'gargantuar' || typeKey === 'giga') zombieVisual.classList.add('gargantuar');
+            if (typeKey === 'imp') zombieVisual.classList.add('imp');
+
+            // These styles are for standalone display
+            zombieVisual.style.position = 'relative';
+            zombieVisual.style.transform = 'scaleX(-1)';
+            zombieVisual.style.pointerEvents = 'none';
+
+            const baseEmoji = document.createElement('span');
+            baseEmoji.textContent = zombieType.emoji;
+            zombieVisual.appendChild(baseEmoji);
+
+            if (zombieType.attachments) {
+                zombieType.attachments.forEach(att => {
+                    const attachmentEl = document.createElement('span');
+                    attachmentEl.className = 'zombie-attachment';
+                    attachmentEl.textContent = att.emoji;
+                    attachmentEl.style.right = `${att.offset.x}px`;
+                    attachmentEl.style.top = `${att.offset.y}px`;
+                    zombieVisual.appendChild(attachmentEl);
+                });
+            }
+            return zombieVisual;
+        }
+
+        function populateAlmanac() {
+            const grid = document.getElementById('almanacGrid');
+            grid.innerHTML = '';
+            const encountered = JSON.parse(localStorage.getItem('pvz_encountered_zombies')) || [];
+
+            for (const typeKey in zombieTypes) {
+                const card = document.createElement('div');
+                card.className = 'almanac-card';
+                const zombie = zombieTypes[typeKey];
+                const zombieInfo = almanacData[typeKey] || {};
+
+                const visualContainer = document.createElement('div');
+                visualContainer.className = 'almanac-visual';
+                const zombieVisual = createZombieVisual(typeKey);
+                if (zombieVisual) {
+                    visualContainer.appendChild(zombieVisual);
+                }
+
+                const detailsContainer = document.createElement('div');
+                detailsContainer.className = 'almanac-details';
+
+                if (encountered.includes(typeKey)) {
+                    const getSpawnText = (spawnWave) => {
+                        if (typeof spawnWave === 'number') {
+                            return `From Wave ${spawnWave}`;
+                        }
+                        return spawnWave; // Returns "Summoned", "Thrown", etc.
+                    };
+
+                    detailsContainer.innerHTML = `
+                        <div class="almanac-name">${zombieInfo.name || typeKey}</div>
+                        <div class="almanac-stats">
+                            <div><span>Toughness:</span><span>${getHealthText(zombie.maxHealth)}</span></div>
+                            ${getHealthBarHTML(zombie.maxHealth)}
+                            <div><span>Speed:</span><span>${getSpeedText(zombie.speed)}</span></div>
+                            <div><span>Spawns:</span><span>${getSpawnText(zombieInfo.spawnWave)}</span></div>
+                        </div>
+                        <div class="almanac-desc">${zombieInfo.description || 'No data.'}</div>
+                    `;
+                } else {
+                    card.classList.add('hidden');
+                    detailsContainer.innerHTML = `<div class="almanac-name">???</div>`;
+                }
+
+                card.appendChild(visualContainer);
+                card.appendChild(detailsContainer);
+                grid.appendChild(card);
+            }
+        }
+
+        function markZombieAsEncountered(zombieType) {
+            let encounteredZombies = JSON.parse(localStorage.getItem('pvz_encountered_zombies')) || [];
+            if (!encounteredZombies.includes(zombieType)) {
+                encounteredZombies.push(zombieType);
+                localStorage.setItem('pvz_encountered_zombies', JSON.stringify(encounteredZombies));
+            }
+        }
+
         // This function now only sets up listeners for dynamic or game-session-specific elements.
         function setupGameBoardListeners() {
             document.querySelectorAll('.cell').forEach(cell => {
@@ -2823,6 +3117,7 @@ Copyright (c) 2025 Olexandr_43
             });
 
             document.getElementById('leaderBtn').addEventListener('click', showLeaderboard);
+            document.getElementById('almanacBtn').addEventListener('click', showAlmanac);
             document.getElementById('fullscreenBtn').addEventListener('click', toggleFullscreen);
 
             window.addEventListener('resize', updateBoardDimensions);
@@ -3543,41 +3838,18 @@ Copyright (c) 2025 Olexandr_43
             spawner.innerHTML = ''; // Clear any existing
 
             Object.keys(zombieTypes).forEach(typeKey => {
-                const zombieType = zombieTypes[typeKey];
+                const zombieInfo = almanacData[typeKey] || {};
                 const card = document.createElement('div');
                 card.className = 'zombieCard';
                 card.dataset.zombieType = typeKey;
 
-                const zombieVisual = document.createElement('div');
-                zombieVisual.className = 'zombie';
-
-                if (typeKey === 'zomboni') zombieVisual.classList.add('zomboni');
-                if (typeKey === 'gargantuar' || typeKey === 'giga') zombieVisual.classList.add('gargantuar');
-                if (typeKey === 'imp') zombieVisual.classList.add('imp');
-
-                zombieVisual.style.position = 'relative';
+                const zombieVisual = createZombieVisual(typeKey);
                 zombieVisual.style.transform = 'scale(0.64) scaleX(-1)';
                 zombieVisual.style.margin = '-10px 0';
-                zombieVisual.style.pointerEvents = 'none';
-
-                const baseEmoji = document.createElement('span');
-                baseEmoji.textContent = zombieType.emoji;
-                zombieVisual.appendChild(baseEmoji);
-
-                if (zombieType.attachments) {
-                    zombieType.attachments.forEach(att => {
-                        const attachmentEl = document.createElement('span');
-                        attachmentEl.className = 'zombie-attachment';
-                        attachmentEl.textContent = att.emoji;
-                        attachmentEl.style.right = `${att.offset.x}px`;
-                        attachmentEl.style.top = `${att.offset.y}px`;
-                        zombieVisual.appendChild(attachmentEl);
-                    });
-                }
 
                 const nameDiv = document.createElement('div');
                 nameDiv.className = 'name';
-                nameDiv.textContent = zombieType.name || typeKey;
+                nameDiv.textContent = zombieInfo.name || typeKey;
 
                 card.appendChild(zombieVisual);
                 card.appendChild(nameDiv);
@@ -4619,7 +4891,7 @@ Copyright (c) 2025 Olexandr_43
 
                             const zombieEmoji = zombie.element.firstChild;
                             if (zombieEmoji) {
-                               zombieEmoji.textContent = '🧟';
+                                zombieEmoji.textContent = '🧟';
                             }
                             zombie.element.style.transition = `top calc(0.3s / var(--game-speed)) ease-in`;
                             const yPosition = gameState.boardRect.top + zombie.row * gameState.cellSize.height + gameState.cellSize.height / 2 - 20;
@@ -5284,6 +5556,8 @@ Copyright (c) 2025 Olexandr_43
             const zombieType = zombieTypes[typeKey];
             if (!zombieType) return null;
 
+            markZombieAsEncountered(typeKey);
+
             const zombie = document.createElement('div');
             zombie.className = 'zombie';
 
@@ -5426,6 +5700,8 @@ Copyright (c) 2025 Olexandr_43
 
 
             const zombieType = zombieTypes[typeKey];
+
+            markZombieAsEncountered(typeKey);
 
             const zombie = document.createElement('div');
             zombie.className = 'zombie';
