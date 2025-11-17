@@ -685,6 +685,8 @@ Copyright (c) 2025 Olexandr_43
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
             flex-shrink: 0;
         }
 
@@ -3997,11 +3999,11 @@ Copyright (c) 2025 Olexandr_43
                 plant.octopusElement = octopusOverlay;
             }
 
-            if (plantData.isGrown) {
-                plant.isGrown = true;
-                if (plant.element) {
-                    plant.element.style.transition = 'transform 0.5s ease';
-                    plant.element.style.transform = 'translate(-50%, -50%) scale(1.3)';
+            if (plant.type === 'sunshroom') {
+                if (plant.isGrown) {
+                    plantElement.style.transform = 'translate(-50%, -50%) scale(1)';
+                } else {
+                    plantElement.classList.add('arming');
                 }
             }
 
@@ -5033,12 +5035,23 @@ Copyright (c) 2025 Olexandr_43
         }
 
         function showPlantSelectionScreen() {
-            if (true) { // Always show the button, we'll check for saves inside the menu
-                const loadBtn = document.getElementById('loadGameBtn');
+            // Check if any save slot exists
+            let saveExists = false;
+            for (let i = 1; i <= 9; i++) {
+                if (localStorage.getItem(`pvz_fullGameState_slot${i}`)) {
+                    saveExists = true;
+                    break;
+                }
+            }
+
+            const loadBtn = document.getElementById('loadGameBtn');
+            if (saveExists) {
                 loadBtn.style.display = 'block';
-                // Remove previous listeners to be safe, then add the new one
-                loadBtn.replaceWith(loadBtn.cloneNode(true));
-                document.getElementById('loadGameBtn').addEventListener('click', () => openSaveLoadMenu('load'));
+                const newLoadBtn = loadBtn.cloneNode(true);
+                loadBtn.parentNode.replaceChild(newLoadBtn, loadBtn);
+                newLoadBtn.addEventListener('click', () => openSaveLoadMenu('load'));
+            } else {
+                loadBtn.style.display = 'none';
             }
 
             const screen = document.getElementById('plantSelectionScreen');
@@ -5065,7 +5078,7 @@ Copyright (c) 2025 Olexandr_43
                 libraryGrid.appendChild(libraryCard);
             });
 
-            // Mobile-only tip: recommend fullscreen when not already in fullscreen
+            // Mobile-only tip
             if (mobileDevice && !document.fullscreenElement) {
                 showCustomDialog(
                     'Fullscreen Recommended',
@@ -6085,7 +6098,7 @@ Copyright (c) 2025 Olexandr_43
                 plant.growthTimerId = createTimer(selectedPlantTypeInfo.growthTime, () => {
                     if (plant && plant.element) {
                         plant.isGrown = true;
-                        plant.element.classList.remove('arming'); 
+                        plant.element.classList.remove('arming');
                         plant.element.style.transform = 'translate(-50%, -50%) scale(1)';
                     }
                 }, false, 'plantGrowth', plant.id);
@@ -6274,7 +6287,11 @@ Copyright (c) 2025 Olexandr_43
                     const windElement = document.createElement('div');
                     windElement.className = 'instant-effect';
                     windElement.textContent = '💨';
-                    windElement.style.cssText = `position: fixed; font-size: 4em; z-index: 10; opacity: 0.7; top: ${gameState.boardRect.top + row * gameState.cellSize.height + 20}px; left: ${gameState.boardRect.left}px; animation: windBlow calc(0.8s / var(--game-speed)) ease-out forwards; pointer-events: none;`;
+                    if (mobileDevice) {
+                        windElement.style.cssText = `position: fixed; font-size: 3em; z-index: 10; opacity: 0.7; top: ${gameState.boardRect.top + row * gameState.cellSize.height + 10}px; left: ${gameState.boardRect.left}px; animation: windBlow calc(0.8s / var(--game-speed)) ease-out forwards;`;
+                    } else {
+                        windElement.style.cssText = `position: fixed; font-size: 4em; z-index: 10; opacity: 0.7; top: ${gameState.boardRect.top + row * gameState.cellSize.height + 20}px; left: ${gameState.boardRect.left}px; animation: windBlow calc(0.8s / var(--game-speed)) ease-out forwards;`;
+                    }
                     document.getElementById('gameContainer').appendChild(windElement);
                     createTimer(800, () => windElement.remove(), false, 'windElement_remove');
                     const zombiesToPush = gameState.zombies.filter(zombie => zombie.row === row);
@@ -6295,7 +6312,11 @@ Copyright (c) 2025 Olexandr_43
                             const fireElement = document.createElement('div');
                             fireElement.className = 'instant-effect';
                             fireElement.textContent = '🔥';
-                            fireElement.style.cssText = `position: absolute; font-size: 3.5em; z-index: 10; animation: fireGlow calc(0.5s / var(--game-speed)) infinite alternate;`;
+                            if (mobileDevice) {
+                                fireElement.style.cssText = `position: absolute; font-size: 2.5em; z-index: 10; animation: fireGlow calc(0.5s / var(--game-speed)) infinite alternate;`;
+                            } else {
+                                fireElement.style.cssText = `position: absolute; font-size: 3.5em; z-index: 10; animation: fireGlow calc(0.5s / var(--game-speed)) infinite alternate;`;
+                            }
                             affectedCell.appendChild(fireElement);
                             createTimer(1000, () => fireElement.remove(), false, 'fireElement_remove');
                             const iceTrailIndex = gameState.iceTrails.findIndex(t => t.row === row && t.col === c);
@@ -6318,7 +6339,11 @@ Copyright (c) 2025 Olexandr_43
                     const windElement = document.createElement('div');
                     windElement.className = 'instant-effect';
                     windElement.textContent = '💨';
-                    windElement.style.cssText = `position: fixed; font-size: 4em; z-index: 10; opacity: 0.7; top: ${gameState.boardRect.top + i * gameState.cellSize.height + 20}px; left: ${gameState.boardRect.left}px; animation: windBlow calc(0.5s / var(--game-speed)) ease-out forwards; pointer-events: none;`;
+                    if (mobileDevice) {
+                        windElement.style.cssText = `position: fixed; font-size: 3em; z-index: 10; opacity: 0.7; top: ${gameState.boardRect.top + i * gameState.cellSize.height + 10}px; left: ${gameState.boardRect.left}px; animation: windBlow calc(0.5s / var(--game-speed)) ease-out forwards;`;
+                    } else {
+                        windElement.style.cssText = `position: fixed; font-size: 4em; z-index: 10; opacity: 0.7; top: ${gameState.boardRect.top + i * gameState.cellSize.height + 20}px; left: ${gameState.boardRect.left}px; animation: windBlow calc(0.5s / var(--game-speed)) ease-out forwards;`;
+                    }
                     document.getElementById('gameContainer').appendChild(windElement);
                     createTimer(800, () => windElement.remove(), false, 'windElement_remove');
                 }
@@ -6334,6 +6359,24 @@ Copyright (c) 2025 Olexandr_43
             zombiesToDamage.forEach(zombie => {
                 zombie.health -= plantType.damage;
                 checkZombieStateChange(zombie);
+
+                // Thaw/unfreeze logic from the old function
+                if (zombie.isFrozen) {
+                    zombie.isFrozen = false;
+                    zombie.freezeTimer = 0;
+                    if (zombie.element) {
+                        zombie.element.classList.remove('frozen');
+                        createParticleEffect(zombie.element, '💨');
+                    }
+                } else if (zombie.slowed) {
+                    zombie.slowed = false;
+                    zombie.slowTimer = 0;
+                    if (zombie.element) {
+                        zombie.element.classList.remove('slowed');
+                        createParticleEffect(zombie.element, '💨');
+                    }
+                }
+
                 if (zombie.health <= 0) handleZombieDefeat(zombie);
                 else {
                     if (zombie.element) {
