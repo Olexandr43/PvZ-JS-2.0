@@ -3309,12 +3309,13 @@ Copyright (c) 2025 Olexandr_43
             lastSelectedPlantForImitater = null;
             wavePointsForCurrentWave = null;
             isShowingZombiesInPlantBar = false;
+            const selectedMap = document.querySelector('#mapChooser .mapOption.active').dataset.map || 'day';
 
             // Reset game state
             gameState = {
                 sun: 200,
                 score: 0,
-                map: gameState.map, // Keep the selected map
+                map: selectedMap,
                 selectedPlant: null,
                 selectedZombie: null,
                 isShovelActive: false,
@@ -3946,6 +3947,10 @@ Copyright (c) 2025 Olexandr_43
             if (!cell) return;
 
             const plantTypeInfo = plantTypes[plantData.type];
+            if (!plantTypeInfo) {
+                console.warn(`Unknown plant: '${plantData.type}'. Skipped.`);
+                return;
+            }
             const plant = {
                 ...plantData,
                 element: null,
@@ -3961,7 +3966,6 @@ Copyright (c) 2025 Olexandr_43
             if (plantTypeInfo.isActivatingPlant) plantElement.classList.add('activating');
             plantElement.textContent = plantTypeInfo.emoji;
 
-            // If the recreated plant is a Grave Buster, it must be in its eating state.
             if (plantTypeInfo.isGraveBuster) {
                 plantElement.classList.add('eating-grave');
                 plantElement.style.zIndex = '2';
@@ -4013,7 +4017,10 @@ Copyright (c) 2025 Olexandr_43
 
         function recreateZombie(zombieData) {
             const zombieType = zombieTypes[zombieData.type];
-            if (!zombieType) return;
+            if (!zombieType) {
+                console.warn(`Unknown zombie: '${zombieData.type}'. Skipped.`);
+                return;
+            }
 
             const zombieElement = document.createElement('div');
             zombieElement.className = 'zombie';
@@ -4093,12 +4100,10 @@ Copyright (c) 2025 Olexandr_43
 
             document.getElementById('gameContainer').appendChild(projectile);
 
-            // Reconstruct the projectile object with ALL saved data
             const proj = {
                 ...projData, // Copies all saved data like damage, slow, fire, splashDamage, etc.
                 element: projectile,
-                speed: projData.owner === 'zombie' ? -200 : 200, // This is a constant value
-                // Ensure these arrays exist, using saved data if available, otherwise default to empty.
+                speed: projData.owner === 'zombie' ? -200 : 200,
                 hitZombies: projData.hitZombies || [],
                 hitTorchwoods: projData.hitTorchwoods || []
             };
@@ -4366,7 +4371,8 @@ Copyright (c) 2025 Olexandr_43
                         const plant = gameState.plants.find(p => p.id === timerData.context);
                         if (plant && plant.element) {
                             plant.isGrown = true;
-                            plant.element.style.transform = 'translate(-50%, -50%) scale(1.3)';
+                            plant.element.classList.remove('arming');
+                            plant.element.style.transform = 'translate(-50%, -50%) scale(1)';
                         }
                     };
                     break;
