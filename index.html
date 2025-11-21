@@ -169,6 +169,16 @@ Copyright (c) 2025 Olexandr_43
             padding: 5px;
             border-radius: 5px;
             display: none;
+            width: 200px;
+            font-family: monospace;
+        }
+
+        #fpsGraph {
+            width: 100%;
+            height: 40px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border: 1px solid #444;
+            margin-top: 5px;
         }
 
         /* --- GAME BOARD ELEMENTS --- */
@@ -550,7 +560,6 @@ Copyright (c) 2025 Olexandr_43
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             position: relative;
             overflow: hidden;
             flex-shrink: 0;
@@ -558,7 +567,6 @@ Copyright (c) 2025 Olexandr_43
 
         .plantCard:hover {
             transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
             border-color: #45a049;
         }
 
@@ -582,7 +590,6 @@ Copyright (c) 2025 Olexandr_43
         .plantCard.selected {
             background: linear-gradient(135deg, #4CAF50, #45a049);
             transform: scale(1.1);
-            box-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
         }
 
         .plantCard.imitated {
@@ -600,7 +607,6 @@ Copyright (c) 2025 Olexandr_43
 
         .plantCard[data-upgrade="true"].selected {
             background: linear-gradient(135deg, #9b59b6, #8e44ad);
-            box-shadow: 0 0 20px rgba(155, 89, 182, 0.5);
         }
 
         .plantCard.disabled {
@@ -668,7 +674,6 @@ Copyright (c) 2025 Olexandr_43
         #shovelCard.selected {
             background: linear-gradient(135deg, #A9A9A9, #808080);
             border-color: #696969;
-            box-shadow: 0 0 20px rgba(128, 128, 128, 0.5);
         }
 
         .zombieCard {
@@ -684,7 +689,6 @@ Copyright (c) 2025 Olexandr_43
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             position: relative;
             overflow: hidden;
             flex-shrink: 0;
@@ -692,14 +696,12 @@ Copyright (c) 2025 Olexandr_43
 
         .zombieCard:hover {
             transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
             border-color: #ff0000;
         }
 
         .zombieCard.selected {
             background: linear-gradient(135deg, #b22222, #8b0000);
             transform: scale(1.1);
-            box-shadow: 0 0 20px rgba(178, 34, 34, 0.5);
         }
 
         .zombieCard .name {
@@ -2234,6 +2236,90 @@ Copyright (c) 2025 Olexandr_43
                 padding: 6px 10px;
             }
         }
+
+        .zombie,
+        .projectile,
+        .lawnmower,
+        .sun,
+        .flying-imp,
+        .flying-octopus {
+            will-change: top, left, transform;
+            /* transform: translateZ(0); */
+            backface-visibility: hidden;
+        }
+
+        /* --- PERFORMANCE MODE TOGGLE --- */
+
+        /* 1. Game Entities */
+        body.performance-mode .zombie,
+        body.performance-mode .plant,
+        body.performance-mode .projectile,
+        body.performance-mode .sun,
+        body.performance-mode .lawnmower,
+        body.performance-mode .particle,
+        body.performance-mode .cell,
+        body.performance-mode .cell:hover,
+        body.performance-mode .zombie-health-fill,
+        body.performance-mode .plant-health-fill,
+        body.performance-mode .instant-effect,
+        body.performance-mode .flying-imp,
+        body.performance-mode .flying-octopus {
+            filter: none !important;
+            box-shadow: none !important;
+            text-shadow: none !important;
+        }
+
+        /* 2. UI Elements */
+        body.performance-mode #ui,
+        body.performance-mode #zombieSpawner,
+        body.performance-mode #pauseMenu,
+        body.performance-mode #gameOver,
+        body.performance-mode #victoryScreen,
+        body.performance-mode .dialog-box,
+        body.performance-mode .plantCard,
+        body.performance-mode .plantCard.on-cooldown,
+        body.performance-mode .zombieCard {
+            filter: none !important;
+            box-shadow: none !important;
+            backdrop-filter: none !important;
+        }
+
+        /* 3. Remove the main container shadow */
+        body.performance-mode #gameContainer {
+            box-shadow: none !important;
+        }
+
+        /* 4. Visual Fixes */
+        body.performance-mode .zombie.frozen {
+            background-color: rgba(135, 206, 235, 0.6) !important;
+            border-radius: 50% !important;
+        }
+
+        body.performance-mode .zombie.slowed {
+            background-color: rgba(0, 0, 255, 0.2) !important;
+            border-radius: 20% !important;
+        }
+
+        body.performance-mode .zombie.damage-effect,
+        body.performance-mode .plant.plant-damage-effect {
+            animation: none !important;
+            background-color: rgba(255, 0, 0, 0.5) !important;
+            border-radius: 20% !important;
+        }
+
+        body.performance-mode .plant.imitated {
+            background-color: rgba(200, 200, 200, 0.4) !important;
+            border-radius: 10px !important;
+        }
+
+        body.performance-mode .zombie.enraged {
+            background-color: rgba(235, 35, 152, 0.4) !important;
+            border-radius: 20% !important;
+        }
+
+        body.performance-mode .plantCard.on-cooldown {
+            opacity: 0.5 !important;
+        }
     </style>
 </head>
 
@@ -2311,13 +2397,17 @@ Copyright (c) 2025 Olexandr_43
 
         <div id="gameBoard"></div>
 
-        <div id="debugInfo"></div>
+        <div id="debugInfo">
+            <div id="debugText"></div>
+            <canvas id="fpsGraph" width="150" height="40"></canvas>
+        </div>
 
         <div id="pauseMenu">
             <h2>Game Paused</h2>
             <button class="btn" onclick="resumeGame()">▶️ Resume</button>
             <button class="btn savegame" onclick="openSaveLoadMenu('save')">💾 Save Game</button>
             <button class="btn restart" onclick="confirmRestart()">🔄 Restart</button>
+            <button class="btn secondary" onclick="togglePerformanceMode()">🚀 Performance Mode</button>
         </div>
 
         <div id="leaderboard">
@@ -2438,6 +2528,34 @@ Copyright (c) 2025 Olexandr_43
             <p id="dialogMessage"></p>
             <div id="dialogButtons">
                 <!-- Buttons are injected here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Critical Error Modal -->
+    <div id="errorModal" class="dialog-overlay" style="z-index: 10000;">
+        <div class="dialog-box" style="border: 4px solid #ff4444; max-width: 600px;">
+            <h2 style="color: #ff4444; margin-bottom: 10px;">⚠️ Critical Error</h2>
+            <p style="margin-bottom: 15px;">The game encountered a problem and needs to stop.<br>Please copy the error
+                below and report it.</p>
+
+            <textarea id="errorDetail" readonly style="
+                width: 100%; 
+                height: 150px; 
+                margin-bottom: 15px; 
+                background: rgba(0,0,0,0.1); 
+                border: 1px solid #ccc; 
+                border-radius: 5px; 
+                padding: 10px; 
+                font-family: monospace; 
+                font-size: 0.8em; 
+                resize: none; 
+                color: #333;
+            "></textarea>
+
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button class="btn restart" onclick="location.reload()">🔄 Reload Game</button>
+                <button class="btn secondary" id="copyErrorBtn" onclick="copyErrorToClipboard()">📋 Copy Error</button>
             </div>
         </div>
     </div>
@@ -2629,10 +2747,10 @@ Copyright (c) 2025 Olexandr_43
             <div class="cost">225</div>
             <div class="name">Snapdragon</div>
         </div>
-        <div class="plantCard" data-plant="hurrikale" data-cost="100">
+        <div class="plantCard" data-plant="hurrikale" data-cost="150">
             <div class="cooldown-overlay"></div>
             <div class="emoji">🌬️</div>
-            <div class="cost">100</div>
+            <div class="cost">150</div>
             <div class="name">Hurrikale</div>
         </div>
         <div class="plantCard" data-plant="gatling" data-cost="250" data-upgrade="true" data-upgrades-from="repeater">
@@ -2690,6 +2808,58 @@ Copyright (c) 2025 Olexandr_43
 
 
     <script>
+        // --- GLOBAL ERROR HANDLING ---
+        window.onerror = function (msg, url, lineNo, columnNo, error) {
+            handleCriticalError(msg, url, lineNo, columnNo, error);
+            return false;
+        };
+
+        window.onunhandledrejection = function (event) {
+            handleCriticalError('Unhandled Promise Rejection', '', '', '', event.reason);
+        };
+
+        function handleCriticalError(msg, url, lineNo, columnNo, error) {
+            const modal = document.getElementById('errorModal');
+            const detailBox = document.getElementById('errorDetail');
+
+            if (modal.style.display === 'flex') return;
+
+            if (typeof gameState !== 'undefined') {
+                gameState.isPaused = true;
+                if (gameState.gameLoopId) cancelAnimationFrame(gameState.gameLoopId);
+            }
+
+            let errorText = `Error: ${msg}\n`;
+            if (lineNo) errorText += `Location: Line ${lineNo}:${columnNo}\n`;
+            if (url) errorText += `URL: ${url}\n`;
+            if (error && error.stack) {
+                errorText += `\nStack Trace:\n${error.stack}`;
+            } else if (error) {
+                errorText += `\nDetails:\n${JSON.stringify(error, null, 2)}`;
+            }
+
+            detailBox.value = errorText;
+            modal.style.display = 'flex';
+        }
+
+        function copyErrorToClipboard() {
+            const copyText = document.getElementById("errorDetail");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+
+            try {
+                navigator.clipboard.writeText(copyText.value).then(() => {
+                    const btn = document.getElementById('copyErrorBtn');
+                    const originalText = btn.textContent;
+                    btn.textContent = "✅ Copied!";
+                    setTimeout(() => btn.textContent = originalText, 2000);
+                });
+            } catch (err) {
+                document.execCommand("copy");
+                alert("Error copied to clipboard");
+            }
+        }
+
         let selectedPlantDeck = [];
         let lastSelectedPlantForImitater = null;
         let wavePointsForCurrentWave = null;
@@ -4520,6 +4690,102 @@ Copyright (c) 2025 Olexandr_43
             document.getElementById('saveLoadMenu').style.display = 'none';
         }
         document.getElementById('closeSaveLoadMenuBtn').addEventListener('click', closeSaveLoadMenu);
+
+        // --- FPS GRAPH LOGIC ---
+
+        const fpsHistory = new Array(150).fill(60); // Store last 150 frames (approx 2.5 seconds)
+        let fpsRecordingData = [];
+        let isRecordingFPS = false;
+        let recordingStartTime = 0;
+
+        window.startFPSrec = function () {
+            fpsRecordingData = [];
+            isRecordingFPS = true;
+            recordingStartTime = Date.now();
+            console.log('%c 🔴 FPS Recording Started...', 'color: red; font-weight: bold;');
+            console.log('Type finishFPSrec() to stop and download.');
+        };
+
+        window.finishFPSrec = function () {
+            if (!isRecordingFPS) {
+                console.warn('FPS recording is not active.');
+                return;
+            }
+            isRecordingFPS = false;
+            const duration = ((Date.now() - recordingStartTime) / 1000).toFixed(2);
+
+            console.log(`%c ⏹️ Recording Finished. Duration: ${duration}s. Frames: ${fpsRecordingData.length}`, 'color: green; font-weight: bold;');
+
+            let fileContent = `FPS Recording Log\nDate: ${new Date().toLocaleString()}\nDuration: ${duration} seconds\nTotal Frames Captured: ${fpsRecordingData.length}\n\nTimestamp(ms)\tFPS\n`;
+
+            fpsRecordingData.forEach(entry => {
+                fileContent += `${entry.time}\t${entry.fps}\n`;
+            });
+
+            const fpsValues = fpsRecordingData.map(e => e.fps);
+            const avg = Math.round(fpsValues.reduce((a, b) => a + b, 0) / fpsValues.length);
+            const min = Math.min(...fpsValues);
+            const max = Math.max(...fpsValues);
+            const onePercentLow = fpsValues.sort((a, b) => a - b)[Math.floor(fpsValues.length * 0.01)];
+
+            fileContent = fileContent.replace('Timestamp(ms)', `Session Min: ${min} | Max: ${max} | Avg: ${avg} | 1% Low: ${onePercentLow}\n\nTimestamp(ms)`);
+
+            const blob = new Blob([fileContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `pvz_fps_log_${Date.now()}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        };
+
+        function updateFpsGraph(currentFps) {
+            const canvas = document.getElementById('fpsGraph');
+            const ctx = canvas.getContext('2d', { alpha: false });
+
+            // 1. Update Data
+            fpsHistory.push(currentFps);
+            fpsHistory.shift();
+
+            // 2. Clear
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 3. Draw Graph
+            ctx.beginPath();
+
+            // Dynamic scaling: Logic implies 60fps is "top" of graph (0 y), 0fps is bottom (height)
+            const maxFps = 65;
+            const w = canvas.width;
+            const h = canvas.height;
+            const step = w / (fpsHistory.length - 1);
+
+            for (let i = 0; i < fpsHistory.length; i++) {
+                const fps = fpsHistory[i];
+                const y = h - (Math.min(fps, maxFps) / maxFps) * h;
+
+                if (i === 0) {
+                    ctx.moveTo(0, y);
+                } else {
+                    ctx.lineTo(i * step, y);
+                }
+            }
+
+            // 4. Style & Stroke
+            if (currentFps > 50) ctx.strokeStyle = '#00ff00'; // Green
+            else if (currentFps > 30) ctx.strokeStyle = '#ffff00'; // Yellow
+            else ctx.strokeStyle = '#ff0000'; // Red
+
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            // 5. Draw 30 FPS and 60 FPS guide lines
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+            const y30 = h - (30 / maxFps) * h;
+            ctx.fillRect(0, y30, w, 1);
+        }
 
         // --- ALMANAC FUNCTIONS ---
 
@@ -8120,6 +8386,9 @@ Copyright (c) 2025 Olexandr_43
 
         // Create Particle Effect
         function createParticleEffect(element, emoji) {
+            if (document.body.classList.contains('performance-mode')) {
+                return;
+            }
             const rect = element.getBoundingClientRect ?
                 element.getBoundingClientRect() :
                 { left: element.offsetLeft, top: element.offsetTop };
@@ -8382,6 +8651,26 @@ Copyright (c) 2025 Olexandr_43
 
                 return true; // Keep in the array
             });
+        }
+
+        function togglePerformanceMode() {
+            document.body.classList.toggle('performance-mode');
+
+            // Save preference
+            const isEnabled = document.body.classList.contains('performance-mode');
+            localStorage.setItem('pvz_perf_mode', isEnabled);
+
+            // Optional: Visual feedback on the button
+            const btn = document.querySelector('#pauseMenu button[onclick="togglePerformanceMode()"]');
+            if (btn) btn.textContent = isEnabled ? "🚀 Perf. Mode: ON" : "🚀 Perf. Mode: OFF";
+
+            // Re-render board dimensions in case CSS changes affected layout
+            setTimeout(updateBoardDimensions, 100);
+        }
+
+        // Checks if the user had it enabled previously
+        if (localStorage.getItem('pvz_perf_mode') === 'true') {
+            togglePerformanceMode(); // Activates it on startup
         }
 
         // Game Loop
@@ -8728,7 +9017,7 @@ Copyright (c) 2025 Olexandr_43
 
                     // --- SNAPDRAGON LOGIC ---
                     gameState.plants.forEach(plant => {
-                        if (plant.type === 'snapdragon') {
+                        if (plant.type === 'snapdragon' && !plant.isWrapped) {
                             if (!plant.shootCooldown) plant.shootCooldown = 0;
                             plant.shootCooldown -= adjustedDelta;
                             if (plant.shootCooldown <= 0) {
@@ -8855,31 +9144,49 @@ Copyright (c) 2025 Olexandr_43
                     gameState.plants = gameState.plants.filter(p => p.element);
 
                     const debugInfo = document.getElementById('debugInfo');
+                    const fps = Math.round(1000 / deltaTime);
+
+                    if (isRecordingFPS) {
+                        fpsRecordingData.push({
+                            time: Date.now() - recordingStartTime,
+                            fps: fps
+                        });
+                    }
+
                     if (debugInfo.style.display === 'block') {
+                        let avgFps = 0, minFps = 0, maxFps = 0;
+                        if (fpsHistory.length > 0) {
+                            avgFps = Math.round(fpsHistory.reduce((a, b) => a + b, 0) / fpsHistory.length);
+                            minFps = Math.min(...fpsHistory);
+                            maxFps = Math.max(...fpsHistory);
+                        }
+
                         let nextWaveIn = 'N/A';
                         const waveTimer = Object.values(gameState.timers).find(t => t.type === 'waveTimer' || t.type === 'nextWave');
                         if (waveTimer) {
                             nextWaveIn = (waveTimer.remaining / 1000).toFixed(1) + 's';
                         }
 
-                        debugInfo.innerHTML = `
+                        let recordingStatus = isRecordingFPS ? '<span style="color:red; animation: pulse 1s infinite">● REC</span>' : 'OFF';
+
+                        document.getElementById('debugText').innerHTML = `
+                            <strong>FPS: ${fps}</strong> <small>(Avg:${avgFps} Min:${minFps} Max:${maxFps})</small><br>
+                            <div style="height:1px; background: #555; margin: 3px 0;"></div>
                             Zombies: ${gameState.zombies.length}<br>
                             Plants: ${gameState.plants.length}<br>
                             Projectiles: ${gameState.projectiles.length}<br>
-                            Graves: ${gameState.graves.length}<br>
-                            Ice: ${gameState.iceTrails.length}<br>
-                            Spawning Complete: ${gameState.isSpawningComplete}<br>
-                            Total Wave Points: ${wavePointsForCurrentWave}<br>
-                            Next Wave In: ${nextWaveIn}<br>
-                            Wave: ${gameState.wave}/${gameState.maxWaves}<br>
+                            Graves: ${gameState.graves.length} | Ice: ${gameState.iceTrails.length}<br>
                             Timers: ${Object.keys(gameState.timers).length}<br>
-							Score: ${gameState.score}<br>
-                            Speed: x${gameState.gameSpeed}<br>
-                            Zombies Defeated: ${gameState.zombiesDefeated}<br>
-							Damage Mult: ${gameState.zombieDamageMultiplier.toFixed(2)}x<br>
-							Map: ${gameState.map}<br>
-                            FPS: ${Math.round(1000 / deltaTime)}
+                            <div style="height:1px; background: #555; margin: 3px 0;"></div>
+                            Wave: ${gameState.wave}/${gameState.maxWaves} (Next: ${nextWaveIn})<br>
+                            Points Budget: ${wavePointsForCurrentWave}<br>
+                            Spawning Complete: ${gameState.isSpawningComplete}<br>
+                            Damage Mult: ${gameState.zombieDamageMultiplier.toFixed(2)}x<br>
+                            <div style="height:1px; background: #555; margin: 3px 0;"></div>
+                            Recorder: ${recordingStatus}
                         `;
+
+                        updateFpsGraph(fps);
                     }
                 }
 
