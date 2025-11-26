@@ -224,6 +224,11 @@ Copyright (c) 2025 Olexandr_43
             animation: iceGlimmer calc(2s / var(--game-speed)) infinite alternate;
         }
 
+        .cell.golden-tile {
+            background-color: rgba(255, 215, 0, 0.4) !important;
+            border: 2px solid #ffd700;
+        }
+
         .cell.grave {
             cursor: not-allowed;
             position: relative;
@@ -474,7 +479,27 @@ Copyright (c) 2025 Olexandr_43
             height: 100%;
             background: linear-gradient(90deg, #ff0000, #ff6600);
             transition: width calc(0.3s / var(--game-speed)) ease;
-            box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+        }
+
+        .zombie-armor-bar {
+            position: absolute;
+            width: 40px;
+            height: 4px;
+            background: rgba(100, 100, 100, 0.8);
+            top: -16px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+            overflow: hidden;
+            z-index: 3;
+            display: none;
+            /* Hidden by default */
+        }
+
+        .zombie-armor-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #888888, #dddddd);
+            transition: width calc(0.3s / var(--game-speed)) ease;
         }
 
         .zombie.damage-effect {
@@ -607,6 +632,15 @@ Copyright (c) 2025 Olexandr_43
 
         .plantCard[data-upgrade="true"].selected {
             background: linear-gradient(135deg, #9b59b6, #8e44ad);
+        }
+
+        .plantCard[data-dlc="true"] {
+            border-color: #597ab6;
+            background: linear-gradient(135deg, #dae6ef, #b4c7e0);
+        }
+
+        .plantCard[data-dlc="true"].selected {
+            background: linear-gradient(135deg, #597ab6, #4a6aad);
         }
 
         .plantCard.disabled {
@@ -1119,7 +1153,8 @@ Copyright (c) 2025 Olexandr_43
             padding: 15px;
         }
 
-        #almanacContent {
+        #almanacContent,
+        #almanacPlantContent {
             display: flex;
             flex-direction: row;
             gap: 20px;
@@ -1131,7 +1166,8 @@ Copyright (c) 2025 Olexandr_43
             padding: 15px;
         }
 
-        #almanacZombieList {
+        #almanacZombieList,
+        #almanacPlantList {
             flex-basis: 45%;
             flex-shrink: 0;
             display: grid;
@@ -1143,16 +1179,19 @@ Copyright (c) 2025 Olexandr_43
             border-radius: 10px;
         }
 
-        #almanacZombieList::-webkit-scrollbar {
+        #almanacZombieList::-webkit-scrollbar,
+        #almanacPlantList::-webkit-scrollbar {
             width: 8px;
         }
 
-        #almanacZombieList::-webkit-scrollbar-track {
+        #almanacZombieList::-webkit-scrollbar-track,
+        #almanacPlantList::-webkit-scrollbar-track {
             background: rgba(0, 0, 0, 0.3);
             border-radius: 4px;
         }
 
-        #almanacZombieList::-webkit-scrollbar-thumb {
+        #almanacZombieList::-webkit-scrollbar-thumb,
+        #almanacPlantList::-webkit-scrollbar-thumb {
             background: rgba(255, 255, 255, 0.3);
             border-radius: 4px;
         }
@@ -1190,7 +1229,8 @@ Copyright (c) 2025 Olexandr_43
             transform: scale(0.9);
         }
 
-        #almanacZombieDetails {
+        #almanacZombieDetails,
+        #almanacPlantDetails {
             flex-basis: 55%;
             display: none;
             /* Initially hidden */
@@ -1206,7 +1246,8 @@ Copyright (c) 2025 Olexandr_43
             overflow-y: auto;
         }
 
-        #almanacZombieDetails .almanac-visual {
+        #almanacZombieDetails .almanac-visual,
+        #almanacPlantDetails .almanac-visual {
             width: 150px;
             height: 150px;
             margin-bottom: 15px;
@@ -1214,7 +1255,8 @@ Copyright (c) 2025 Olexandr_43
             border-radius: 10px;
         }
 
-        #almanacZombieDetails .almanac-name {
+        #almanacZombieDetails .almanac-name,
+        #almanacPlantDetails .almanac-name {
             font-size: 1.8em;
         }
 
@@ -2137,7 +2179,7 @@ Copyright (c) 2025 Olexandr_43
             }
 
             #deckBar .plantCard .emoji {
-                font-size: 1.4em;
+                font-size: 1.3em;
             }
 
             #plantLibrary {
@@ -2173,12 +2215,14 @@ Copyright (c) 2025 Olexandr_43
                 padding: 10px;
             }
 
-            #almanacZombieDetails .almanac-visual {
+            #almanacZombieDetails .almanac-visual,
+            #almanacPlantDetails .almanac-visual {
                 width: 100px;
                 height: 100px;
             }
 
-            #almanacZombieDetails .almanac-name {
+            #almanacZombieDetails .almanac-name,
+            #almanacPlantDetails .almanac-name {
                 font-size: 1.5em;
             }
 
@@ -2188,8 +2232,30 @@ Copyright (c) 2025 Olexandr_43
                 height: 70px;
             }
 
-            #almanacZombieList {
+            #almanacZombieList,
+            #almanacPlantList {
                 grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+            }
+
+            #almanacSelectionView h2 {
+                font-size: 2em !important;
+            }
+
+            #almanacSelectionView div {
+                gap: 20px !important;
+            }
+
+            #almanacSelectionView button.btn:not(.secondary) {
+                width: 140px !important;
+                height: 180px !important;
+            }
+
+            #almanacSelectionView button.btn:not(.secondary) span:first-child {
+                font-size: 3.5em !important;
+            }
+
+            #almanacSelectionView button.btn:not(.secondary) span:last-child {
+                font-size: 1.2em !important;
             }
         }
 
@@ -2234,6 +2300,28 @@ Copyright (c) 2025 Olexandr_43
             .controlBtn {
                 font-size: 0.9em;
                 padding: 6px 10px;
+            }
+
+            #almanacSelectionView h2 {
+                font-size: 1.8em !important;
+                margin-bottom: 20px !important;
+            }
+
+            #almanacSelectionView div {
+                gap: 15px !important;
+            }
+
+            #almanacSelectionView button.btn:not(.secondary) {
+                width: 120px !important;
+                height: 150px !important;
+            }
+
+            #almanacSelectionView button.btn:not(.secondary) span:first-child {
+                font-size: 3em !important;
+            }
+
+            #almanacSelectionView button.btn:not(.secondary) span:last-child {
+                font-size: 1em !important;
             }
         }
 
@@ -2456,17 +2544,68 @@ Copyright (c) 2025 Olexandr_43
 
         <div id="almanacScreen"
             style="display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: #3d2a15; z-index: 1000; flex-direction: column; align-items: center; padding: 30px;">
-            <h2 style="color: white; font-size: 2.5em; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); margin-bottom: 15px;">
-                Zombie Almanac</h2>
-            <div id="almanacContent">
-                <div id="almanacZombieList">
-                    <!-- Zombie icon cards will be generated here by JavaScript -->
+
+            <!-- SELECTION VIEW -->
+            <div id="almanacSelectionView"
+                style="display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; height: 100%; justify-content: center;">
+                <h2
+                    style="color: white; font-size: 3em; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); margin-bottom: 30px;">
+                    Suburban Almanac</h2>
+                <div style="display: flex; gap: 40px;">
+                    <button class="btn" onclick="showPlantAlmanac()"
+                        style="width: 200px; height: 250px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; background: linear-gradient(135deg, #4CAF50, #2E7D32); border: 4px solid #1B5E20;">
+                        <span style="font-size: 5em;">🌻</span>
+                        <span style="font-size: 1.5em; font-weight: bold;">Plants</span>
+                    </button>
+                    <button class="btn" onclick="showZombieAlmanac()"
+                        style="width: 200px; height: 250px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; background: linear-gradient(135deg, #795548, #3E2723); border: 4px solid #281815;">
+                        <span style="font-size: 5em;">🧟</span>
+                        <span style="font-size: 1.5em; font-weight: bold;">Zombies</span>
+                    </button>
                 </div>
-                <div id="almanacZombieDetails">
-                    <!-- Details for the selected zombie will be shown here by JavaScript -->
+                <button class="btn secondary" onclick="closeAlmanac()"
+                    style="margin-top: 40px; padding: 10px 30px; font-size: 1.2em;">Close Almanac</button>
+            </div>
+
+            <!-- PLANT VIEW -->
+            <div id="almanacPlantView"
+                style="display: none; flex-direction: column; align-items: center; width: 100%; height: 100%;">
+                <h2
+                    style="color: white; font-size: 2.5em; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); margin-bottom: 15px;">
+                    Plant Almanac</h2>
+                <div id="almanacPlantContent">
+                    <div id="almanacPlantList">
+                        <!-- Plant icon cards will be generated here -->
+                    </div>
+                    <div id="almanacPlantDetails">
+                        <!-- Details for the selected plant will be shown here -->
+                    </div>
+                </div>
+                <div style="display: flex; gap: 15px;">
+                    <button class="btn secondary" onclick="returnToAlmanacSelection()">Back</button>
+                    <button class="btn" onclick="closeAlmanac()">Close</button>
                 </div>
             </div>
-            <button class="btn" onclick="closeAlmanac()" style="margin-top: 15px;">Close</button>
+
+            <!-- ZOMBIE VIEW -->
+            <div id="almanacZombieView"
+                style="display: none; flex-direction: column; align-items: center; width: 100%; height: 100%;">
+                <h2
+                    style="color: white; font-size: 2.5em; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); margin-bottom: 15px;">
+                    Zombie Almanac</h2>
+                <div id="almanacContent">
+                    <div id="almanacZombieList">
+                        <!-- Zombie icon cards will be generated here by JavaScript -->
+                    </div>
+                    <div id="almanacZombieDetails">
+                        <!-- Details for the selected zombie will be shown here by JavaScript -->
+                    </div>
+                </div>
+                <div style="display: flex; gap: 15px;">
+                    <button class="btn secondary" onclick="returnToAlmanacSelection()">Back</button>
+                    <button class="btn" onclick="closeAlmanac()">Close</button>
+                </div>
+            </div>
         </div>
 
 
@@ -2699,6 +2838,18 @@ Copyright (c) 2025 Olexandr_43
             <div class="cost">125</div>
             <div class="name">Blover</div>
         </div>
+        <div class="plantCard" data-plant="pumpkin" data-cost="125">
+            <div class="cooldown-overlay"></div>
+            <div class="emoji">🎃</div>
+            <div class="cost">125</div>
+            <div class="name">Pumpkin</div>
+        </div>
+        <div class="plantCard" data-plant="magnetshroom" data-cost="100">
+            <div class="cooldown-overlay"></div>
+            <div class="emoji">🧲</div>
+            <div class="cost">100</div>
+            <div class="name">Magnet-shroom</div>
+        </div>
         <div class="plantCard" data-plant="cabbagepult" data-cost="100">
             <div class="cooldown-overlay"></div>
             <div class="emoji">🥬</div>
@@ -2723,6 +2874,12 @@ Copyright (c) 2025 Olexandr_43
             <div class="cost">50</div>
             <div class="name">Garlic</div>
         </div>
+        <div class="plantCard" data-plant="umbrellaLeaf" data-cost="100">
+            <div class="cooldown-overlay"></div>
+            <div class="emoji">🌴</div>
+            <div class="cost">100</div>
+            <div class="name">Umbrella Leaf</div>
+        </div>
         <div class="plantCard" data-plant="marigold" data-cost="50">
             <div class="cooldown-overlay"></div>
             <div class="emoji">🌼</div>
@@ -2734,24 +2891,6 @@ Copyright (c) 2025 Olexandr_43
             <div class="emoji">🍉</div>
             <div class="cost">300</div>
             <div class="name">Melon-pult</div>
-        </div>
-        <div class="plantCard" data-plant="firepea" data-cost="250">
-            <div class="cooldown-overlay"></div>
-            <div class="emoji">🔥</div>
-            <div class="cost">250</div>
-            <div class="name">Fire Pea</div>
-        </div>
-        <div class="plantCard" data-plant="snapdragon" data-cost="225">
-            <div class="cooldown-overlay"></div>
-            <div class="emoji">🐲</div>
-            <div class="cost">225</div>
-            <div class="name">Snapdragon</div>
-        </div>
-        <div class="plantCard" data-plant="hurrikale" data-cost="150">
-            <div class="cooldown-overlay"></div>
-            <div class="emoji">🌬️</div>
-            <div class="cost">150</div>
-            <div class="name">Hurrikale</div>
         </div>
         <div class="plantCard" data-plant="gatling" data-cost="250" data-upgrade="true" data-upgrades-from="repeater">
             <div class="cooldown-overlay"></div>
@@ -2793,11 +2932,53 @@ Copyright (c) 2025 Olexandr_43
             <div class="cost"></div>
             <div class="name">Imitater</div>
         </div>
-        <div class="plantCard" data-plant="suncheat" data-cost="0">
+        <div class="plantCard" data-plant="firepea" data-cost="250" data-dlc="true">
             <div class="cooldown-overlay"></div>
-            <div class="emoji">☀️</div>
-            <div class="cost">0</div>
-            <div class="name">Suncheat</div>
+            <div class="emoji">🔥</div>
+            <div class="cost">250</div>
+            <div class="name">Fire Pea</div>
+        </div>
+        <div class="plantCard" data-plant="snapdragon" data-cost="225" data-dlc="true">
+            <div class="cooldown-overlay"></div>
+            <div class="emoji">🐲</div>
+            <div class="cost">225</div>
+            <div class="name">Snapdragon</div>
+        </div>
+        <div class="plantCard" data-plant="hurrikale" data-cost="150" data-dlc="true">
+            <div class="cooldown-overlay"></div>
+            <div class="emoji">🌬️</div>
+            <div class="cost">150</div>
+            <div class="name">Hurrikale</div>
+        </div>
+        <div class="plantCard" data-plant="magnifyingGrass" data-cost="50" data-dlc="true">
+            <div class="cooldown-overlay"></div>
+            <div class="emoji">🔍</div>
+            <div class="cost">50</div>
+            <div class="name">Magnifying Grass</div>
+        </div>
+        <div class="plantCard" data-plant="aloe" data-cost="75" data-dlc="true">
+            <div class="cooldown-overlay"></div>
+            <div class="emoji">🌳</div>
+            <div class="cost">75</div>
+            <div class="name">Aloe</div>
+        </div>
+        <div class="plantCard" data-plant="peanut" data-cost="150" data-dlc="true">
+            <div class="cooldown-overlay"></div>
+            <div class="emoji">🥜</div>
+            <div class="cost">150</div>
+            <div class="name">Pea-nut</div>
+        </div>
+        <div class="plantCard" data-plant="blockoli" data-cost="150" data-dlc="true">
+            <div class="cooldown-overlay"></div>
+            <div class="emoji">🥦</div>
+            <div class="cost">150</div>
+            <div class="name">Blockoli</div>
+        </div>
+        <div class="plantCard" data-plant="goldleaf" data-cost="50" data-dlc="true">
+            <div class="cooldown-overlay"></div>
+            <div class="emoji">🍁</div>
+            <div class="cost">50</div>
+            <div class="name">Goldleaf</div>
         </div>
         <!-- Shovel -->
         <div class="plantCard" id="shovelCard">
@@ -2901,7 +3082,8 @@ Copyright (c) 2025 Olexandr_43
             gameLoopId: null,
             timers: {},
             nextTimerId: 0,
-            nextId: 0
+            nextId: 0,
+            goldenTiles: []
         };
 
         let activeChallenges = {
@@ -2949,8 +3131,8 @@ Copyright (c) 2025 Olexandr_43
             },
             wallnut: {
                 emoji: '🥥',
-                health: 24,
-                maxHealth: 24,
+                health: 48,
+                maxHealth: 48,
                 shoots: false,
                 description: 'Defensive wall',
                 cooldown: 30000 // Slow
@@ -2980,8 +3162,8 @@ Copyright (c) 2025 Olexandr_43
             },
             chomper: {
                 emoji: '🌿',
-                health: 4.88,
-                maxHealth: 4.88,
+                health: 4.8,
+                maxHealth: 4.8,
                 shoots: false,
                 damage: 2,
                 attackInterval: 1000,
@@ -3133,8 +3315,8 @@ Copyright (c) 2025 Olexandr_43
             },
             tallnut: {
                 emoji: '🌰',
-                health: 48,
-                maxHealth: 48,
+                health: 96,
+                maxHealth: 96,
                 shoots: false,
                 description: 'Great defensive wall',
                 cooldown: 30000 // Slow
@@ -3170,6 +3352,26 @@ Copyright (c) 2025 Olexandr_43
                 description: 'Blows away flying zombies',
                 cooldown: 7500, // Fast
             },
+            pumpkin: {
+                emoji: '🎃',
+                health: 48,
+                maxHealth: 48,
+                shoots: false,
+                description: 'Protects plants inside',
+                cooldown: 30000, // Slow
+                isPumpkin: true
+            },
+            magnetshroom: {
+                emoji: '🧲',
+                health: 4.8,
+                maxHealth: 4.8,
+                isMushroom: true,
+                shoots: false,
+                isMagnetshroom: true,
+                magnetInterval: 10000,
+                description: 'Steals metallic armor from zombies <br><p style="color: #CC6CE7;">Sleeps during day',
+                cooldown: 30000 // Slow
+            },
             cabbagepult: {
                 emoji: '🥬',
                 health: 3.6,
@@ -3178,6 +3380,7 @@ Copyright (c) 2025 Olexandr_43
                 damage: 2,
                 shootInterval: 3000,
                 projectile: '🥬',
+                lobbed: true,
                 description: 'Lobs cabbages',
                 cooldown: 7500 // Fast
             },
@@ -3189,6 +3392,7 @@ Copyright (c) 2025 Olexandr_43
                 damage: 1,
                 shootInterval: 3000,
                 projectile: '🟡',
+                lobbed: true,
                 hasButter: true,
                 description: 'Lobs kernels and butter that stuns',
                 cooldown: 7500, // Fast
@@ -3210,6 +3414,15 @@ Copyright (c) 2025 Olexandr_43
                 description: 'Diverts zombies to other lanes',
                 cooldown: 7500 // Fast
             },
+            umbrellaLeaf: {
+                emoji: '🌴',
+                health: 3.6,
+                maxHealth: 3.6,
+                shoots: false,
+                isUmbrellaLeaf: true,
+                description: 'Protects plants from lobbed projectiles',
+                cooldown: 30000 // Slow
+            },
             marigold: {
                 emoji: '🌼',
                 health: 3.6,
@@ -3230,45 +3443,9 @@ Copyright (c) 2025 Olexandr_43
                 splashRadiusY: 1, // 3 rows total (target row +/- 1)
                 shootInterval: 3000,
                 projectile: '🍈',
+                lobbed: true,
                 description: 'High direct, 3x3 splash damage',
                 cooldown: 7500 // Fast
-            },
-            firepea: {
-                emoji: '🔥',
-                health: 3.6,
-                maxHealth: 3.6,
-                shoots: true,
-                damage: 2,
-                splashDamage: 0.65,
-                splashRadiusY: 0, // 3x1 radius
-                fire: true,
-                shootInterval: 1500,
-                projectile: '🔥',
-                description: 'Splash fire damage',
-                cooldown: 7500 // Fast
-            },
-            snapdragon: {
-                emoji: '🐲',
-                health: 4.8,
-                maxHealth: 4.8,
-                shoots: false,
-                isSnapdragon: true,
-                damage: 1.5,
-                shootInterval: 2000,
-                description: 'Breathes fire in a 3x2 area',
-                cooldown: 7500 // Fast
-            },
-            hurrikale: {
-                emoji: '🌬️',
-                health: Infinity,
-                maxHealth: Infinity,
-                shoots: false,
-                isActivatingPlant: true,
-                armTime: 1200,
-                laneWide: true,
-                isPusher: true,
-                description: 'Pushes zombies back and slows them',
-                cooldown: 15000 // Medium
             },
             gatling: {
                 emoji: '🔫',
@@ -3348,34 +3525,118 @@ Copyright (c) 2025 Olexandr_43
                 description: 'Copies the previously selected plant',
                 cooldown: 1000 // Cooldown is on the transformed card
             },
-            suncheat: {
-                emoji: '☀️',
-                health: 1,
-                maxHealth: 1,
-                produces: 'sun',
-                sunAmount: 9990,
-                baseInterval: 99900,
+            firepea: {
+                emoji: '🔥',
+                health: 3.6,
+                maxHealth: 3.6,
+                shoots: true,
+                damage: 2,
+                splashDamage: 0.65,
+                splashRadiusY: 0, // 3x1 radius
+                fire: true,
+                shootInterval: 1500,
+                projectile: '🔥',
+                description: 'Splash fire damage',
+                cooldown: 7500 // Fast
+            },
+            snapdragon: {
+                emoji: '🐲',
+                health: 4.8,
+                maxHealth: 4.8,
                 shoots: false,
-                description: 'Cheats sun',
-                cooldown: 0
+                isSnapdragon: true,
+                damage: 1.5,
+                shootInterval: 2000,
+                description: 'Breathes fire in a 3x2 area',
+                cooldown: 7500 // Fast
+            },
+            hurrikale: {
+                emoji: '🌬️',
+                health: Infinity,
+                maxHealth: Infinity,
+                shoots: false,
+                isActivatingPlant: true,
+                armTime: 1200,
+                laneWide: true,
+                isPusher: true,
+                description: 'Pushes zombies back and slows them',
+                cooldown: 15000 // Medium
+            },
+            magnifyingGrass: {
+                emoji: '🔍',
+                health: 3.6,
+                maxHealth: 3.6,
+                shoots: false,
+                isMagnifyingGrass: true,
+                damage: 27.5,
+                shootInterval: 0,
+                projectile: '⚡',
+                projectileSpeed: 300,
+                description: 'Click to shoot a bolt for sun cost',
+                cooldown: 7500 // Fast
+            },
+            aloe: {
+                emoji: '🌳',
+                health: 5.4,
+                maxHealth: 5.4,
+                shoots: false,
+                isAloe: true,
+                healAmount: 4.8,
+                healInterval: 6000,
+                description: 'Heals the plant to its right',
+                cooldown: 7500 // Fast
+            },
+            peanut: {
+                emoji: '🥜',
+                health: 48,
+                maxHealth: 48,
+                shoots: true,
+                damage: 1,
+                shootInterval: 1500,
+                projectile: '🟢',
+                description: 'Defensive shooter',
+                cooldown: 20000 // Medium
+            },
+            blockoli: {
+                emoji: '🥦',
+                health: 72,
+                maxHealth: 72,
+                shoots: false,
+                isBlockoli: true,
+                slamInterval: 15000,
+                slamRechargeTime: 10000,
+                slamDamage: 4.75,
+                stunDuration: 3000,
+                description: 'Wall plant that slams to stun nearby zombies',
+                cooldown: 30000 // Slow
+            },
+            goldleaf: {
+                emoji: '🍁',
+                health: 3.6,
+                maxHealth: 3.6,
+                cost: 50,
+                description: 'Creates a Golden Tile that produces sun',
+                isGoldLeaf: true,
+                cooldown: 30000 // Slow
+
             },
         };
 
         // Zombies
         const zombieTypes = {
-            normal: { emoji: '🧟', health: 10, maxHealth: 10, speed: 13, damage: 1, points: 100 },
-            flag: { emoji: '🧟', health: 10, maxHealth: 10, speed: 17, damage: 1, points: 125, attachments: [{ emoji: '🚩', offset: { x: 3, y: 0 } }] },
-            cone: { emoji: '🧟‍♂️', health: 28, maxHealth: 28, speed: 13, damage: 1, points: 200, attachments: [{ emoji: '⚠️', offset: { x: 9, y: -13 } }] },
-            fast: { emoji: '💀', health: 17, maxHealth: 17, speed: 25, damage: 1, points: 150 },
-            newspaper: { emoji: '🧟', health: 17.5, maxHealth: 17.5, speed: 10, rageSpeedMultiplier: 4.57, damage: 1, points: 175, attachments: [{ emoji: '📰', offset: { x: 9, y: 16 } }] },
-            bucket: { emoji: '🧟‍♀️', health: 65, maxHealth: 65, speed: 10, damage: 1, points: 400, attachments: [{ emoji: '🎓', offset: { x: 9, y: -13 } }] },
+            normal: { emoji: '🧟', bodyHp: 10, speed: 13, damage: 1, points: 100 },
+            flag: { emoji: '🧟', bodyHp: 10, speed: 17, damage: 1, points: 125, attachments: [{ emoji: '🚩', offset: { x: 3, y: 0 } }] },
+            cone: { emoji: '🧟‍♂️', bodyHp: 10, armor: { type: 'cone', hp: 18, emoji: '⚠️' }, speed: 13, damage: 1, points: 200, attachments: [{ emoji: '⚠️', offset: { x: 9, y: -13 } }] },
+            fast: { emoji: '💀', bodyHp: 17, speed: 25, damage: 1, points: 150 },
+            newspaper: { emoji: '🧟', bodyHp: 9, armor: { type: 'newspaper', hp: 8, emoji: '📰' }, speed: 10, rageSpeedMultiplier: 4.57, damage: 1, points: 175, attachments: [{ emoji: '📰', offset: { x: 9, y: 16 } }] },
+            bucket: { emoji: '🧟‍♀️', bodyHp: 10, armor: { type: 'bucket', hp: 55, emoji: '🎓' }, speed: 10, damage: 1, points: 400, attachments: [{ emoji: '🎓', offset: { x: 9, y: -13 } }] },
             jackInTheBox: { emoji: '🤡', health: 17, maxHealth: 17, speed: 25, damage: 1, points: 450, isExplosive: true },
             balloon: { emoji: '🎈', health: 11, maxHealth: 11, speed: 25, damage: 1, points: 250, isFlying: true },
             dancing: { emoji: '🕺', health: 17, maxHealth: 17, speed: 13, damage: 1, points: 500, summons: true, summonCooldown: 10000 },
             backupDancer: { emoji: '💃', health: 10, maxHealth: 10, speed: 13, damage: 1, points: 150, isSummoned: true },
-            football: { emoji: '👹', health: 80, maxHealth: 80, speed: 25, damage: 2, points: 600 },
+            football: { emoji: '👹', bodyHp: 10, armor: { type: 'helmet', hp: 70, emoji: '⛑️' }, speed: 25, damage: 2, points: 600 },
             zomboni: { emoji: '🚚', health: 65, maxHealth: 65, speed: 10, damage: 99, points: 1000, crushes: true, leavesIceTrail: true, attachments: [{ emoji: '🧟‍♀️', offset: { x: 30, y: 3 } }] },
-            trashCanZombie: { emoji: '🧟', health: 50, maxHealth: 50, speed: 10, damage: 1, points: 450, attachments: [{ emoji: '🗑️', offset: { x: -4, y: 15 } }] },
+            trashCanZombie: { emoji: '🧟', bodyHp: 10, armor: { type: 'trashcan', hp: 40, emoji: '🗑️' }, speed: 10, damage: 1, points: 450, attachments: [{ emoji: '🗑️', offset: { x: -4, y: 15 } }] },
             gargantuar: { emoji: '🗿', health: 150, maxHealth: 150, speed: 5, damage: 99, points: 2000, uneatable: true, crushes: true },
             imp: { emoji: '👿', health: 10, maxHealth: 10, speed: 20, damage: 1, points: 75 },
             octoZombie: { emoji: '🧟', health: 46, maxHealth: 46, speed: 13, damage: 1, points: 450, isThrower: true, throwInterval: 6000, projectile: '🐙', attachments: [{ emoji: '🐙', offset: { x: 9, y: -2 } }] },
@@ -3384,7 +3645,7 @@ Copyright (c) 2025 Olexandr_43
             wallnutZombie: { emoji: '🧟', health: 65, maxHealth: 65, speed: 10, damage: 1, points: 800, attachments: [{ emoji: '🥥', offset: { x: 9, y: -2 } }] },
             gatlingZombie: { emoji: '🧟', health: 28, maxHealth: 28, speed: 13, damage: 0.225, points: 350, shoots: true, quad: true, shootInterval: 1500, projectile: '🟢', attachments: [{ emoji: '🔫', offset: { x: 9, y: -2 } }] },
             tallnutZombie: { emoji: '🧟', health: 120, maxHealth: 120, speed: 10, damage: 1, points: 1500, attachments: [{ emoji: '🌰', offset: { x: 9, y: -2 } }] },
-            gigafootball: { emoji: '👹', health: 155, maxHealth: 155, speed: 25, damage: 2, points: 2800, attachments: [{ emoji: '⛑️', offset: { x: 9, y: -4 } }] },
+            gigafootball: { emoji: '👹', bodyHp: 10, armor: { type: 'helmet', hp: 145, emoji: '⛑️' }, speed: 25, damage: 2, points: 2800, attachments: [{ emoji: '⛑️', offset: { x: 9, y: -4 } }] },
             rally: { emoji: '🧟', health: 18, maxHealth: 18, speed: 22, damage: 3, points: 175, attachments: [{ emoji: '🏴‍☠️', offset: { x: 3, y: 0 } }] },
             zomboss: { emoji: '🤖', health: 2000, maxHealth: 2000, speed: 1, damage: 99, points: 40000, uneatable: true, crushes: true },
         };
@@ -3516,7 +3777,8 @@ Copyright (c) 2025 Olexandr_43
                 gameLoopId: gameState.gameLoopId, // Keep the game loop running
                 timers: {},
                 nextTimerId: 0,
-                nextId: 0
+                nextId: 0,
+                goldenTiles: []
             };
 
             // Reset UI
@@ -3832,13 +4094,25 @@ Copyright (c) 2025 Olexandr_43
                     sunCooldown: p.sunCooldown || 0,
                     shootCooldown: p.shootCooldown || 0,
                     isWrapped: p.isWrapped || false,
-                    wrapTimer: p.wrapTimer || 0
+                    wrapTimer: p.wrapTimer || 0,
+                    magnetCooldown: p.magnetCooldown,
+                    hasMetalItem: p.hasMetalItem || false,
+                    stolenItemEmoji: p.stolenItemElement ? p.stolenItemElement.textContent : null,
+                    healCooldown: p.healCooldown,
+                    slamCooldown: p.slamCooldown,
+                    isRecharging: p.isRecharging || false,
+                    rechargeCooldown: p.rechargeCooldown
                 })),
                 zombies: gameState.zombies.map(z => ({
                     id: z.id,
                     type: z.type,
                     row: z.row,
                     health: z.health,
+                    bodyHp: z.bodyHp,
+                    maxBodyHp: z.maxBodyHp,
+                    armorHp: z.armorHp,
+                    maxArmorHp: z.maxArmorHp,
+                    armorType: z.armorType,
                     x: z.x,
                     isFlying: z.isFlying,
                     armorBroken: z.armorBroken,
@@ -3877,6 +4151,12 @@ Copyright (c) 2025 Olexandr_43
                     x: o.x,
                     y: o.y,
                     targetPlantId: o.targetPlantId
+                })),
+
+                goldenTiles: gameState.goldenTiles.map(t => ({
+                    row: t.row,
+                    col: t.col,
+                    lastSunTime: t.lastSunTime
                 })),
 
                 // Board State
@@ -3991,6 +4271,17 @@ Copyright (c) 2025 Olexandr_43
                 selectedPlantDeck = savedData.selectedPlantDeck;
                 gameState.isSpawningComplete = savedData.isSpawningComplete;
 
+                // Restore Golden Tiles
+                if (savedData.goldenTiles) {
+                    savedData.goldenTiles.forEach(t => {
+                        createGoldenTile(t.row, t.col);
+                        const tile = gameState.goldenTiles.find(gt => gt.row === t.row && gt.col === t.col);
+                        if (tile) {
+                            tile.lastSunTime = t.lastSunTime;
+                        }
+                    });
+                }
+
                 // 3. Set up the UI and board
                 if (gameState.map === 'night') {
                     document.getElementById('gameContainer').classList.add('night-mode');
@@ -4082,8 +4373,16 @@ Copyright (c) 2025 Olexandr_43
                 gameState.timers = {}; // Clear any default timers
                 savedData.timers.forEach(t => recreateTimer(t));
 
-                savedData.plants.forEach(p => recreatePlant(p));
+                savedData.plants.forEach(p => recreatePlant(p, savedData.timers));
                 savedData.zombies.forEach(z => recreateZombie(z));
+
+                // Re-activate Golden Tiles if they have plants
+                gameState.goldenTiles.forEach(tile => {
+                    const hasPlant = gameState.plants.some(p => p.row === tile.row && p.col === tile.col);
+                    if (hasPlant) {
+                        activateGoldenTile(tile);
+                    }
+                });
 
                 // 6. Restore card cooldowns
                 savedData.cardCooldowns.forEach(cd => {
@@ -4112,7 +4411,7 @@ Copyright (c) 2025 Olexandr_43
             }
         }
 
-        function recreatePlant(plantData) {
+        function recreatePlant(plantData, savedTimers = []) {
             const cell = document.querySelector(`.cell[data-row='${plantData.row}'][data-col='${plantData.col}']`);
             if (!cell) return;
 
@@ -4173,12 +4472,58 @@ Copyright (c) 2025 Olexandr_43
                 plant.octopusElement = octopusOverlay;
             }
 
+            // --- Restore Z-Index Logic for Stacking ---
+            if (plantTypeInfo.isPumpkin) {
+                plantElement.style.zIndex = '3';
+            }
+
             if (plant.type === 'sunshroom') {
                 if (plant.isGrown) {
                     plantElement.style.transform = 'translate(-50%, -50%) scale(1)';
                 } else {
                     plantElement.classList.add('arming');
                 }
+            }
+
+            // Restore Magnet-shroom stolen item if applicable
+            if (plantData.hasMetalItem && plantData.stolenItemEmoji) {
+                const stolenItemElement = document.createElement('div');
+                stolenItemElement.className = 'stolen-metal-item';
+                stolenItemElement.textContent = plantData.stolenItemEmoji;
+                stolenItemElement.style.cssText = `
+                    position: absolute;
+                    top: -15px;
+                    right: -10px;
+                    font-size: 1.2em;
+                    z-index: 3;
+                    filter: drop-shadow(0 0 3px rgba(255, 215, 0, 0.8));
+                `;
+                plantElement.appendChild(stolenItemElement);
+                plant.stolenItemElement = stolenItemElement;
+
+                // Recreate the timer to remove the item after the remaining time
+                let remainingTime = 15000;
+                let timerType = 'magnet_digest';
+
+                if (savedTimers && savedTimers.length > 0) {
+                    const savedTimer = savedTimers.find(t =>
+                        t.type === 'magnet_digest' &&
+                        t.context === plant.id
+                    );
+
+                    if (savedTimer) {
+                        remainingTime = savedTimer.remaining;
+                    }
+                }
+
+                createTimer(remainingTime, () => {
+                    if (plant.stolenItemElement) {
+                        plant.stolenItemElement.remove();
+                        plant.stolenItemElement = null;
+                    }
+                    plant.hasMetalItem = false;
+                    plant.magnetCooldown = 0;
+                }, false, timerType, plant.id);
             }
 
             updatePlantHealth(plant);
@@ -4221,6 +4566,14 @@ Copyright (c) 2025 Olexandr_43
                 });
             }
 
+            const armorBar = document.createElement('div');
+            armorBar.className = 'zombie-armor-bar';
+            const armorFill = document.createElement('div');
+            armorFill.className = 'zombie-armor-fill';
+            armorFill.style.width = '100%';
+            armorBar.appendChild(armorFill);
+            zombieElement.appendChild(armorBar);
+
             const healthBar = document.createElement('div');
             healthBar.className = 'zombie-health-bar';
             const healthFill = document.createElement('div');
@@ -4248,6 +4601,8 @@ Copyright (c) 2025 Olexandr_43
                 element: zombieElement,
                 healthBar: healthBar,
                 healthFill: healthFill,
+                armorBar: armorBar,
+                armorFill: armorFill,
                 attacking: false,
                 attackCooldown: 0,
                 dancers: []
@@ -4790,12 +5145,130 @@ Copyright (c) 2025 Olexandr_43
         // --- ALMANAC FUNCTIONS ---
 
         function showAlmanac() {
-            populateAlmanac();
+            if (!gameState.isPaused) {
+                togglePause();
+            }
             document.getElementById('almanacScreen').style.display = 'flex';
+            returnToAlmanacSelection();
         }
 
         function closeAlmanac() {
             document.getElementById('almanacScreen').style.display = 'none';
+            if (gameState.isPaused) {
+                togglePause();
+            }
+        }
+
+        function returnToAlmanacSelection() {
+            document.getElementById('almanacSelectionView').style.display = 'flex';
+            document.getElementById('almanacPlantView').style.display = 'none';
+            document.getElementById('almanacZombieView').style.display = 'none';
+        }
+
+        function showPlantAlmanac() {
+            document.getElementById('almanacSelectionView').style.display = 'none';
+            document.getElementById('almanacPlantView').style.display = 'flex';
+            populatePlantAlmanac();
+        }
+
+        function showZombieAlmanac() {
+            document.getElementById('almanacSelectionView').style.display = 'none';
+            document.getElementById('almanacZombieView').style.display = 'flex';
+            populateAlmanac();
+        }
+
+        function getPlantName(type) {
+            const card = document.querySelector(`#plantCardTemplates .plantCard[data-plant="${type}"] .name`);
+            return card ? card.textContent : type;
+        }
+
+        function getPlantCost(type) {
+            const card = document.querySelector(`#plantCardTemplates .plantCard[data-plant="${type}"]`);
+            return card ? card.dataset.cost : '???';
+        }
+
+        function populatePlantAlmanac() {
+            const list = document.getElementById('almanacPlantList');
+            list.innerHTML = '';
+            document.getElementById('almanacPlantDetails').innerHTML = '';
+            document.getElementById('almanacPlantDetails').style.display = 'none';
+
+            let firstPlant = null;
+
+            for (const typeKey in plantTypes) {
+                if (plantTypes.hasOwnProperty(typeKey)) {
+                    if (!firstPlant) firstPlant = typeKey;
+
+                    const iconCard = document.createElement('div');
+                    iconCard.className = 'almanac-icon-card';
+                    iconCard.dataset.plantType = typeKey;
+
+                    const visualContainer = document.createElement('div');
+                    visualContainer.className = 'almanac-visual';
+
+                    const plantInfo = plantTypes[typeKey];
+                    const emojiSpan = document.createElement('span');
+                    emojiSpan.textContent = plantInfo.emoji;
+                    emojiSpan.style.fontSize = '2.5em';
+                    visualContainer.appendChild(emojiSpan);
+
+                    iconCard.appendChild(visualContainer);
+                    iconCard.addEventListener('click', () => displayPlantAlmanacDetails(typeKey));
+                    list.appendChild(iconCard);
+                }
+            }
+
+            if (firstPlant) {
+                displayPlantAlmanacDetails(firstPlant);
+            }
+        }
+
+        function displayPlantAlmanacDetails(typeKey) {
+            const detailsPanel = document.getElementById('almanacPlantDetails');
+            detailsPanel.innerHTML = '';
+
+            document.querySelectorAll('#almanacPlantList .almanac-icon-card').forEach(card => {
+                card.classList.toggle('selected', card.dataset.plantType === typeKey);
+            });
+
+            const plant = plantTypes[typeKey];
+            const name = getPlantName(typeKey);
+            const cost = getPlantCost(typeKey);
+
+            const visualContainer = document.createElement('div');
+            visualContainer.className = 'almanac-visual';
+
+
+            const emojiSpan = document.createElement('span');
+            emojiSpan.textContent = plant.emoji;
+            emojiSpan.style.fontSize = '5em';
+            visualContainer.appendChild(emojiSpan);
+            detailsPanel.appendChild(visualContainer);
+
+            const detailContent = document.createElement('div');
+            detailContent.id = 'almanacDetailContent';
+
+            let rechargeText = 'Fast';
+            if (plant.cooldown >= 30000) rechargeText = 'Slow';
+            if (plant.cooldown >= 50000) rechargeText = 'Very Slow';
+
+            const plantInfo = plantAlmanacData[typeKey] || {};
+
+            detailContent.innerHTML = `
+                <div class="almanac-name">${name}</div>
+                <div class="almanac-stats">
+                    <div><span>Sun Cost:</span><span>${cost}</span></div>
+                    <div><span>Recharge:</span><span>${rechargeText}</span></div>
+                    <div><span>Toughness:</span><span>${getHealthText(plant.maxHealth)}</span></div>
+                    ${plant.damage ? `<div><span>Damage:</span><span>${plant.damage}</span></div>` : ''}
+                    ${plant.range ? `<div><span>Range:</span><span>${plant.range}</span></div>` : ''}
+                    ${plantInfo.special ? `<div><span>Special:</span><span>${plantInfo.special}</span></div>` : ''}
+                </div>
+                <div class="almanac-desc">${plantInfo.description || plant.description || 'No description available.'}</div>
+            `;
+
+            detailsPanel.appendChild(detailContent);
+            detailsPanel.style.display = 'flex';
         }
 
         function getSpeedText(speedValue) {
@@ -4805,6 +5278,52 @@ Copyright (c) 2025 Olexandr_43
             if (speedValue <= 20) return 'Fast';
             return 'Very Fast';
         }
+
+        const plantAlmanacData = {
+            peashooter: { description: 'Peashooters are your first line of defense. They shoot peas at attacking zombies.' },
+            sunflower: { description: 'Sunflowers are essential for you to produce extra sun. Try planting as many as you can!' },
+            cherrybomb: { description: 'Cherry Bombs can blow up all zombies in an area. They have a short fuse so plant them near zombies.' },
+            wallnut: { description: 'Wall-nuts have hard shells which you can use to protect your other plants.' },
+            potatomine: { description: 'Potato Mines explode on contact, but they take time to arm themselves. Plant them ahead of zombies.' },
+            snowpea: { description: 'Snow Peas shoot frozen peas that damage and slow the enemy.', special: 'Slows zombies' },
+            chomper: { description: 'Chompers can devour a zombie whole, but they are vulnerable while chewing.', special: 'Devours zombies whole' },
+            repeater: { description: 'Repeaters fire two peas at a time.' },
+            puffshroom: { description: 'Puff-shrooms are free, but they have a short range and only last for a limited time.', special: 'Dissapears after 1min' },
+            sunshroom: { description: 'Sun-shrooms give small suns at first and normal suns later.', special: 'Grows over time' },
+            fumeshroom: { description: 'Fume-shrooms shoot fumes that can pass through screen doors and ladders.', special: 'Pierces shields' },
+            gravebuster: { description: 'Grave Busters consume graves they are planted on.', special: 'Removes graves' },
+            scaredyshroom: { description: 'Scaredy-shrooms are long-range shooters that hide when zombies get too close.', special: 'Hides when zombie is close' },
+            iceshroom: { description: 'Ice-shrooms temporarily freeze all zombies on the screen.' },
+            doomshroom: { description: 'Doom-shrooms destroy everything in a large area and leave a crater that can\'t be planted on.', special: 'Leaves crater' },
+            threepeater: { description: 'Threepeaters shoot peas across three lanes.' },
+            jalapeno: { description: 'Jalapenos destroy an entire lane of zombies.' },
+            spikeweed: { description: 'Spikeweeds pop tires and hurt zombies that step on them.', special: 'Cant be eaten' },
+            torchwood: { description: 'Torchwoods turn peas that pass through them into fireballs.' },
+            tallnut: { description: 'Tall-nuts are heavy-duty wall plants that can\'t be vaulted over.' },
+            plantern: { description: 'Planterns light up an area, letting you see through fog.', special: 'Imagination' },
+            cactus: { description: 'Cactuses shoot spikes that can pop balloons.', special: 'Pops balloons' },
+            blover: { description: 'Blovers blow away all balloon zombies and fog.' },
+            cabbagepult: { description: 'Cabbage-pults hurl cabbages at the enemy.' },
+            kernelpult: { description: 'Kernel-pults fling corn kernels and butter at zombies.', special: 'Butter stuns zombies' },
+            coffeebean: { description: 'Use Coffee Beans to wake up sleeping mushrooms.' },
+            garlic: { description: 'Garlic diverts zombies into other lanes.' },
+            marigold: { description: 'Marigolds give you silver and gold coins.' },
+            melonpult: { description: 'Melon-pults do heavy damage to a group of zombies.' },
+            firepea: { description: 'Fire Peas shoot flaming peas that do splash damage.' },
+            snapdragon: { description: 'Snapdragons breathe fire in a short range.' },
+            hurrikale: { description: 'Hurrikales push back all zombies in a lane and chill them.' },
+            gatling: { description: 'Gatling Peas shoot four peas at a time.' },
+            twinSunflower: { description: 'Twin Sunflowers give twice as much sun as a normal Sunflower.' },
+            gloomshroom: { description: 'Gloom-shrooms shoot fumes in 8 directions.' },
+            wintermelon: { description: 'Winter Melons do heavy damage and slow groups of zombies.' },
+            spikerock: { description: 'Spikerocks are durable Spikeweeds that can pop multiple tires.', special: 'Cant be eaten' },
+            imitater: { description: 'Imitaters let you use two of the same plant during a level.', special: 'Copies plant' },
+            magnifyingGrass: { description: 'Magnifying Grass turns sun into damage.', special: 'Click to shoot' },
+            aloe: { description: 'Aloe heals nearby plants.' },
+            peanut: { description: 'Peanuts can shoot peas and block zombies.' },
+            blockoli: { description: 'Blockoli stuns zombies and acts as a shield.' },
+            pumpkin: { description: 'Pumpkins protect plants that are inside them.', special: 'Can be planted on other plants' }
+        };
 
         const almanacData = {
             normal: { name: 'Zombie', description: 'Just your standard, garden-variety, brain-eating zombie. A classic for a reason.' },
@@ -4965,11 +5484,16 @@ Copyright (c) 2025 Olexandr_43
                 const waveData = zombieWaveData[typeKey];
                 let spawnText = (waveData && waveData.weight > 0) ? `From Wave ${waveData.minWave}` : (zombieInfo.spawnWave || 'Special');
 
+                // For zombies with armor, show body toughness; for others show total
+                const healthToDisplay = zombie.bodyHp || zombie.maxHealth || zombie.health || 10;
+                const totalMaxHealth = (zombie.bodyHp || zombie.maxHealth || zombie.health || 10) + (zombie.armor ? zombie.armor.hp : 0);
+
                 detailContent.innerHTML = `
                     <div class="almanac-name">${zombieInfo.name || typeKey}</div>
                     <div class="almanac-stats">
-                        <div><span>Toughness:</span><span>${getHealthText(zombie.maxHealth)}</span></div>
-                        ${getHealthBarHTML(zombie.maxHealth)}
+                        <div><span>Toughness:</span><span>${getHealthText(healthToDisplay)}</span></div>
+                        ${getHealthBarHTML(totalMaxHealth)}
+                        ${zombie.armor ? `<div><span>Armor:</span><span>${getHealthText(zombie.armor.hp)}</span></div>` : ''}
                         <div><span>Speed:</span><span>${getSpeedText(zombie.speed)}</span></div>
                         <div><span>Spawns:</span><span>${spawnText}</span></div>
                         ${zombieInfo.special ? `<div><span>Special:</span><span>${zombieInfo.special}</span></div>` : ''}
@@ -5453,7 +5977,7 @@ Copyright (c) 2025 Olexandr_43
                 return plant && plant.isMushroom;
             });
 
-            // Check for any sun-producing plants (sunflower, twinSunflower, suncheat)
+            // Check for any sun-producing plants (sunflower, twinSunflower)
             const hasSunProducer = deckPlantTypes.some(type => {
                 const plant = plantTypes[type];
                 return plant && plant.produces === 'sun';
@@ -6020,9 +6544,14 @@ Copyright (c) 2025 Olexandr_43
             const col = parseInt(cell.dataset.col);
             let actionTaken = false;
 
-            const plantIndex = gameState.plants.findIndex(p => p.row === row && p.col === col);
-            if (plantIndex !== -1) {
-                const plantToRemove = gameState.plants[plantIndex];
+            // Prioritize removing Pumpkin first
+            let plantToRemove = gameState.plants.find(p => p.row === row && p.col === col && plantTypes[p.type].isPumpkin);
+            if (!plantToRemove) {
+                plantToRemove = gameState.plants.find(p => p.row === row && p.col === col);
+            }
+
+            if (plantToRemove) {
+                const plantIndex = gameState.plants.indexOf(plantToRemove);
 
                 if (plantToRemove.graveBusterTimerId) {
                     clearTimer(plantToRemove.graveBusterTimerId);
@@ -6043,6 +6572,14 @@ Copyright (c) 2025 Olexandr_43
                 }
                 gameState.plants.splice(plantIndex, 1);
                 actionTaken = true;
+
+                // --- Golden Tile Deactivation ---
+                // Only deactivate if NO plants are left on the tile
+                const remainingPlants = gameState.plants.filter(p => p.row === row && p.col === col);
+                const goldenTile = gameState.goldenTiles.find(t => t.row === row && t.col === col);
+                if (goldenTile && remainingPlants.length === 0) {
+                    deactivateGoldenTile(goldenTile);
+                }
             }
 
             // Deactivate shovel after use
@@ -6097,16 +6634,33 @@ Copyright (c) 2025 Olexandr_43
         function canPlantOnCell(row, col, plantTypeInfo) {
             const cell = document.querySelector(`.cell[data-row='${row}'][data-col='${col}']`);
             const hasGrave = gameState.graves.some(g => g.row === row && g.col === col);
-            const existingPlant = gameState.plants.find(p => p.row === row && p.col === col);
+
+            // Get all plants on this cell
+            const existingPlants = gameState.plants.filter(p => p.row === row && p.col === col);
+            const hasPumpkin = existingPlants.some(p => plantTypes[p.type].isPumpkin);
+            const hasRegularPlant = existingPlants.some(p => !plantTypes[p.type].isPumpkin);
 
             // 1. Check for unplantable terrain
             if (cell.classList.contains('crater') || cell.classList.contains('iced')) {
                 return { canPlant: false, reason: 'Cell is blocked', action: 'none' };
             }
 
+            // Prevent planting Gold Leaf on an existing Golden Tile
+            if (plantTypeInfo.isGoldLeaf) {
+                if (gameState.goldenTiles.some(t => t.row === row && t.col === col)) {
+                    return { canPlant: false, reason: 'Already a Golden Tile', action: 'none' };
+                }
+                // Allow planting on existing plants, but not graves
+                if (hasGrave) {
+                    return { canPlant: false, reason: 'Cannot plant on graves', action: 'none' };
+                }
+                return { canPlant: true, reason: 'Placing Golden Tile', action: 'goldleaf' };
+            }
+
             // 2. Handle Coffee Bean
             if (plantTypeInfo.isWakeUp) {
-                if (existingPlant && existingPlant.isMushroom && existingPlant.isSleeping) {
+                const mushroom = existingPlants.find(p => p.isMushroom && p.isSleeping);
+                if (mushroom) {
                     return { canPlant: true, reason: 'Waking up mushroom', action: 'wakeup' };
                 } else {
                     return { canPlant: false, reason: 'Can only be used on sleeping mushrooms', action: 'none' };
@@ -6115,25 +6669,40 @@ Copyright (c) 2025 Olexandr_43
 
             // 3. Handle Grave Buster
             if (plantTypeInfo.isGraveBuster) {
-                return hasGrave && !existingPlant ? { canPlant: true, reason: 'Planting Grave Buster', action: 'gravebust' } :
+                return hasGrave && existingPlants.length === 0 ? { canPlant: true, reason: 'Planting Grave Buster', action: 'gravebust' } :
                     { canPlant: false, reason: 'Must be planted on a grave', action: 'none' };
             }
 
             // 4. Handle Upgrades
             if (plantTypeInfo.isUpgrade) {
-                if (existingPlant && existingPlant.type === plantTypeInfo.upgradesFrom) {
+                const basePlant = existingPlants.find(p => p.type === plantTypeInfo.upgradesFrom);
+                if (basePlant) {
                     return { canPlant: true, reason: 'Upgrading plant', action: 'upgrade' };
                 } else {
                     return { canPlant: false, reason: 'Can only upgrade specific plants', action: 'none' };
                 }
             }
 
-            // 5. Handle Regular planting
-            if (hasGrave || existingPlant) {
+            // 5. Handle Pumpkin Logic
+            if (plantTypeInfo.isPumpkin) {
+                if (hasGrave) return { canPlant: false, reason: 'Cannot plant on graves', action: 'none' };
+                if (hasPumpkin) return { canPlant: false, reason: 'Already has a Pumpkin', action: 'none' };
+                return { canPlant: true, reason: 'Planting Pumpkin', action: 'regular' };
+            }
+
+            // 6. Handle Planting Inside Pumpkin
+            if (hasPumpkin) {
+                if (hasRegularPlant) return { canPlant: false, reason: 'Pumpkin is full', action: 'none' };
+                if (hasGrave) return { canPlant: false, reason: 'Cannot plant on graves', action: 'none' };
+                return { canPlant: true, reason: 'Planting inside Pumpkin', action: 'regular' };
+            }
+
+            // 7. Handle Regular planting (no pumpkin)
+            if (hasGrave || existingPlants.length > 0) {
                 return { canPlant: false, reason: 'Cell is occupied', action: 'none' };
             }
 
-            // 6. If all checks pass
+            // 8. If all checks pass
             return { canPlant: true, reason: 'Cell is clear', action: 'regular' };
         }
 
@@ -6321,7 +6890,8 @@ Copyright (c) 2025 Olexandr_43
                 sunCooldown: 0,
                 isImitated: gameState.selectedPlant.isImitated || false,
                 isMushroom: selectedPlantTypeInfo.isMushroom || false,
-                isSleeping: false
+                isSleeping: false,
+                slamCooldown: selectedPlantTypeInfo.isBlockoli ? 0 : undefined
             };
 
             if (plant.type === 'chomper') {
@@ -6340,10 +6910,15 @@ Copyright (c) 2025 Olexandr_43
             if (plant.isImitated) {
                 plantElement.classList.add('imitated');
             }
-            if (selectedPlantTypeInfo.isSpike) {
+            if (selectedPlantTypeInfo.isSpike || selectedPlantTypeInfo.isPumpkin) {
                 plantElement.classList.add('spike-plant');
             }
             plantElement.textContent = selectedPlantTypeInfo.emoji;
+
+            // --- Z-Index Logic for Stacking ---
+            if (selectedPlantTypeInfo.isPumpkin) {
+                plantElement.style.zIndex = '3';
+            }
 
             const healthBar = document.createElement('div');
             healthBar.className = 'plant-health-bar';
@@ -6447,6 +7022,120 @@ Copyright (c) 2025 Olexandr_43
             // We don't deselect, as per user request (no cost, no cooldown)
         }
 
+        // Shoot Magnifying Grass
+        function shootMagnifyingGrass(plant) {
+            if (gameState.sun < 50 || plant.isWrapped) {
+                return;
+            }
+
+            gameState.sun -= 50;
+            updateSunDisplay();
+
+            // Create projectile using shared logic
+            spawnProjectile(plant, plant.row, true);
+
+            if (plant.element) {
+                plant.element.classList.add('shooting');
+                setTimeout(() => {
+                    if (plant.element) plant.element.classList.remove('shooting');
+                }, 300);
+            }
+        }
+
+        // --- GOLDEN TILE LOGIC ---
+
+        function createGoldenTile(row, col) {
+            // Check if already golden
+            if (gameState.goldenTiles.some(t => t.row === row && t.col === col)) return;
+
+            const cell = document.querySelector(`.cell[data-row='${row}'][data-col='${col}']`);
+            if (cell) {
+                cell.classList.add('golden-tile');
+                createParticleEffect(cell, '✨');
+            }
+
+            const tile = {
+                row: row,
+                col: col,
+                lastSunTime: 0,
+                timerId: null
+            };
+            gameState.goldenTiles.push(tile);
+        }
+
+        function activateGoldenTile(tile) {
+            if (tile.timerId) return;
+
+            const now = Date.now();
+            const timeSinceLastSun = now - tile.lastSunTime;
+            const cooldown = 20000;
+
+            if (timeSinceLastSun >= cooldown) {
+                spawnSunFromGoldenTile(tile);
+                tile.timerId = createTimer(cooldown, () => {
+                    spawnSunFromGoldenTile(tile);
+                }, true, 'goldenTileSun', { row: tile.row, col: tile.col });
+            } else {
+                const remaining = cooldown - timeSinceLastSun;
+                tile.timerId = createTimer(remaining, () => {
+                    spawnSunFromGoldenTile(tile);
+                    tile.timerId = createTimer(cooldown, () => {
+                        spawnSunFromGoldenTile(tile);
+                    }, true, 'goldenTileSun', { row: tile.row, col: tile.col });
+                }, false, 'goldenTileSunDelayed', { row: tile.row, col: tile.col });
+            }
+        }
+
+        function deactivateGoldenTile(tile) {
+            if (tile.timerId) {
+                clearTimer(tile.timerId);
+                tile.timerId = null;
+            }
+        }
+
+        function spawnSunFromGoldenTile(tile) {
+            if (gameState.isPaused || gameState.isGameOver) return;
+
+            const hasPlant = gameState.plants.some(p => p.row === tile.row && p.col === tile.col);
+            if (!hasPlant) {
+                deactivateGoldenTile(tile);
+                return;
+            }
+
+            tile.lastSunTime = Date.now();
+
+            const cell = document.querySelector(`.cell[data-row='${tile.row}'][data-col='${tile.col}']`);
+            if (!cell) return;
+
+            const rect = cell.getBoundingClientRect();
+            const sun = document.createElement('div');
+            sun.className = 'sun';
+            sun.innerHTML = '<span>☀️</span><span class="sun-value">25</span>';
+
+            const sunId = `sun-${gameState.nextId++}`;
+            sun.dataset.sunId = sunId;
+
+            sun.style.left = (rect.left + rect.width / 2 - 15) + 'px';
+            sun.style.top = (rect.top + rect.height / 2 - 15) + 'px';
+            sun.style.position = 'fixed';
+
+            document.getElementById('gameContainer').appendChild(sun);
+
+            sun.style.transform = 'scale(0)';
+            sun.style.transition = 'transform 0.3s ease-out';
+            setTimeout(() => sun.style.transform = 'scale(1)', 50);
+
+            sun.addEventListener('click', () => collectSun(sun, 25));
+            sun.addEventListener('touchstart', (e) => { e.preventDefault(); collectSun(sun, 25); }, { passive: false });
+
+            createTimer(8000, () => {
+                if (sun.parentElement && !sun.dataset.collecting) {
+                    sun.style.opacity = '0';
+                    createTimer(500, () => sun.remove());
+                }
+            }, false, 'sunDespawn', sunId);
+        }
+
         // Place Plant
         function placePlant(cell) {
             if (gameState.selectedZombie) {
@@ -6457,6 +7146,21 @@ Copyright (c) 2025 Olexandr_43
                 removePlant(cell);
                 return;
             }
+
+            // --- Magnifying Grass Logic ---
+            if (!gameState.selectedPlant) {
+                if (gameState.isPaused) return;
+
+                const row = parseInt(cell.dataset.row);
+                const col = parseInt(cell.dataset.col);
+                const plant = gameState.plants.find(p => p.row === row && p.col === col);
+
+                if (plant && plantTypes[plant.type].isMagnifyingGrass) {
+                    shootMagnifyingGrass(plant);
+                }
+                return;
+            }
+
             if (!gameState.selectedPlant || gameState.isPaused) return;
 
             const row = parseInt(cell.dataset.row);
@@ -6473,6 +7177,31 @@ Copyright (c) 2025 Olexandr_43
             }
 
             gameState.sun -= gameState.selectedPlant.cost;
+
+            // --- Gold Leaf Logic ---
+            if (plantToPlaceType === 'goldleaf') {
+                createGoldenTile(row, col);
+
+                const hasPlant = gameState.plants.some(p => p.row === row && p.col === col);
+                if (hasPlant) {
+                    const newTile = gameState.goldenTiles.find(t => t.row === row && t.col === col);
+                    if (newTile) {
+                        activateGoldenTile(newTile);
+                    }
+                }
+
+                createParticleEffect(cell, '🍁');
+
+                const plantCard = gameState.selectedPlant.cardElement;
+                if (plantCard && selectedPlantTypeInfo.cooldown) {
+                    startCooldown(plantCard, selectedPlantTypeInfo.cooldown);
+                }
+                addScore(25);
+                gameState.selectedPlant = null;
+                document.querySelectorAll('.plantCard').forEach(c => c.classList.remove('selected'));
+                updateSunDisplay();
+                return;
+            }
 
             switch (plantingCheck.action) {
                 case 'gravebust':
@@ -6492,6 +7221,12 @@ Copyright (c) 2025 Olexandr_43
                     return;
             }
 
+            // --- Golden Tile Activation ---
+            const goldenTile = gameState.goldenTiles.find(t => t.row === row && t.col === col);
+            if (goldenTile) {
+                activateGoldenTile(goldenTile);
+            }
+
             const plantCard = gameState.selectedPlant.cardElement;
             if (plantCard && selectedPlantTypeInfo.cooldown) {
                 startCooldown(plantCard, selectedPlantTypeInfo.cooldown);
@@ -6505,7 +7240,6 @@ Copyright (c) 2025 Olexandr_43
 
         // --- Function to trigger insta-plants ---
         function activatePlantEffect(plant) {
-            // Failsafe: if plant was dug up just as the timer fired, do nothing.
             if (!plant.element || !gameState.plants.includes(plant)) {
                 return;
             }
@@ -6629,8 +7363,7 @@ Copyright (c) 2025 Olexandr_43
 
             // Damage application and cleanup
             zombiesToDamage.forEach(zombie => {
-                zombie.health -= plantType.damage;
-                checkZombieStateChange(zombie);
+                applyDamageToZombie(zombie, plantType.damage);
 
                 // Thaw/unfreeze logic from the old function
                 if (zombie.isFrozen) {
@@ -6710,7 +7443,7 @@ Copyright (c) 2025 Olexandr_43
                     const zombieCol = Math.floor(zombie.x / gameState.cellSize.width);
 
                     if (zombie.row >= minRow && zombie.row <= maxRow && zombieCol >= minCol && zombieCol <= maxCol) {
-                        zombie.health -= plantType.damage;
+                        applyDamageToZombie(zombie, plantType.damage);
                         checkZombieStateChange(zombie);
                         updateZombieHealth(zombie);
                         if (zombie.health <= 0) handleZombieDefeat(zombie);
@@ -6730,7 +7463,7 @@ Copyright (c) 2025 Olexandr_43
 
                 gameState.zombies.forEach(zombie => {
                     if (zombie.element) {
-                        zombie.health -= plantType.damage;
+                        applyDamageToZombie(zombie, plantType.damage);
                         checkZombieStateChange(zombie);
                         zombie.isFrozen = true;
                         zombie.freezeTimer = 4000;
@@ -6838,6 +7571,81 @@ Copyright (c) 2025 Olexandr_43
             }, false, 'sunDespawn', sunId);
         }
 
+        // Spawn Projectile
+        function spawnProjectile(plant, targetRow, ignoreTargetCheck = false) {
+            const plantType = plantTypes[plant.type];
+            const cell = plant.element.parentElement;
+            const rect = cell.getBoundingClientRect();
+
+            // Check if there's a target in the row (unless ignored)
+            if (!ignoreTargetCheck) {
+                const hasRowTarget = gameState.zombies.some(z => {
+                    if (z.row !== targetRow || !z.element) return false;
+                    return plant.type === 'cactus' || !z.isFlying;
+                });
+                if (!hasRowTarget) return;
+            }
+
+            const projectile = document.createElement('div');
+            projectile.className = 'projectile';
+            if (plantType.fire) projectile.classList.add('fire');
+            projectile.textContent = plantType.projectile || '🟢';
+
+            // Apply specific styles for Magnifying Grass if needed, or rely on CSS
+            if (plantType.isMagnifyingGrass) {
+                projectile.style.filter = 'drop-shadow(0 0 5px yellow)';
+                projectile.style.fontSize = '2em';
+            }
+
+            const rowY = gameState.boardRect.top + targetRow * gameState.cellSize.height + gameState.cellSize.height / 2 - 10;
+
+            // Start position logic
+            let startX;
+            if (plantType.isMagnifyingGrass) {
+                startX = (plant.col + 0.5) * gameState.cellSize.width;
+                projectile.style.zIndex = '100';
+            } else {
+                startX = rect.left + rect.width * 0.7 - gameState.boardRect.left;
+            }
+
+            projectile.style.left = (gameState.boardRect.left + startX) + 'px';
+            projectile.style.top = rowY + 'px';
+            projectile.style.position = 'fixed';
+
+            document.getElementById('gameContainer').appendChild(projectile);
+
+            let projectileDamage = plantType.damage;
+            let stunDuration = 0;
+            if (plantType.hasButter && plant.type === 'kernelpult') {
+                if (Math.random() < 0.25) {
+                    projectile.textContent = '🧈';
+                    projectileDamage = 2;
+                    stunDuration = 5000;
+                }
+            }
+
+            const proj = {
+                element: projectile,
+                row: targetRow,
+                damage: projectileDamage,
+                splashDamage: plantType.splashDamage,
+                splashRadiusY: plantType.splashRadiusY,
+                slow: plantType.slow,
+                fire: plantType.fire,
+                stunDuration: stunDuration,
+                pierce: plantType.pierce,
+                lobbed: plantType.lobbed,
+                x: startX,
+                startX: startX, // Store the starting position
+                range: plantType.range, // Pass range to projectile
+                speed: plantType.projectileSpeed || 200, // Use plant speed or default
+                hitZombies: [],
+                hitTorchwoods: []
+            };
+
+            gameState.projectiles.push(proj);
+        }
+
         // Shoot Projectile
         function shoot(plant) {
             if (!plant.element || !plant.element.parentElement) return;
@@ -6895,70 +7703,14 @@ Copyright (c) 2025 Olexandr_43
                 if (plant.element) plant.element.classList.remove('shooting');
             }, false, 'remove_shooting');
 
-            const cell = plant.element.parentElement;
-            const rect = cell.getBoundingClientRect();
-
-            const createProjectileForRow = (targetRow) => {
-                const hasRowTarget = gameState.zombies.some(z => {
-                    if (z.row !== targetRow || !z.element) return false;
-                    return plant.type === 'cactus' || !z.isFlying;
-                });
-
-                if (!hasRowTarget) return;
-
-                const projectile = document.createElement('div');
-                projectile.className = 'projectile';
-                if (plantType.fire) projectile.classList.add('fire');
-                projectile.textContent = plantType.projectile || '🟢';
-
-                const rowY = gameState.boardRect.top + targetRow * gameState.cellSize.height + gameState.cellSize.height / 2 - 10;
-
-                projectile.style.left = (rect.left + rect.width * 0.7) + 'px';
-                projectile.style.top = rowY + 'px';
-                projectile.style.position = 'fixed';
-
-                document.getElementById('gameContainer').appendChild(projectile);
-
-                let projectileDamage = plantType.damage;
-                let stunDuration = 0;
-                if (plantType.hasButter && plant.type === 'kernelpult') {
-                    if (Math.random() < 0.25) {
-                        projectile.textContent = '🧈';
-                        projectileDamage = 2;
-                        stunDuration = 5000;
-                    }
-                }
-
-                const startX = rect.left + rect.width * 0.7 - gameState.boardRect.left;
-                const proj = {
-                    element: projectile,
-                    row: targetRow,
-                    damage: projectileDamage,
-                    splashDamage: plantType.splashDamage,
-                    splashRadiusY: plantType.splashRadiusY,
-                    slow: plantType.slow,
-                    fire: plantType.fire,
-                    stunDuration: stunDuration,
-                    pierce: plantType.pierce,
-                    x: startX,
-                    startX: startX, // Store the starting position
-                    range: plantType.range, // Pass range to projectile
-                    speed: 200,
-                    hitZombies: [],
-                    hitTorchwoods: []
-                };
-
-                gameState.projectiles.push(proj);
-            };
-
             targetRows.forEach(row => {
-                createProjectileForRow(row);
+                spawnProjectile(plant, row);
             });
 
             if (plantType.double) {
                 createTimer(200, () => {
                     targetRows.forEach(row => {
-                        createProjectileForRow(row);
+                        spawnProjectile(plant, row);
                     });
                 });
             }
@@ -6966,17 +7718,17 @@ Copyright (c) 2025 Olexandr_43
             if (plantType.quad) {
                 createTimer(133, () => {
                     targetRows.forEach(row => {
-                        createProjectileForRow(row);
+                        spawnProjectile(plant, row);
                     });
                 });
                 createTimer(266, () => {
                     targetRows.forEach(row => {
-                        createProjectileForRow(row);
+                        spawnProjectile(plant, row);
                     });
                 });
                 createTimer(399, () => {
                     targetRows.forEach(row => {
-                        createProjectileForRow(row);
+                        spawnProjectile(plant, row);
                     });
                 });
             }
@@ -7080,8 +7832,10 @@ Copyright (c) 2025 Olexandr_43
                                 // Use existing particle mechanic for splash effect
                                 createParticleEffect(zombie.element, proj.slow ? '❄️' : (proj.fire ? '🔥' : '💧'));
 
-                                // Damage primary target
-                                zombie.health -= proj.damage;
+                                // Apply damage
+                                const isLobbed = proj.lobbed || false;
+                                const isPiercing = proj.pierce || isLobbed;
+                                applyDamageToZombie(zombie, proj.damage, isPiercing);
                                 checkZombieStateChange(zombie);
                                 updateZombieHealth(zombie);
                                 if (zombie.element) zombie.element.classList.add('damage-effect');
@@ -7123,9 +7877,9 @@ Copyright (c) 2025 Olexandr_43
 
                                     if (isHorizontallyClose && isVerticallyClose) {
                                         // Apply splash damage
-                                        splashTarget.health -= proj.splashDamage;
-                                        checkZombieStateChange(splashTarget);
-                                        updateZombieHealth(splashTarget);
+                                        const isSplashLobbed = proj.lobbed;
+                                        applyDamageToZombie(splashTarget, proj.splashDamage, isSplashLobbed);
+
                                         if (splashTarget.element) splashTarget.element.classList.add('damage-effect');
                                         createTimer(300, () => { if (splashTarget.element) splashTarget.element.classList.remove('damage-effect'); }, false, 'remove_damage-effect');
 
@@ -7155,7 +7909,7 @@ Copyright (c) 2025 Olexandr_43
                                 });
 
                             } else { // --- STANDARD/PIERCING DAMAGE LOGIC ---
-                                zombie.health -= proj.damage;
+                                applyDamageToZombie(zombie, proj.damage, proj.pierce);
                                 checkZombieStateChange(zombie);
                                 updateZombieHealth(zombie);
                                 zombie.element.classList.add('damage-effect');
@@ -7282,55 +8036,72 @@ Copyright (c) 2025 Olexandr_43
         function updateZombieHealth(zombie) {
             if (!zombie.element || !zombie.healthBar) return;
 
-            const healthPercent = Math.max(0, zombie.health / zombieTypes[zombie.type].maxHealth);
-            zombie.healthFill.style.width = (healthPercent * 100) + '%';
+            // Update Body Health Bar
+            const maxBodyHp = zombie.maxBodyHp || 10;
+            const bodyHealthPercent = Math.max(0, zombie.bodyHp / maxBodyHp);
+            zombie.healthFill.style.width = (bodyHealthPercent * 100) + '%';
+
+            // Update Armor Health Bar
+            if (zombie.armorBar && zombie.armorFill) {
+                if (zombie.armorHp > 0) {
+                    zombie.armorBar.style.display = 'block';
+                    const maxArmorHp = zombie.maxArmorHp || 1;
+                    const armorHealthPercent = Math.max(0, zombie.armorHp / maxArmorHp);
+                    zombie.armorFill.style.width = (armorHealthPercent * 100) + '%';
+                } else {
+                    zombie.armorBar.style.display = 'none';
+                }
+            }
         }
 
-        // Check for zombie state changes after taking damage (e.g., armor breaking)
+        // Check for zombie state changes after taking damage (e.g.,armor breaking)
         function checkZombieStateChange(zombie) {
             if (!zombie.element || zombie.armorBroken) return;
 
-            const isConehead = zombie.type === 'cone';
-            const isbuckethead = zombie.type === 'bucket';
-            const isNewspaper = zombie.type === 'newspaper';
-            const isTrashCan = zombie.type === 'trashCanZombie';
-
-            // Only proceed if it's one of the armored types we're handling
-            if (!isConehead && !isbuckethead && !isNewspaper && !isTrashCan) return;
-
-            let breakHealth;
-            let particleEmoji;
-
-            // Set the specific properties for each armor type
-            if (isNewspaper) {
-                breakHealth = zombieTypes.normal.maxHealth;
-                particleEmoji = '💢';
-            } else if (isTrashCan) {
-                breakHealth = zombieTypes.normal.maxHealth;
-                particleEmoji = '🗑️';
-            } else if (isConehead) {
-                breakHealth = zombieTypes.normal.maxHealth;
-                particleEmoji = '⚠️';
-            } else if (isbuckethead) {
-                breakHealth = zombieTypes.normal.maxHealth;
-                particleEmoji = '🎓';
-            }
-
-            // Check if the health is below the specific breaking point
-            if (zombie.health <= breakHealth) {
+            // If the zombie has armor and it's depleted, break the armor
+            if (zombie.maxArmorHp > 0 && zombie.armorHp <= 0 && !zombie.armorBroken) {
                 zombie.armorBroken = true;
                 const attachment = zombie.element.querySelector('.zombie-attachment');
 
                 if (attachment) {
+                    const zombieType = zombieTypes[zombie.type];
+                    const particleEmoji = zombieType.armor ? zombieType.armor.emoji : '💥';
                     createParticleEffect(attachment, particleEmoji);
                     attachment.remove();
                 }
 
-                // Add the enraged class only for the newspaper zombie
-                if (isNewspaper) {
+                if (zombie.type === 'newspaper') {
                     zombie.element.classList.add('enraged');
                 }
             }
+        }
+
+        // Apply damage to zombie (armor first, then body)
+        function applyDamageToZombie(zombie, damage, piercing = false) {
+            if (!zombie || damage <= 0) return;
+
+            let remainingDamage = damage;
+
+            const canPierce = piercing && zombie.armorType && (zombie.armorType === 'trashcan' || zombie.armorType === 'newspaper');
+
+            if (zombie.armorHp && zombie.armorHp > 0 && !canPierce) {
+                const armorDamage = Math.min(zombie.armorHp, remainingDamage);
+                zombie.armorHp -= armorDamage;
+                remainingDamage -= armorDamage;
+
+                checkZombieStateChange(zombie);
+            }
+
+            if (remainingDamage > 0) {
+                zombie.bodyHp -= remainingDamage;
+            }
+
+            if (zombie.bodyHp <= 0) {
+                zombie.health = 0;
+            } else {
+                zombie.health = (zombie.armorHp || 0) + zombie.bodyHp;
+            }
+            updateZombieHealth(zombie);
         }
 
         // Create Ice Trail
@@ -7598,6 +8369,17 @@ Copyright (c) 2025 Olexandr_43
                 gameState.plants.forEach(plant => {
                     if (!plant.element || plant.row !== zombie.row || zombie.isFlying || plant.isWrapped) return;
 
+                    // --- PUMPKIN PROTECTION LOGIC ---
+                    // Check if there is a Pumpkin in this cell
+                    const plantsInCell = gameState.plants.filter(p => p.row === plant.row && p.col === plant.col);
+                    const pumpkin = plantsInCell.find(p => plantTypes[p.type].isPumpkin);
+
+                    // If this plant is NOT the pumpkin, and there IS a pumpkin, skip this plant
+                    // (The zombie should only attack the pumpkin)
+                    if (pumpkin && plant !== pumpkin) {
+                        return;
+                    }
+
                     if (plant.col === zombieCol) {
 
                         if (plant.type === 'potatomine' && plant.isArmed) return;
@@ -7825,6 +8607,14 @@ Copyright (c) 2025 Olexandr_43
             if (typeKey === 'imp') zombie.classList.add('imp');
             if (typeKey === 'jackInTheBox') zombie.classList.add('jackInTheBox');
 
+            const armorBar = document.createElement('div');
+            armorBar.className = 'zombie-armor-bar';
+            const armorFill = document.createElement('div');
+            armorFill.className = 'zombie-armor-fill';
+            armorFill.style.width = '100%';
+            armorBar.appendChild(armorFill);
+            zombie.appendChild(armorBar);
+
             const healthBar = document.createElement('div');
             healthBar.className = 'zombie-health-bar';
             const healthFill = document.createElement('div');
@@ -7858,8 +8648,16 @@ Copyright (c) 2025 Olexandr_43
                 element: zombie,
                 healthBar: healthBar,
                 healthFill: healthFill,
+                armorBar: armorBar,
+                armorFill: armorFill,
                 row: row,
-                health: zombieType.health,
+                bodyHp: zombieType.bodyHp || zombieType.health || 10,
+                maxBodyHp: zombieType.bodyHp || zombieType.health || 10,
+                armorHp: zombieType.armor ? zombieType.armor.hp : 0,
+                maxArmorHp: zombieType.armor ? zombieType.armor.hp : 0,
+                armorType: zombieType.armor ? zombieType.armor.type : null,
+                health: (zombieType.bodyHp || zombieType.health || 10) + (zombieType.armor ? zombieType.armor.hp : 0),
+                maxHealth: (zombieType.bodyHp || zombieType.health || 10) + (zombieType.armor ? zombieType.armor.hp : 0),
                 type: typeKey,
                 x: startX,
                 attacking: false,
@@ -7876,7 +8674,8 @@ Copyright (c) 2025 Olexandr_43
                 isBeingPushed: false
             };
 
-            if (typeKey === 'cone' || typeKey === 'bucket' || typeKey === 'newspaper' || typeKey === 'trashCanZombie') {
+            // Armor is initially intact for armored zombies
+            if (zombieType.armor) {
                 zombieObj.armorBroken = false;
             }
 
@@ -7898,6 +8697,7 @@ Copyright (c) 2025 Olexandr_43
             }
 
             gameState.zombies.push(zombieObj);
+            updateZombieHealth(zombieObj); // Initialize health bars
             return zombieObj;
         }
 
@@ -7946,6 +8746,14 @@ Copyright (c) 2025 Olexandr_43
             if (typeKey === 'imp') zombie.classList.add('imp');
             if (typeKey === 'jackInTheBox') zombie.classList.add('jackInTheBox');
 
+            const armorBar = document.createElement('div');
+            armorBar.className = 'zombie-armor-bar';
+            const armorFill = document.createElement('div');
+            armorFill.className = 'zombie-armor-fill';
+            armorFill.style.width = '100%';
+            armorBar.appendChild(armorFill);
+            zombie.appendChild(armorBar);
+
             const healthBar = document.createElement('div');
             healthBar.className = 'zombie-health-bar';
             const healthFill = document.createElement('div');
@@ -7968,8 +8776,16 @@ Copyright (c) 2025 Olexandr_43
                 element: zombie,
                 healthBar: healthBar,
                 healthFill: healthFill,
+                armorBar: armorBar,
+                armorFill: armorFill,
                 row: row,
-                health: zombieType.health,
+                bodyHp: zombieType.bodyHp || zombieType.health || 10,
+                maxBodyHp: zombieType.bodyHp || zombieType.health || 10,
+                armorHp: zombieType.armor ? zombieType.armor.hp : 0,
+                maxArmorHp: zombieType.armor ? zombieType.armor.hp : 0,
+                armorType: zombieType.armor ? zombieType.armor.type : null,
+                health: (zombieType.bodyHp || zombieType.health || 10) + (zombieType.armor ? zombieType.armor.hp : 0),
+                maxHealth: (zombieType.bodyHp || zombieType.health || 10) + (zombieType.armor ? zombieType.armor.hp : 0),
                 type: typeKey,
                 x: startX,
                 attacking: false,
@@ -7986,7 +8802,8 @@ Copyright (c) 2025 Olexandr_43
                 isBeingPushed: false
             };
 
-            if (typeKey === 'cone' || typeKey === 'bucket' || typeKey === 'newspaper' || typeKey === 'trashCanZombie') {
+            // Armor is initially intact for armored zombies
+            if (zombieType.armor) {
                 zombieObj.armorBroken = false;
             }
 
@@ -8007,6 +8824,7 @@ Copyright (c) 2025 Olexandr_43
             }
 
             gameState.zombies.push(zombieObj);
+            updateZombieHealth(zombieObj); // Initialize health bars
         }
 
         // Spawn Zombie from a Grave
@@ -8842,7 +9660,7 @@ Copyright (c) 2025 Olexandr_43
                             }
 
                             zombiesToDamage.forEach(zombie => {
-                                zombie.health -= plantTypes.potatomine.damage;
+                                applyDamageToZombie(zombie, plantTypes.potatomine.damage);
                                 checkZombieStateChange(zombie);
                                 updateZombieHealth(zombie);
                                 if (zombie.element) {
@@ -8899,6 +9717,330 @@ Copyright (c) 2025 Olexandr_43
                         if (!plant.element || plant.isSleeping || plant.isWrapped) return;
                         const plantType = plantTypes[plant.type];
 
+                        // Aloe Logic
+                        if (plantType.isAloe) {
+                            if (plant.healCooldown === undefined) plant.healCooldown = plantType.healInterval;
+                            plant.healCooldown -= adjustedDelta;
+
+                            if (plant.healCooldown <= 0) {
+                                const targetPlants = gameState.plants.filter(p => p.row === plant.row && p.col === plant.col + 1);
+                                let healedAny = false;
+
+                                targetPlants.forEach(targetPlant => {
+                                    if (targetPlant && targetPlant.health < targetPlant.maxHealth) {
+                                        targetPlant.health = Math.min(targetPlant.health + plantType.healAmount, targetPlant.maxHealth);
+                                        updatePlantHealth(targetPlant);
+                                        if (targetPlant.element) {
+                                            createParticleEffect(targetPlant.element, '❤️');
+                                        }
+                                        healedAny = true;
+                                    }
+                                });
+
+                                if (healedAny) {
+                                    if (plant.element) {
+                                        plant.element.classList.add('shooting');
+                                        createTimer(300, () => { if (plant.element) plant.element.classList.remove('shooting'); }, false, 'remove_shooting');
+                                    }
+                                    plant.healCooldown = plantType.healInterval;
+                                }
+                            }
+                        }
+
+                        // --- BLOCKOLI LOGIC ---
+                        if (plantType.isBlockoli) {
+                            if (plant.slamCooldown === undefined) plant.slamCooldown = plantType.slamInterval;
+                            if (plant.isRecharging === undefined) plant.isRecharging = false;
+
+                            if (plant.isRecharging) {
+                                plant.rechargeCooldown -= adjustedDelta;
+                                if (plant.rechargeCooldown <= 0) {
+                                    plant.isRecharging = false;
+                                }
+                            } else {
+                                plant.slamCooldown -= adjustedDelta;
+
+                                if (plant.slamCooldown <= 0) {
+                                    const attackRows = [plant.row - 1, plant.row, plant.row + 1];
+                                    const startBoundaryX = (plant.col + 2 / 3) * gameState.cellSize.width;
+                                    const endBoundaryX = (plant.col + 3) * gameState.cellSize.width;
+
+                                    const zombiesToStun = gameState.zombies.filter(zombie => {
+                                        if (!zombie.element) return false;
+
+                                        const isInYRange = attackRows.includes(zombie.row);
+                                        const isInXRange = zombie.x >= startBoundaryX && zombie.x < endBoundaryX;
+
+                                        return isInYRange && isInXRange && !zombie.isFlying;
+                                    });
+
+                                    if (zombiesToStun.length > 0) {
+                                        if (plant.element) {
+                                            plant.element.classList.add('shooting');
+                                            createTimer(300, () => { if (plant.element) plant.element.classList.remove('shooting'); }, false, 'remove_shooting');
+                                        }
+
+                                        attackRows.forEach(r => {
+                                            if (r >= 0 && r < 5) {
+                                                const cell1 = document.querySelector(`.cell[data-row='${r}'][data-col='${plant.col + 1}']`);
+                                                const cell2 = document.querySelector(`.cell[data-row='${r}'][data-col='${plant.col + 2}']`);
+
+                                                [cell1, cell2].forEach(cell => {
+                                                    if (cell) {
+                                                        const slamEffect = document.createElement('div');
+                                                        slamEffect.className = 'instant-effect';
+                                                        slamEffect.textContent = '💫';
+                                                        slamEffect.style.cssText = `position: absolute; font-size: 3em; z-index: 5; transform: translate(-50%, -50%); top: 50%; left: 50%; pointer-events: none; opacity: 0.8;`;
+                                                        cell.appendChild(slamEffect);
+                                                        createTimer(600, () => slamEffect.remove(), false, 'remove_slamEffect');
+                                                    }
+                                                });
+                                            }
+                                        });
+
+                                        zombiesToStun.forEach(zombie => {
+                                            applyDamageToZombie(zombie, plantType.slamDamage);
+                                            checkZombieStateChange(zombie);
+                                            updateZombieHealth(zombie);
+
+                                            zombie.isStunned = true;
+                                            zombie.stunTimer = plantType.stunDuration;
+                                            if (zombie.element) {
+                                                zombie.element.classList.add('stunned');
+                                                zombie.element.classList.add('damage-effect');
+                                                createTimer(300, () => { if (zombie.element) zombie.element.classList.remove('damage-effect'); }, false, 'remove_damage-effect');
+                                            }
+
+                                            if (zombie.health <= 0) {
+                                                handleZombieDefeat(zombie);
+                                            }
+                                        });
+
+                                        plant.isRecharging = true;
+                                        plant.rechargeCooldown = plantType.slamRechargeTime;
+                                    }
+
+                                    plant.slamCooldown = plantType.slamInterval;
+                                }
+                            }
+                        }
+
+                        // --- MAGNET-SHROOM LOGIC ---
+                        if (plantType.isMagnetshroom) {
+                            plant.magnetCooldown = plant.magnetCooldown ?? 0;
+                            plant.hasMetalItem = plant.hasMetalItem ?? false;
+
+                            if (plant.hasMetalItem) return;
+
+                            plant.magnetCooldown -= adjustedDelta;
+                            if (plant.magnetCooldown > 0) return;
+
+                            const range = {
+                                minRow: plant.row - 1,
+                                maxRow: plant.row + 1,
+                                minCol: plant.col - 1,
+                                maxCol: plant.col + 1
+                            };
+
+                            const targetZombie = gameState.zombies.find(zombie => {
+                                if (!zombie.element || zombie.health <= 0) return false;
+
+                                const zombieCol = Math.floor(zombie.x / gameState.cellSize.width);
+                                if (zombie.row < range.minRow || zombie.row > range.maxRow ||
+                                    zombieCol < range.minCol || zombieCol > range.maxCol) {
+                                    return false;
+                                }
+
+                                const hasMetalArmor = zombie.armorType &&
+                                    !zombie.armorBroken &&
+                                    ['bucket', 'helmet', 'trashcan'].includes(zombie.armorType);
+
+                                const hasMetalSpecial = zombie.type === 'jackInTheBox' && zombie.explosionTimerId;
+
+                                return hasMetalArmor || hasMetalSpecial;
+                            });
+
+                            if (targetZombie) {
+                                handleMagnetSteal(plant, targetZombie, plantType);
+                            } else {
+                                plant.magnetCooldown = 1000;
+                            }
+                        }
+
+                        function handleMagnetSteal(plant, zombie, plantType) {
+                            let stolenItemEmoji = '⚙️';
+
+                            if (plant.element) {
+                                plant.element.classList.add('shooting');
+                                createTimer(300, () => plant.element?.classList.remove('shooting'), false, 'remove_shooting');
+                            }
+
+                            if (zombie.type === 'jackInTheBox' && zombie.explosionTimerId) {
+                                clearTimer(zombie.explosionTimerId);
+                                zombie.explosionTimerId = null;
+                                zombie.element.classList.remove('jackInTheBox');
+                                stolenItemEmoji = '🎁';
+                            }
+                            else if (zombie.armorType && !zombie.armorBroken) {
+                                const armorEmojis = { 'bucket': '🎓', 'helmet': '⛑️', 'trashcan': '🗑️' };
+                                stolenItemEmoji = armorEmojis[zombie.armorType] || '⚙️';
+
+                                const armorEl = zombie.element.querySelector(`.zombie-attachment-${zombie.armorType}`)
+                                    || zombie.element.querySelector('.zombie-attachment');
+                                if (armorEl) armorEl.remove();
+
+                                zombie.armorHp = 0;
+                                zombie.armorBroken = true;
+                                zombie.health = zombie.bodyHp;
+                                updateZombieHealth(zombie);
+                            }
+
+                            createParticleEffect(zombie.element, '🧲');
+
+                            plant.hasMetalItem = true;
+                            plant.magnetCooldown = plantType.magnetInterval;
+
+                            // Show stolen item
+                            if (plant.element) {
+                                const itemEl = document.createElement('div');
+                                itemEl.className = 'stolen-metal-item';
+                                itemEl.textContent = stolenItemEmoji;
+                                itemEl.style.cssText = `position: absolute; top: -15px; right: -10px; font-size: 1.2em; z-index: 3; filter: drop-shadow(0 0 3px gold);`;
+
+                                plant.element.appendChild(itemEl);
+                                plant.stolenItemElement = itemEl;
+
+                                createTimer(15000, () => {
+                                    if (plant && plant.element) {
+                                        if (plant.stolenItemElement) plant.stolenItemElement.remove();
+                                        plant.stolenItemElement = null;
+                                        plant.hasMetalItem = false;
+                                        plant.magnetCooldown = 0;
+                                    }
+                                }, false, 'magnet_digest', plant.id);
+                            }
+                        }
+
+                        // --- SNAPDRAGON LOGIC ---
+                        if (plant.type === 'snapdragon') {
+                            if (!plant.shootCooldown) plant.shootCooldown = 0;
+                            plant.shootCooldown -= adjustedDelta;
+                            if (plant.shootCooldown <= 0) {
+                                const attackRows = [plant.row - 1, plant.row, plant.row + 1];
+
+                                const startBoundaryX = (plant.col + 2 / 3) * gameState.cellSize.width;
+                                const endBoundaryX = (plant.col + 3) * gameState.cellSize.width;
+
+                                const zombiesToAttack = gameState.zombies.filter(zombie => {
+                                    if (!zombie.element) return false;
+
+                                    const isInYRange = attackRows.includes(zombie.row);
+                                    const isInXRange = zombie.x >= startBoundaryX && zombie.x < endBoundaryX;
+
+                                    return isInYRange && isInXRange && !zombie.isFlying;
+                                });
+
+                                if (zombiesToAttack.length > 0) {
+                                    plant.shootCooldown = plantTypes.snapdragon.shootInterval;
+                                    if (plant.element) {
+                                        plant.element.classList.add('shooting');
+                                        createTimer(300, () => { if (plant.element) plant.element.classList.remove('shooting'); }, false, 'remove_shooting');
+                                    }
+
+                                    attackRows.forEach(r => {
+                                        if (r >= 0 && r < 5) {
+                                            const cell1 = document.querySelector(`.cell[data-row='${r}'][data-col='${plant.col + 1}']`);
+                                            const cell2 = document.querySelector(`.cell[data-row='${r}'][data-col='${plant.col + 2}']`);
+
+                                            if (cell1) createFireBreathEffect(cell1);
+                                            if (cell2) createFireBreathEffect(cell2);
+                                        }
+                                    });
+
+                                    zombiesToAttack.forEach(zombie => {
+                                        applyDamageToZombie(zombie, plantTypes.snapdragon.damage);
+                                        checkZombieStateChange(zombie);
+                                        updateZombieHealth(zombie);
+
+                                        if (zombie.isFrozen) {
+                                            zombie.isFrozen = false;
+                                            zombie.freezeTimer = 0;
+                                            zombie.element.classList.remove('frozen');
+                                        } else if (zombie.slowed) {
+                                            zombie.slowed = false;
+                                            zombie.slowTimer = 0;
+                                            zombie.element.classList.remove('slowed');
+                                        }
+
+                                        if (zombie.element) {
+                                            zombie.element.classList.add('damage-effect');
+                                            createTimer(300, () => { if (zombie.element) zombie.element.classList.remove('damage-effect'); }, false, 'remove_damage-effect');
+                                        }
+
+                                        if (zombie.health <= 0) {
+                                            handleZombieDefeat(zombie);
+                                        }
+                                    });
+                                }
+                            }
+                        }
+
+                        // --- GLOOM-SHROOM LOGIC ---
+                        if (plant.type === 'gloomshroom') {
+                            if (!plant.shootCooldown) plant.shootCooldown = 0;
+                            plant.shootCooldown -= adjustedDelta;
+
+                            if (plant.shootCooldown <= 0) {
+                                const plantType = plantTypes.gloomshroom;
+                                // Define the 3x3 attack area
+                                const minRow = plant.row - 1;
+                                const maxRow = plant.row + 1;
+                                const minCol = plant.col - 1;
+                                const maxCol = plant.col + 1;
+
+                                // Find all zombies within that 3x3 grid
+                                const zombiesToAttack = gameState.zombies.filter(zombie =>
+                                    zombie.element &&
+                                    !zombie.isFlying &&
+                                    zombie.row >= minRow && zombie.row <= maxRow &&
+                                    Math.floor(zombie.x / gameState.cellSize.width) >= minCol &&
+                                    Math.floor(zombie.x / gameState.cellSize.width) <= maxCol
+                                );
+
+                                if (zombiesToAttack.length > 0) {
+                                    plant.shootCooldown = plantType.attackInterval;
+                                    if (plant.element) {
+                                        plant.element.classList.add('shooting');
+                                        createTimer(300, () => { if (plant.element) plant.element.classList.remove('shooting'); }, false, 'remove_shooting');
+                                    }
+
+                                    // Create a visual effect on all 9 tiles
+                                    for (let r = minRow; r <= maxRow; r++) {
+                                        for (let c = minCol; c <= maxCol; c++) {
+                                            if (r >= 0 && r < 5 && c >= 0 && c < 9) {
+                                                const cell = document.querySelector(`.cell[data-row='${r}'][data-col='${c}']`);
+                                                if (cell) createGloomFumeEffect(cell);
+                                            }
+                                        }
+                                    }
+
+                                    // Damage all zombies in the area
+                                    zombiesToAttack.forEach(zombie => {
+                                        applyDamageToZombie(zombie, plantType.damage);
+
+                                        if (zombie.element) {
+                                            zombie.element.classList.add('damage-effect');
+                                            createTimer(300, () => { if (zombie.element) zombie.element.classList.remove('damage-effect'); }, false, 'remove_damage-effect');
+                                        }
+
+                                        if (zombie.health <= 0) {
+                                            handleZombieDefeat(zombie);
+                                        }
+                                    });
+                                }
+                            }
+                        }
+
                         // Sun Production
                         if (plantType.produces === 'sun' || plantType.produces === 'coin') {
                             plant.sunCooldown -= adjustedDelta;
@@ -8941,7 +10083,9 @@ Copyright (c) 2025 Olexandr_43
                                     if (zombieType.uneatable) {
                                         if (now - plant.lastChomp > plantType.attackInterval / gameState.gameSpeed) {
                                             plant.lastChomp = now;
-                                            targetZombie.health -= plantType.damage;
+
+                                            // Use applyDamageToZombie to respect armor
+                                            applyDamageToZombie(targetZombie, plantType.damage);
 
                                             if (plant.element) {
                                                 plant.element.classList.add('shooting');
@@ -8954,7 +10098,7 @@ Copyright (c) 2025 Olexandr_43
                                                     if (targetZombie.element) targetZombie.element.classList.remove('damage-effect');
                                                 }, false, 'remove_damage-effect');
                                             }
-                                            updateZombieHealth(targetZombie);
+
                                             if (targetZombie.health <= 0) {
                                                 handleZombieDefeat(targetZombie);
                                             }
@@ -8998,9 +10142,7 @@ Copyright (c) 2025 Olexandr_43
                                     }
 
                                     zombiesOnTile.forEach(zombie => {
-                                        zombie.health -= plantType.damage;
-                                        checkZombieStateChange(zombie);
-                                        updateZombieHealth(zombie);
+                                        applyDamageToZombie(zombie, plantType.damage, true); // Spikes pierce shields/newspaper
                                         if (zombie.element) {
                                             zombie.element.classList.add('damage-effect');
                                             createTimer(300, () => { if (zombie.element) zombie.element.classList.remove('damage-effect'); }, false, 'remove_damage-effect');
@@ -9010,132 +10152,6 @@ Copyright (c) 2025 Olexandr_43
                                         }
                                     });
                                     gameState.zombies = gameState.zombies.filter(z => z.element);
-                                }
-                            }
-                        }
-                    });
-
-                    // --- SNAPDRAGON LOGIC ---
-                    gameState.plants.forEach(plant => {
-                        if (plant.type === 'snapdragon' && !plant.isWrapped) {
-                            if (!plant.shootCooldown) plant.shootCooldown = 0;
-                            plant.shootCooldown -= adjustedDelta;
-                            if (plant.shootCooldown <= 0) {
-                                const attackRows = [plant.row - 1, plant.row, plant.row + 1];
-
-                                const startBoundaryX = (plant.col + 2 / 3) * gameState.cellSize.width;
-                                const endBoundaryX = (plant.col + 3) * gameState.cellSize.width;
-
-                                const zombiesToAttack = gameState.zombies.filter(zombie => {
-                                    if (!zombie.element) return false;
-
-                                    const isInYRange = attackRows.includes(zombie.row);
-                                    const isInXRange = zombie.x >= startBoundaryX && zombie.x < endBoundaryX;
-
-                                    return isInYRange && isInXRange && !zombie.isFlying;
-                                });
-
-                                if (zombiesToAttack.length > 0) {
-                                    plant.shootCooldown = plantTypes.snapdragon.shootInterval;
-                                    if (plant.element) {
-                                        plant.element.classList.add('shooting');
-                                        createTimer(300, () => { if (plant.element) plant.element.classList.remove('shooting'); }, false, 'remove_shooting');
-                                    }
-
-                                    attackRows.forEach(r => {
-                                        if (r >= 0 && r < 5) {
-                                            const cell1 = document.querySelector(`.cell[data-row='${r}'][data-col='${plant.col + 1}']`);
-                                            const cell2 = document.querySelector(`.cell[data-row='${r}'][data-col='${plant.col + 2}']`);
-
-                                            if (cell1) createFireBreathEffect(cell1);
-                                            if (cell2) createFireBreathEffect(cell2);
-                                        }
-                                    });
-
-                                    zombiesToAttack.forEach(zombie => {
-                                        zombie.health -= plantTypes.snapdragon.damage;
-                                        checkZombieStateChange(zombie);
-                                        updateZombieHealth(zombie);
-
-                                        if (zombie.isFrozen) {
-                                            zombie.isFrozen = false;
-                                            zombie.freezeTimer = 0;
-                                            zombie.element.classList.remove('frozen');
-                                        } else if (zombie.slowed) {
-                                            zombie.slowed = false;
-                                            zombie.slowTimer = 0;
-                                            zombie.element.classList.remove('slowed');
-                                        }
-
-                                        if (zombie.element) {
-                                            zombie.element.classList.add('damage-effect');
-                                            createTimer(300, () => { if (zombie.element) zombie.element.classList.remove('damage-effect'); }, false, 'remove_damage-effect');
-                                        }
-
-                                        if (zombie.health <= 0) {
-                                            handleZombieDefeat(zombie);
-                                        }
-                                    });
-                                }
-                            }
-                        }
-                    });
-
-                    // --- GLOOM-SHROOM LOGIC ---
-                    gameState.plants.forEach(plant => {
-                        if (plant.type === 'gloomshroom' && !plant.isSleeping && !plant.isWrapped) {
-                            if (!plant.shootCooldown) plant.shootCooldown = 0;
-                            plant.shootCooldown -= adjustedDelta;
-
-                            if (plant.shootCooldown <= 0) {
-                                const plantType = plantTypes.gloomshroom;
-                                // Define the 3x3 attack area
-                                const minRow = plant.row - 1;
-                                const maxRow = plant.row + 1;
-                                const minCol = plant.col - 1;
-                                const maxCol = plant.col + 1;
-
-                                // Find all zombies within that 3x3 grid
-                                const zombiesToAttack = gameState.zombies.filter(zombie =>
-                                    zombie.element &&
-                                    !zombie.isFlying &&
-                                    zombie.row >= minRow && zombie.row <= maxRow &&
-                                    Math.floor(zombie.x / gameState.cellSize.width) >= minCol &&
-                                    Math.floor(zombie.x / gameState.cellSize.width) <= maxCol
-                                );
-
-                                if (zombiesToAttack.length > 0) {
-                                    plant.shootCooldown = plantType.attackInterval;
-                                    if (plant.element) {
-                                        plant.element.classList.add('shooting');
-                                        createTimer(300, () => { if (plant.element) plant.element.classList.remove('shooting'); }, false, 'remove_shooting');
-                                    }
-
-                                    // Create a visual effect on all 9 tiles
-                                    for (let r = minRow; r <= maxRow; r++) {
-                                        for (let c = minCol; c <= maxCol; c++) {
-                                            if (r >= 0 && r < 5 && c >= 0 && c < 9) {
-                                                const cell = document.querySelector(`.cell[data-row='${r}'][data-col='${c}']`);
-                                                if (cell) createGloomFumeEffect(cell);
-                                            }
-                                        }
-                                    }
-
-                                    // Damage all zombies in the area
-                                    zombiesToAttack.forEach(zombie => {
-                                        zombie.health -= plantType.damage;
-                                        checkZombieStateChange(zombie);
-                                        updateZombieHealth(zombie);
-
-                                        if (zombie.element) {
-                                            zombie.element.classList.add('damage-effect');
-                                            createTimer(300, () => { if (zombie.element) zombie.element.classList.remove('damage-effect'); }, false, 'remove_damage-effect');
-                                        }
-
-                                        if (zombie.health <= 0) {
-                                            handleZombieDefeat(zombie);
-                                        }
-                                    });
                                 }
                             }
                         }
