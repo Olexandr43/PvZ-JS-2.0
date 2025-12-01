@@ -1,4 +1,4 @@
-﻿# Mod is still in Development!
+# Mod is still in Development!
 
 
 # Plants vs. Zombies (HTML, CSS, JavaScript)
@@ -93,6 +93,12 @@ The arsenal of plants has more than tripled, adding significant strategic variet
 *   **Twin Sunflower (🌻🌻):** Costs 150 sun. An upgrade plant that must be planted on an existing Sunflower. It produces 100 sun at a time, doubling the normal rate.
 *   **Wall-nut (🥥):** Costs 50 sun. A defensive plant with high health (24) that blocks zombies.
 *   **Winter Melon (🥶):** Costs 200 sun. An upgrade for the Melon-pult. Its projectiles deal heavy damage and freeze all zombies in the splash zone.
+*   **Magnet-shroom (🧲):** Costs 100 sun. Periodically removes metal objects from zombies in a 3x3 area, such as helmets, buckets, and vehicles, significantly weakening armored enemies. Sleeps during the day.
+*   **Gold Leaf (🍁):** Costs 50 sun. Transforms the tile it's planted on into a permanent Golden Tile, which produces sun over time. The plant disappears after creating the tile, but the tile remains and continues generating resources.
+*   **Blockoli (🥦):** Costs 150 sun. A defensive plant that periodically stuns all zombies in a 3-row tall, 2-3 column wide area in front of it. Acts as a defensive wall while its stunning ability recharges.
+*   **Aloe (🌳):** Costs 75 sun. A support plant that heals the plant directly to its right at regular intervals, restoring damaged plants to full health over time.
+*   **Lightning Reed (📡):** Costs 125 sun. Attacks up to 3 zombies at once with chain lightning, prioritizing the closest targets in any lane. Effective against groups of enemies.
+*   **Laser Bean (👽):** Costs 200 sun. Fires a continuous laser beam that pierces through all zombies in its lane, dealing damage to every zombie it hits.
 ---
 
 ### New Zombies Added
@@ -117,6 +123,8 @@ The horde has grown nearly five times more dangerous and unpredictable.
 *   **Octo Zombie (🐙):** Throws octopuses that wrap around your plants, disabling them temporarily.
 *   **Giga-Football Zombie (⛑️):** A stronger, tougher version of the Football Zombie.
 *   **Rally Zombie (🏴‍☠️):** A very fast and durable version of the Flag Zombie that appears on the final wave.
+*   **Assassin Zombie (🐱‍👤):** A stealthy, nimble zombie that periodically switches lanes while advancing, making it harder to defend against. Starts spawning from wave 21.
+*   **Wizard Zombie (🧙):** A magical zombie that can cast spells at range, teleporting plants or applying other magical effects to disrupt your defenses.
 
 ---
 
