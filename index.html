@@ -2926,7 +2926,7 @@ Copyright (c) 2025 Olexandr_43
             <div class="cost">125</div>
             <div class="name">Spikerock</div>
         </div>
-        <div class="plantCard" data-plant="imitater" data-cost="">
+        <div class="plantCard" data-plant="imitater" data-cost="" data-upgrade="true">
             <div class="cooldown-overlay"></div>
             <div class="emoji">🎭</div>
             <div class="cost"></div>
@@ -2979,6 +2979,18 @@ Copyright (c) 2025 Olexandr_43
             <div class="emoji">🍁</div>
             <div class="cost">50</div>
             <div class="name">Goldleaf</div>
+        </div>
+        <div class="plantCard" data-plant="electricreed" data-cost="125" data-dlc="true">
+            <div class="cooldown-overlay"></div>
+            <div class="emoji">📡</div>
+            <div class="cost">125</div>
+            <div class="name">Lightning Reed</div>
+        </div>
+        <div class="plantCard" data-plant="laserbean" data-cost="200" data-dlc="true">
+            <div class="cooldown-overlay"></div>
+            <div class="emoji">👽</div>
+            <div class="cost">200</div>
+            <div class="name">Laser Bean</div>
         </div>
         <!-- Shovel -->
         <div class="plantCard" id="shovelCard">
@@ -3620,6 +3632,28 @@ Copyright (c) 2025 Olexandr_43
                 cooldown: 30000 // Slow
 
             },
+            electricreed: {
+                emoji: '📡',
+                health: 3.6,
+                maxHealth: 3.6,
+                shoots: false,
+                isElectricReed: true,
+                damage: 0.5,
+                shootInterval: 1400,
+                description: 'Shoots lightning that arcs to nearby zombies',
+                cooldown: 5000 // Fast
+            },
+            laserbean: {
+                emoji: '👽',
+                health: 3.6,
+                maxHealth: 3.6,
+                shoots: false,
+                isLaserBean: true,
+                damage: 2.0,
+                shootInterval: 2900,
+                description: 'Fires a piercing beam',
+                cooldown: 5000 // Fast
+            },
         };
 
         // Zombies
@@ -3647,6 +3681,8 @@ Copyright (c) 2025 Olexandr_43
             tallnutZombie: { emoji: '🧟', health: 120, maxHealth: 120, speed: 10, damage: 1, points: 1500, attachments: [{ emoji: '🌰', offset: { x: 9, y: -2 } }] },
             gigafootball: { emoji: '👹', bodyHp: 10, armor: { type: 'helmet', hp: 145, emoji: '⛑️' }, speed: 25, damage: 2, points: 2800, attachments: [{ emoji: '⛑️', offset: { x: 9, y: -4 } }] },
             rally: { emoji: '🧟', health: 18, maxHealth: 18, speed: 22, damage: 3, points: 175, attachments: [{ emoji: '🏴‍☠️', offset: { x: 3, y: 0 } }] },
+            assassinZombie: { emoji: '🐱‍👤', health: 12, maxHealth: 12, speed: 35, damage: 4, points: 300 },
+            wizardZombie: { emoji: '🧙', health: 25, maxHealth: 25, speed: 8, damage: 1, points: 450, isWizard: true, castInterval: 12000 },
             zomboss: { emoji: '🤖', health: 2000, maxHealth: 2000, speed: 1, damage: 99, points: 40000, uneatable: true, crushes: true },
         };
 
@@ -3671,6 +3707,9 @@ Copyright (c) 2025 Olexandr_43
             gatlingZombie: { cost: 4, weight: 1500, minWave: 17 },
             tallnutZombie: { cost: 8, weight: 2500, minWave: 18 },
             gigafootball: { cost: 13, weight: 3000, minWave: 19 },
+
+            assassinZombie: { cost: 3, weight: 1500, minWave: 21 },
+            wizardZombie: { cost: 6, weight: 2000, minWave: 22 },
 
             flag: { cost: 1, weight: 0, minWave: 1 },
             backupDancer: { cost: 0, weight: 0, minWave: 1 },
@@ -4101,7 +4140,10 @@ Copyright (c) 2025 Olexandr_43
                     healCooldown: p.healCooldown,
                     slamCooldown: p.slamCooldown,
                     isRecharging: p.isRecharging || false,
-                    rechargeCooldown: p.rechargeCooldown
+                    rechargeCooldown: p.rechargeCooldown,
+                    isSheep: p.isSheep || false,
+                    wizardId: p.wizardId || null,
+                    originalEmoji: p.originalEmoji || null
                 })),
                 zombies: gameState.zombies.map(z => ({
                     id: z.id,
@@ -4127,7 +4169,9 @@ Copyright (c) 2025 Olexandr_43
                     hasThrownImp: z.hasThrownImp || false,
                     isBeingPushed: z.isBeingPushed || false,
                     throwCooldown: z.throwCooldown || 0,
-                    shootCooldown: z.shootCooldown || 0
+                    shootCooldown: z.shootCooldown || 0,
+                    laneSwitchTimer: z.laneSwitchTimer || 0,
+                    castCooldown: z.castCooldown || 0,
                 })),
                 projectiles: gameState.projectiles.map(p => ({
                     row: p.row,
@@ -4472,6 +4516,18 @@ Copyright (c) 2025 Olexandr_43
                 plant.octopusElement = octopusOverlay;
             }
 
+            // Restore sheep state
+            if (plantData.isSheep) {
+                plant.isSheep = true;
+                plant.isWrapped = true;
+                plant.wizardId = plantData.wizardId;
+                plant.originalEmoji = plantData.originalEmoji;
+
+                // Replace emoji with sheep
+                plantElement.firstChild.textContent = '🐑';
+                plantElement.style.filter = 'grayscale(0.5)';
+            }
+
             // --- Restore Z-Index Logic for Stacking ---
             if (plantTypeInfo.isPumpkin) {
                 plantElement.style.zIndex = '3';
@@ -4605,7 +4661,9 @@ Copyright (c) 2025 Olexandr_43
                 armorFill: armorFill,
                 attacking: false,
                 attackCooldown: 0,
-                dancers: []
+                dancers: [],
+                laneSwitchTimer: zombieData.laneSwitchTimer || 0,
+                castCooldown: zombieData.castCooldown || 0,
             };
 
             updateZombieHealth(zombieObj);
@@ -5349,6 +5407,8 @@ Copyright (c) 2025 Olexandr_43
             tallnutZombie: { name: 'Tall-nut Zombie', description: 'Sporting a Tall-nut for a helmet, this zombie is extremely durable and is too tall for Pole Vaulting Zombies to jump over.' },
             gigafootball: { name: 'Giga-Football Zombie', description: 'The all-star of the undead league. He\'s even faster and tougher than the regular Football Zombie, making him a high-priority threat.' },
             rally: { name: 'Rally Zombie', description: 'A tougher version of the Flag Zombie, appearing only during the most intense final waves. He\'s faster, stronger, and signals a massive assault.' },
+            assassinZombie: { name: 'Assassin Zombie', description: 'Silent and deadly, the Assassin Zombie moves with incredible speed and can switch lanes to bypass your defenses.', special: 'Switches lanes periodically.' },
+            wizardZombie: { name: 'Wizard Zombie', description: 'The Wizard Zombie is a powerful magic user who turns your plants into harmless sheep.', special: 'Polymorphs plants.' },
             zomboss: { name: 'Dr. Zomboss', description: 'The mastermind behind the invasion. Dr. Zomboss pilots a massive Zombot that can crush plants, summon zombies, and unleash devastating elemental attacks.', special: 'Summons zombies & attacks lanes.' }
         };
 
@@ -5985,7 +6045,7 @@ Copyright (c) 2025 Olexandr_43
 
             // Check for balloon zombie fighter
             const hasBalloonZombieFighter = deckPlantTypes.some(type => {
-                return deckPlantTypes.includes('cherrybomb') || deckPlantTypes.includes('jalapeno') || deckPlantTypes.includes('doomshroom') || deckPlantTypes.includes('cactus') || deckPlantTypes.includes('blover') || deckPlantTypes.includes('hurrikale');
+                return deckPlantTypes.includes('cherrybomb') || deckPlantTypes.includes('jalapeno') || deckPlantTypes.includes('doomshroom') || deckPlantTypes.includes('cactus') || deckPlantTypes.includes('blover') || deckPlantTypes.includes('hurrikale') || deckPlantTypes.includes('electricreed');
             });
 
             // No balloon zombie fighter
@@ -6781,6 +6841,7 @@ Copyright (c) 2025 Olexandr_43
                 sun.addEventListener('touchstart', (e) => { e.preventDefault(); collectSun(sun, sunValue); }, { passive: false });
 
                 const sunId = `sun-${gameState.nextId++}`;
+                sun.dataset.sunId = sunId;
 
                 // Auto-fade sun
                 createTimer(7000, () => {
@@ -8250,6 +8311,41 @@ Copyright (c) 2025 Olexandr_43
                     }
                 }
 
+                // --- Assassin Zombie Lane Switching ---
+                if (zombie.type === 'assassinZombie' && !zombie.isFrozen && !zombie.isStunned && !zombie.isChangingLane && !zombie.attacking) {
+                    zombie.laneSwitchTimer -= adjustedDelta;
+                    if (zombie.laneSwitchTimer <= 0) {
+                        // Try to switch lanes
+                        const possibleRows = [];
+                        if (zombie.row > 0) possibleRows.push(zombie.row - 1);
+                        if (zombie.row < 4) possibleRows.push(zombie.row + 1);
+
+                        if (possibleRows.length > 0) {
+                            const newRow = possibleRows[Math.floor(Math.random() * possibleRows.length)];
+                            zombie.isChangingLane = true;
+
+                            // Visual transition
+                            createTimer(200, () => {
+                                if (!zombie.element) { zombie.isChangingLane = false; return; }
+
+                                zombie.row = newRow;
+                                const yPosition = gameState.boardRect.top + zombie.row * gameState.cellSize.height + (zombie.isFlying ? -10 : gameState.cellSize.height / 2 - 20) + (zombie.row * 2.5);
+
+                                zombie.element.style.transition = `top calc(0.3s / var(--game-speed)) ease, left calc(0.3s / var(--game-speed)) ease`;
+                                zombie.element.style.top = yPosition + 'px';
+
+                                createTimer(300, () => {
+                                    if (zombie.element) zombie.element.style.transition = '';
+                                    zombie.isChangingLane = false;
+                                    zombie.laneSwitchTimer = 2000 + Math.random() * 2000; // Reset timer
+                                }, false, 'assassin_lane_change_finish');
+                            }, false, 'assassin_lane_change_start');
+                        } else {
+                            zombie.laneSwitchTimer = 1000; // Retry sooner if stuck (shouldn't happen on standard board)
+                        }
+                    }
+                }
+
                 // --- Jack-in-the-Box Timer Pause/Resume Logic ---
                 if (zombie.type === 'jackInTheBox') {
                     const isStopped = zombie.isFrozen || zombie.isStunned;
@@ -8694,6 +8790,10 @@ Copyright (c) 2025 Olexandr_43
 
             if (zombieType.isExplosive) {
                 startJackInTheBoxTimer(zombieObj);
+            }
+
+            if (typeKey === 'assassinZombie') {
+                zombieObj.laneSwitchTimer = 2000 + Math.random() * 2000; // 2-4 seconds initial delay
             }
 
             gameState.zombies.push(zombieObj);
@@ -9302,6 +9402,78 @@ Copyright (c) 2025 Olexandr_43
             }, false, 'fadeout_fumeEffect');
         }
 
+        function createLightningEffect(p1, p2) {
+            if (!p1 || !p2) return;
+
+            const dx = p2.x - p1.x;
+            const dy = p2.y - p1.y;
+            const length = Math.sqrt(dx * dx + dy * dy);
+            const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+
+            const bolt = document.createElement('div');
+            bolt.className = 'instant-effect';
+            bolt.style.cssText = `
+                position: fixed; 
+                top: ${p1.y}px; 
+                left: ${p1.x}px;
+                width: ${length}px; 
+                height: 4px;
+                background: white;
+                box-shadow: 0 0 5px cyan, 0 0 10px blue;
+                transform-origin: 0 0;
+                transform: rotate(${angle}deg);
+                z-index: 4;
+                pointer-events: none;
+                opacity: 1;
+                transition: opacity 0.2s ease-out;
+            `;
+
+            document.getElementById('gameContainer').appendChild(bolt);
+
+            createTimer(150, () => {
+                if (bolt) bolt.style.opacity = '0';
+                createTimer(200, () => { if (bolt) bolt.remove(); }, false, 'remove_lightning_bolt_cleanup');
+            }, false, 'remove_lightning_bolt');
+        }
+
+        function createLaserBeamEffect(plant) {
+            if (!plant.element) return;
+
+            const rect = plant.element.getBoundingClientRect();
+            const boardRect = document.getElementById('gameContainer').getBoundingClientRect();
+
+            // Beam goes from plant to end of screen
+            const beamWidth = boardRect.right - rect.right;
+
+            const beam = document.createElement('div');
+            beam.className = 'instant-effect';
+            beam.style.cssText = `
+                position: fixed; 
+                top: ${rect.top + rect.height / 2 - 6}px; 
+                left: ${rect.right}px;
+                width: ${beamWidth}px; 
+                height: 12px;
+                background: linear-gradient(to bottom, #00ffff, #e0ffff, #00ffff);
+                box-shadow: 0 0 15px #00ffff;
+                z-index: 4;
+                opacity: 0.8; 
+                pointer-events: none;
+                transition: opacity 0.3s ease-out, height 0.3s ease-out;
+                transform-origin: left center;
+            `;
+
+            document.getElementById('gameContainer').appendChild(beam);
+
+            // Quick flash then fade out
+            createTimer(100, () => {
+                if (beam) {
+                    beam.style.opacity = '0';
+                    beam.style.height = '2px'; // Shrink vertically as it fades
+                }
+                createTimer(300, () => { if (beam) beam.remove(); }, false, 'remove_laser_beam_cleanup');
+            }, false, 'remove_laser_beam');
+        }
+
         function updateCooldownVisuals() {
             document.querySelectorAll('#plantSelection .plantCard').forEach(card => {
                 const overlay = card.querySelector('.cooldown-overlay');
@@ -9362,6 +9534,26 @@ Copyright (c) 2025 Olexandr_43
             zombie.element.remove();
             zombie.element = null;
             gameState.zombiesDefeated++;
+
+            // --- WIZARD ZOMBIE DEATH: REVERT ALL SHEEP ---
+            if (zombieTypes[zombie.type].isWizard) {
+                gameState.plants.forEach(plant => {
+                    if (plant.isSheep && plant.wizardId === zombie.id) {
+                        plant.isSheep = false;
+                        plant.isWrapped = false;
+                        plant.wizardId = null;
+
+                        if (plant.element) {
+                            // Restore original emoji
+                            if (plant.originalEmoji) {
+                                plant.element.firstChild.textContent = plant.originalEmoji;
+                            }
+                            plant.element.style.filter = '';
+                            plant.element.classList.remove('sheep');
+                        }
+                    }
+                });
+            }
         }
 
         // --- VICTORY TROPHY LOGIC ---
@@ -9415,6 +9607,46 @@ Copyright (c) 2025 Olexandr_43
                 trophyElement.remove();
                 victory();
             });
+        }
+
+        function drawPurpleLightning(rect1, rect2) {
+            if (!rect1 || !rect2) return;
+
+            const bolt = document.createElement('div');
+            const x1 = rect1.left + rect1.width / 2;
+            const y1 = rect1.top + rect1.height / 2;
+            const x2 = rect2.left + rect2.width / 2;
+            const y2 = rect2.top + rect2.height / 2;
+
+            const length = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+            const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+
+            bolt.style.cssText = `
+                position: fixed; top: ${y1}px; left: ${x1}px;
+                width: ${length}px; height: 4px;
+                background: white;
+                box-shadow: 0 0 8px magenta, 0 0 15px purple;
+                transform-origin: 0 0;
+                transform: rotate(${angle}deg);
+                z-index: 100; pointer-events: none;
+            `;
+            document.body.appendChild(bolt);
+
+            // Add sparkle effect at target
+            const sparkle = document.createElement('div');
+            sparkle.textContent = '✨';
+            sparkle.style.cssText = `
+                position: fixed; top: ${y2}px; left: ${x2}px;
+                font-size: 2em; z-index: 101;
+                pointer-events: none;
+                animation: particle calc(0.5s / var(--game-speed)) ease-out forwards;
+            `;
+            document.body.appendChild(sparkle);
+
+            setTimeout(() => {
+                bolt.remove();
+                sparkle.remove();
+            }, 200);
         }
 
         function moveFlyingOctopuses(deltaTime) {
@@ -9538,6 +9770,83 @@ Copyright (c) 2025 Olexandr_43
                                 // For single shooters, let them move again sooner
                                 createTimer(500, () => { if (zombie) zombie.attacking = false; }, false, 'zombieEndAttack', zombie.id);
                             }
+                        }
+                    });
+
+                    // --- WIZARD ZOMBIE CASTING LOGIC ---
+                    gameState.zombies.forEach(zombie => {
+                        if (!zombie.element || zombie.isStunned || zombie.isFrozen || zombie.attacking) return;
+
+                        const zombieType = zombieTypes[zombie.type];
+                        if (!zombieType.isWizard) return;
+
+                        if (zombie.castCooldown === undefined) zombie.castCooldown = zombieType.castInterval;
+                        zombie.castCooldown -= adjustedDelta;
+
+                        let targetPlant = null;
+
+                        // Priority: Find a plant that is NOT already a sheep and NOT wrapped
+                        const availableTargets = gameState.plants.filter(p => !p.isWrapped && !p.isSheep);
+
+                        if (availableTargets.length > 0) {
+                            // Find the furthest column
+                            const maxCol = Math.max(...availableTargets.map(p => p.col));
+                            // Get plants in that column
+                            const frontmostTargets = availableTargets.filter(p => p.col === maxCol);
+                            // Find closest row
+                            targetPlant = frontmostTargets.reduce((closest, current) => {
+                                const closestDist = Math.abs(closest.row - zombie.row);
+                                const currentDist = Math.abs(current.row - zombie.row);
+                                return currentDist < closestDist ? current : closest;
+                            });
+                        }
+
+                        if (zombie.castCooldown <= 0 && targetPlant) {
+                            zombie.castCooldown = zombieType.castInterval;
+                            zombie.attacking = true;
+
+                            if (zombie.element) {
+                                zombie.element.classList.add('zombie-throwing');
+                            }
+
+                            createTimer(500, () => {
+                                if (!zombie.element || !targetPlant.element) return;
+
+                                const zombieRect = zombie.element.getBoundingClientRect();
+                                const plantRect = targetPlant.element.getBoundingClientRect();
+
+                                // Draw purple lightning from wizard to plant
+                                drawPurpleLightning(zombieRect, plantRect);
+
+                                // Transform plant immediately after lightning hits
+                                createTimer(100, () => {
+                                    if (!targetPlant.element || targetPlant.isSheep) return;
+
+                                    // Save original emoji if not already saved
+                                    if (!targetPlant.originalEmoji) {
+                                        targetPlant.originalEmoji = targetPlant.element.firstChild.textContent;
+                                    }
+
+                                    targetPlant.isSheep = true;
+                                    targetPlant.isWrapped = true;
+                                    targetPlant.wizardId = zombie.id;
+
+                                    // Replace emoji with sheep
+                                    targetPlant.element.firstChild.textContent = '🐑';
+                                    targetPlant.element.style.filter = 'grayscale(0.5)';
+                                }, false, 'wizardTransform', targetPlant.id);
+
+                            }, false, 'wizardCast', zombie.id);
+
+                            createTimer(1000, () => {
+                                if (zombie && zombie.element) zombie.element.classList.remove('zombie-throwing');
+                            }, false, 'wizardEndThrowAnim', zombie.id);
+
+                            createTimer(1500, () => {
+                                if (zombie) {
+                                    zombie.attacking = false;
+                                }
+                            }, false, 'zombieEndCast', zombie.id);
                         }
                     });
 
@@ -9714,7 +10023,7 @@ Copyright (c) 2025 Olexandr_43
                             }
                         }
 
-                        if (!plant.element || plant.isSleeping || plant.isWrapped) return;
+                        if (!plant.element || plant.isSleeping || plant.isWrapped || plant.isSheep) return;
                         const plantType = plantTypes[plant.type];
 
                         // Aloe Logic
@@ -10031,6 +10340,162 @@ Copyright (c) 2025 Olexandr_43
                                         if (zombie.element) {
                                             zombie.element.classList.add('damage-effect');
                                             createTimer(300, () => { if (zombie.element) zombie.element.classList.remove('damage-effect'); }, false, 'remove_damage-effect');
+                                        }
+
+                                        if (zombie.health <= 0) {
+                                            handleZombieDefeat(zombie);
+                                        }
+                                    });
+                                }
+                            }
+                        }
+
+                        // --- ELECTRIC REED LOGIC ---
+                        if (plantType.isElectricReed) {
+                            if (!plant.shootCooldown) plant.shootCooldown = 0;
+                            plant.shootCooldown -= adjustedDelta;
+
+                            if (plant.shootCooldown <= 0) {
+                                // 1. Find Primary Target
+                                const attackRows = [plant.row - 1, plant.row, plant.row + 1];
+                                let primaryTarget = null;
+                                let minDist = Infinity;
+
+                                gameState.zombies.forEach(z => {
+                                    if (!z.element || z.health <= 0 || !attackRows.includes(z.row)) return;
+
+                                    const dx = z.x - (plant.col * gameState.cellSize.width);
+                                    const dy = (z.row - plant.row) * gameState.cellSize.height;
+                                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                                    if (z.x > (plant.col * gameState.cellSize.width) && dist < minDist) {
+                                        minDist = dist;
+                                        primaryTarget = z;
+                                    }
+                                });
+
+                                if (primaryTarget) {
+                                    plant.shootCooldown = plantType.shootInterval;
+
+                                    if (plant.element) {
+                                        plant.element.classList.add('shooting');
+                                        createTimer(300, () => { if (plant.element) plant.element.classList.remove('shooting'); }, false, 'remove_shooting');
+                                    }
+
+                                    // 2. Range Calc (Diagonal tile + 20% buffer)
+                                    const tileDiagonal = Math.sqrt(Math.pow(gameState.cellSize.width, 2) + Math.pow(gameState.cellSize.height, 2));
+                                    const trueRange = tileDiagonal * 1.2;
+
+                                    // 3. Calculate Chain
+                                    const zombieChain = [primaryTarget];
+                                    let currentSource = primaryTarget;
+
+                                    for (let i = 0; i < 2; i++) {
+                                        let nextTarget = null;
+                                        let nextMinDist = trueRange;
+
+                                        gameState.zombies.forEach(z => {
+                                            if (!z.element || z.health <= 0 || zombieChain.includes(z)) return;
+
+                                            const dx = z.x - currentSource.x;
+                                            const dy = (z.row - currentSource.row) * gameState.cellSize.height;
+                                            const dist = Math.sqrt(dx * dx + dy * dy);
+
+                                            if (dist < nextMinDist) {
+                                                nextMinDist = dist;
+                                                nextTarget = z;
+                                            }
+                                        });
+
+                                        if (nextTarget) {
+                                            zombieChain.push(nextTarget);
+                                            currentSource = nextTarget;
+                                        } else {
+                                            break;
+                                        }
+                                    }
+
+                                    // 4. Snapshot Coordinates
+                                    const visualPoints = [];
+                                    const pRect = plant.element.getBoundingClientRect();
+
+                                    visualPoints.push({
+                                        x: pRect.left + pRect.width / 2,
+                                        y: pRect.top + pRect.height / 2
+                                    });
+
+                                    zombieChain.forEach(z => {
+                                        if (z.element) {
+                                            const zRect = z.element.getBoundingClientRect();
+                                            visualPoints.push({
+                                                x: zRect.left + zRect.width / 2,
+                                                y: zRect.top + zRect.height / 2
+                                            });
+                                        }
+                                    });
+
+                                    // 5. Execute Chain
+                                    zombieChain.forEach((target, index) => {
+                                        createTimer(index * 15, () => {
+                                            if (visualPoints[index] && visualPoints[index + 1]) {
+                                                createLightningEffect(visualPoints[index], visualPoints[index + 1]);
+                                            }
+
+                                            if (target && target.health > 0) {
+                                                applyDamageToZombie(target, plantType.damage);
+                                                checkZombieStateChange(target);
+                                                updateZombieHealth(target);
+
+                                                if (target.element) {
+                                                    target.element.classList.add('damage-effect');
+                                                    createTimer(200, () => { if (target.element) target.element.classList.remove('damage-effect'); }, false, 'remove_damage-effect');
+                                                }
+
+                                                if (target.health <= 0) {
+                                                    handleZombieDefeat(target, '⚡');
+                                                }
+                                            }
+                                        }, false, 'electric_arc_hit');
+                                    });
+                                }
+                            }
+                        }
+
+                        // --- LASER BEAN LOGIC ---
+                        if (plantType.isLaserBean) {
+                            if (!plant.shootCooldown) plant.shootCooldown = 0;
+                            plant.shootCooldown -= adjustedDelta;
+
+                            if (plant.shootCooldown <= 0) {
+                                const zombiesInRow = gameState.zombies.filter(z =>
+                                    z.row === plant.row &&
+                                    z.x > (plant.col * gameState.cellSize.width) &&
+                                    z.element && z.health > 0 && !z.isFlying
+                                );
+
+                                if (zombiesInRow.length > 0) {
+                                    plant.shootCooldown = plantType.shootInterval;
+
+                                    if (plant.element) {
+                                        plant.element.classList.add('shooting');
+                                        createTimer(300, () => { if (plant.element) plant.element.classList.remove('shooting'); }, false, 'remove_shooting');
+                                    }
+
+                                    createLaserBeamEffect(plant);
+
+                                    zombiesInRow.forEach(zombie => {
+                                        applyDamageToZombie(zombie, plantType.damage, true);
+                                        checkZombieStateChange(zombie);
+                                        updateZombieHealth(zombie);
+
+                                        if (zombie.element) {
+                                            zombie.element.classList.add('damage-effect');
+                                            createTimer(300, () => { if (zombie.element) zombie.element.classList.remove('damage-effect'); }, false, 'remove_damage-effect');
+
+                                            const flash = document.createElement('div');
+                                            flash.style.cssText = `position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,255,255,0.6); pointer-events: none; border-radius: 10px;`;
+                                            zombie.element.appendChild(flash);
+                                            createTimer(150, () => flash.remove(), false, 'remove_laser_flash');
                                         }
 
                                         if (zombie.health <= 0) {
@@ -10381,8 +10846,6 @@ Copyright (c) 2025 Olexandr_43
             }
         });
     </script>
-
-    <script src="cheats_light.js"></script>
 </body>
 
 </html>
