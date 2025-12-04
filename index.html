@@ -3681,8 +3681,15 @@ Copyright (c) 2025 Olexandr_43
             tallnutZombie: { emoji: '🧟', health: 120, maxHealth: 120, speed: 10, damage: 1, points: 1500, attachments: [{ emoji: '🌰', offset: { x: 9, y: -2 } }] },
             gigafootball: { emoji: '👹', bodyHp: 10, armor: { type: 'helmet', hp: 145, emoji: '⛑️' }, speed: 25, damage: 2, points: 2800, attachments: [{ emoji: '⛑️', offset: { x: 9, y: -4 } }] },
             rally: { emoji: '🧟', health: 18, maxHealth: 18, speed: 22, damage: 3, points: 175, attachments: [{ emoji: '🏴‍☠️', offset: { x: 3, y: 0 } }] },
-            assassinZombie: { emoji: '🐱‍👤', health: 12, maxHealth: 12, speed: 35, damage: 4, points: 300 },
+            assassinZombie: { emoji: '🕵️', health: 12, maxHealth: 12, speed: 35, damage: 4, points: 300 },
             wizardZombie: { emoji: '🧙', health: 25, maxHealth: 25, speed: 8, damage: 1, points: 450, isWizard: true, castInterval: 12000 },
+            brickheadZombie: { emoji: '🧟', bodyHp: 10, armor: { type: 'brick', hp: 110, emoji: '🧱' }, speed: 11, damage: 1, points: 600, attachments: [{ emoji: '🧱', offset: { x: 9, y: -2 } }] },
+            excavatorZombie: { emoji: '👷', bodyHp: 10, armor: { type: 'shovel', hp: 20, emoji: '🥄' }, speed: 12, damage: 1, points: 400, isExcavator: true, digCooldown: 2000, attachments: [{ emoji: '🥄', offset: { x: -8, y: 16 } }] },
+            jesterZombie: { emoji: '🤹', health: 18, maxHealth: 18, speed: 18, damage: 1, points: 450, isJester: true },
+            chickenWrangler: { emoji: '🧟', bodyHp: 10, armor: { type: 'chickens', hp: 2, emoji: '🐔' }, speed: 14, damage: 1, points: 500, spawnsChickens: true, chickenCount: 15, attachments: [{ emoji: '🐔', offset: { x: 5, y: 8 } }, { emoji: '🐔', offset: { x: 20, y: 16 } }, { emoji: '🐔', offset: { x: -8, y: 16 } }] },
+            chicken: { emoji: '🐔', health: 0.1, maxHealth: 0.1, speed: 50, damage: 2, points: 10 },
+            allstar: { emoji: '👹', bodyHp: 10, armor: { type: 'helmet', hp: 55, emoji: '⛑️' }, speed: 33, damage: 2, points: 2800, attachments: [{ emoji: '⛑️', offset: { x: 9, y: -4 } }, { emoji: '🏈', offset: { x: -8, y: 16 } }] },
+
             zomboss: { emoji: '🤖', health: 2000, maxHealth: 2000, speed: 1, damage: 99, points: 40000, uneatable: true, crushes: true },
         };
 
@@ -3710,11 +3717,18 @@ Copyright (c) 2025 Olexandr_43
 
             assassinZombie: { cost: 3, weight: 1500, minWave: 21 },
             wizardZombie: { cost: 6, weight: 2000, minWave: 22 },
+            brickheadZombie: { cost: 8, weight: 2000, minWave: 23 },
+            excavatorZombie: { cost: 4, weight: 2000, minWave: 24 },
+            jesterZombie: { cost: 5, weight: 2000, minWave: 25 },
+            chickenWrangler: { cost: 6, weight: 2000, minWave: 26 },
+            allstar: { cost: 7, weight: 2000, minWave: 29 },
 
             flag: { cost: 1, weight: 0, minWave: 1 },
             backupDancer: { cost: 0, weight: 0, minWave: 1 },
             imp: { cost: 0, weight: 0, minWave: 1 },
             rally: { cost: 1, weight: 0, minWave: 20 },
+
+            chicken: { cost: 1, weight: 0, minWave: 1 },
         };
 
         // --- Global variable for the active tooltip
@@ -4601,7 +4615,7 @@ Copyright (c) 2025 Olexandr_43
             if (typeKey === 'dancing') zombieElement.classList.add('dancing');
             if (typeKey === 'zomboni') zombieElement.classList.add('zomboni');
             if (typeKey === 'gargantuar' || typeKey === 'giga') zombieElement.classList.add('gargantuar');
-            if (typeKey === 'imp') zombieElement.classList.add('imp');
+            if (typeKey === 'imp' || typeKey === 'chicken') zombieElement.classList.add('imp');
             if (typeKey === 'jackInTheBox') zombieElement.classList.add('jackInTheBox');
 
             const baseEmoji = document.createElement('span');
@@ -5338,78 +5352,87 @@ Copyright (c) 2025 Olexandr_43
         }
 
         const plantAlmanacData = {
-            peashooter: { description: 'Peashooters are your first line of defense. They shoot peas at attacking zombies.' },
-            sunflower: { description: 'Sunflowers are essential for you to produce extra sun. Try planting as many as you can!' },
-            cherrybomb: { description: 'Cherry Bombs can blow up all zombies in an area. They have a short fuse so plant them near zombies.' },
-            wallnut: { description: 'Wall-nuts have hard shells which you can use to protect your other plants.' },
-            potatomine: { description: 'Potato Mines explode on contact, but they take time to arm themselves. Plant them ahead of zombies.' },
-            snowpea: { description: 'Snow Peas shoot frozen peas that damage and slow the enemy.', special: 'Slows zombies' },
-            chomper: { description: 'Chompers can devour a zombie whole, but they are vulnerable while chewing.', special: 'Devours zombies whole' },
-            repeater: { description: 'Repeaters fire two peas at a time.' },
-            puffshroom: { description: 'Puff-shrooms are free, but they have a short range and only last for a limited time.', special: 'Dissapears after 1min' },
-            sunshroom: { description: 'Sun-shrooms give small suns at first and normal suns later.', special: 'Grows over time' },
-            fumeshroom: { description: 'Fume-shrooms shoot fumes that can pass through screen doors and ladders.', special: 'Pierces shields' },
-            gravebuster: { description: 'Grave Busters consume graves they are planted on.', special: 'Removes graves' },
-            scaredyshroom: { description: 'Scaredy-shrooms are long-range shooters that hide when zombies get too close.', special: 'Hides when zombie is close' },
-            iceshroom: { description: 'Ice-shrooms temporarily freeze all zombies on the screen.' },
-            doomshroom: { description: 'Doom-shrooms destroy everything in a large area and leave a crater that can\'t be planted on.', special: 'Leaves crater' },
-            threepeater: { description: 'Threepeaters shoot peas across three lanes.' },
-            jalapeno: { description: 'Jalapenos destroy an entire lane of zombies.' },
-            spikeweed: { description: 'Spikeweeds pop tires and hurt zombies that step on them.', special: 'Cant be eaten' },
-            torchwood: { description: 'Torchwoods turn peas that pass through them into fireballs.' },
-            tallnut: { description: 'Tall-nuts are heavy-duty wall plants that can\'t be vaulted over.' },
-            plantern: { description: 'Planterns light up an area, letting you see through fog.', special: 'Imagination' },
-            cactus: { description: 'Cactuses shoot spikes that can pop balloons.', special: 'Pops balloons' },
-            blover: { description: 'Blovers blow away all balloon zombies and fog.' },
-            cabbagepult: { description: 'Cabbage-pults hurl cabbages at the enemy.' },
-            kernelpult: { description: 'Kernel-pults fling corn kernels and butter at zombies.', special: 'Butter stuns zombies' },
-            coffeebean: { description: 'Use Coffee Beans to wake up sleeping mushrooms.' },
-            garlic: { description: 'Garlic diverts zombies into other lanes.' },
-            marigold: { description: 'Marigolds give you silver and gold coins.' },
-            melonpult: { description: 'Melon-pults do heavy damage to a group of zombies.' },
-            firepea: { description: 'Fire Peas shoot flaming peas that do splash damage.' },
-            snapdragon: { description: 'Snapdragons breathe fire in a short range.' },
-            hurrikale: { description: 'Hurrikales push back all zombies in a lane and chill them.' },
-            gatling: { description: 'Gatling Peas shoot four peas at a time.' },
-            twinSunflower: { description: 'Twin Sunflowers give twice as much sun as a normal Sunflower.' },
-            gloomshroom: { description: 'Gloom-shrooms shoot fumes in 8 directions.' },
-            wintermelon: { description: 'Winter Melons do heavy damage and slow groups of zombies.' },
-            spikerock: { description: 'Spikerocks are durable Spikeweeds that can pop multiple tires.', special: 'Cant be eaten' },
-            imitater: { description: 'Imitaters let you use two of the same plant during a level.', special: 'Copies plant' },
-            magnifyingGrass: { description: 'Magnifying Grass turns sun into damage.', special: 'Click to shoot' },
-            aloe: { description: 'Aloe heals nearby plants.' },
-            peanut: { description: 'Peanuts can shoot peas and block zombies.' },
-            blockoli: { description: 'Blockoli stuns zombies and acts as a shield.' },
-            pumpkin: { description: 'Pumpkins protect plants that are inside them.', special: 'Can be planted on other plants' }
+            peashooter: { description: 'How can a single plant grow and shoot so many peas so quickly? Peashooter says, "Hard work, commitment, and a healthy, well-balanced breakfast of sunlight and high-fiber carbon dioxide make it all possible."' },
+            sunflower: { description: 'Sunflowers are essential for you to produce extra sun. Try planting as many as you can! Sunflower can\'t help but be cheerful. She\'s naturally sunny. It\'s part of who she is.' },
+            cherrybomb: { description: 'Cherry Bombs can blow up all zombies in an area. They have a short fuse so plant them near zombies. "I wanna asplode," says Cherry #1. "No, I wanna asplode!" says Cherry #2. After all these years, they still argue about it.' },
+            wallnut: { description: 'Wall-nuts have hard shells which you can use to protect your other plants. Wall-nut has a tough outer shell, but he\'s also got a tender heart. He doesn\'t like to talk about it though.' },
+            potatomine: { description: 'Potato Mines explode on contact, but they take time to arm themselves. You\'ll want to plant them ahead of zombies. Potato Mine is cheap and effective, but he takes time to arm. You should plant him in advance. He likes to take naps.' },
+            snowpea: { description: 'Snow Peas shoot frozen peas that damage and slow the enemy. People wonder how Snow Pea can shoot ice peas. "Isn\'t he a plant?" they say. "Doesn\'t he need warm sunlight?" Snow Pea just shrugs. He\'s not interested in their negativity.', special: 'Slows zombies' },
+            chomper: { description: 'Chompers can devour a zombie whole, but they are vulnerable while chewing. Chomper almost got a gig doing stunts for a major motion picture. The project fell through, but he\'s still got the moxie.', special: 'Devours zombies whole' },
+            repeater: { description: 'Repeaters fire two peas at a time. Repeater is fierce. He\'s from the streets. He doesn\'t take attitude from anybody, plant or zombie, and he shoots peas to keep the peace. Twice as many peas.' },
+            puffshroom: { description: 'Puff-shrooms are free, but they have a short range and only last for a limited time. Puff-shroom is a humble shroom. He knows he\'s not much to look at. He knows his range is limited. But he also knows he\'s free. And that makes him very happy.', special: 'Dissapears after 1min' },
+            sunshroom: { description: 'Sun-shrooms give small suns at first and normal suns later. Sun-shroom is nocturnal, but he\'s willing to work days. He just needs a little time to wake up first. Give him a chance, and he\'ll grow on you.', special: 'Grows over time' },
+            fumeshroom: { description: 'Fume-shrooms shoot fumes that can pass through screen doors and ladders. "I\'m a very serious shroom," Fume-shroom says. "I\'m all about the work. I don\'t have time for fun and games." But sometimes, late at night, he plays miniature golf.', special: 'Pierces shields' },
+            gravebuster: { description: 'Grave Busters consume graves they are planted on. Grave Buster enjoys the simple things: a cool breeze, a sunny day, and graves. Especially graves. He just can\'t get enough of them.', special: 'Removes graves' },
+            scaredyshroom: { description: 'Scaredy-shrooms are long-range shooters that hide when zombies get too close. "Who\'s there?!" Scaredy-shroom shakes and trembles. "Go away! I don\'t want any!" He\'s like that with everyone.', special: 'Hides when zombie is close' },
+            iceshroom: { description: 'Ice-shrooms temporarily freeze all zombies on the screen. Ice-shroom can be cold and aloof. Some say he\'s downright icy. But once you get to know him, he\'s pretty cool.' },
+            doomshroom: { description: 'Doom-shrooms destroy everything in a large area and leave a crater that can\'t be planted on. Doom-shroom is troubled. He\'s had a hard life. He knows he\'s powerful, but the cost... the terrible cost. He wishes there was another way.', special: 'Leaves crater' },
+            threepeater: { description: 'Threepeaters shoot peas across three lanes. It\'s widely believed that Threepeater is actually three separate plants, but no one can prove it. Threepeater isn\'t talking.' },
+            jalapeno: { description: 'Jalapenos destroy an entire lane of zombies. "AHHHHHHHHH!" Jalapeno screams. That\'s his way of saying, "I\'m a hot pepper and I\'m going to burn you up!"' },
+            spikeweed: { description: 'Spikeweeds pop tires and hurt zombies that step on them. Spikeweed was born to cause pain. He knows it. You know it. The zombies are about to know it.', special: 'Cant be eaten' },
+            torchwood: { description: 'Torchwoods turn peas that pass through them into fireballs. Torchwood is on fire! He\'s literally on fire. But he\'s cool with it. In fact, he thinks it\'s awesome.' },
+            tallnut: { description: 'Tall-nuts are heavy-duty wall plants that can\'t be vaulted over. People wonder if there\'s a rivalry between Wall-nut and Tall-nut. Tall-nut laughs a rich, baritone laugh. "How could I be jealous of that guy?" he chuckles. "We\'re brothers!"' },
+            plantern: { description: 'Planterns light up an area, letting you see through fog. Plantern is a light in the darkness. He\'s a beacon of hope. He\'s also pretty good at parties.', special: 'Imagination' },
+            cactus: { description: 'Cactuses shoot spikes that can pop balloons. Cactus is a straight shooter. She tells it like it is. No nonsense. No frills. Just spikes. Lots and lots of spikes.', special: 'Pops balloons' },
+            blover: { description: 'Blovers blow away all balloon zombies and fog. Blover is the strong, silent type. He doesn\'t say much. He just blows. And when he blows, zombies fly.' },
+            cabbagepult: { description: 'Cabbage-pults hurl cabbages at the enemy. Cabbage-pult likes to think of himself as a "ballistic vegetable specialist." He went to community college for it and everything.' },
+            kernelpult: { description: 'Kernel-pults fling corn kernels and butter at zombies. Kernel-pult was going to be a baseball pitcher. Then he found out he was a plant. Now he throws corn. He\'s okay with it.', special: 'Butter stuns zombies' },
+            coffeebean: { description: 'Use Coffee Beans to wake up sleeping mushrooms. Coffee Bean says, "Hey, I know I\'m just a bean, but I\'m a COFFEE bean. That\'s gotta count for something, right?"' },
+            garlic: { description: 'Garlic diverts zombies into other lanes. Garlic\'s aroma is... distinctive. Some might say pungent. Garlic doesn\'t care. He knows his worth.' },
+            marigold: { description: 'Marigolds give you silver and gold coins. Marigold is a flower, but she\'s also a valuable source of income. She\'s not sure how she feels about that.' },
+            melonpult: { description: 'Melon-pults do heavy damage to a group of zombies. Melon-pult could have played professional baseball. He had the talent. But he chose to defend your lawn instead. He has no regrets.' },
+            firepea: { description: 'Fire Peas shoot flaming peas that do splash damage. Fire Pea is on fire! Well, his peas are. He\'s very proud of them. "Check out my peas!" he says. "They\'re on FIRE!"' },
+            snapdragon: { description: 'Snapdragons breathe fire in a short range. Snapdragon tried to get a job as a dragon. "You\'re not a dragon," they told him. "You\'re a plant." Snapdragon disagreed. Vigorously.' },
+            hurrikale: { description: 'Hurrikales push back all zombies in a lane and chill them. Hurrikale is a force of nature. Literally. He\'s a walking, talking hurricane. He tries to be gentle, but sometimes he just can\'t help himself.' },
+            gatling: { description: 'Gatling Peas shoot four peas at a time. Gatling Pea is the ultimate pea-shooting machine. He\'s fast, he\'s furious, and he\'s got four barrels of pea-shooting fury.' },
+            twinSunflower: { description: 'Twin Sunflowers give twice as much sun as a normal Sunflower. Twin Sunflower is twice as happy as a regular Sunflower. She produces twice as much sun. She\'s basically living her best life.' },
+            gloomshroom: { description: 'Gloom-shrooms shoot fumes in 8 directions. Gloom-shroom is dark and mysterious. He doesn\'t talk about his past. He just shoots fumes in all directions and minds his own business.' },
+            wintermelon: { description: 'Winter Melons do heavy damage and slow groups of zombies. Winter Melon is the ultimate combination of cold and heavy. He\'s like a frozen wrecking ball. Zombies hate him.' },
+            spikerock: { description: 'Spikerocks are durable Spikeweeds that can pop multiple tires. Spikerock is Spikeweed\'s big brother. He\'s tougher, meaner, and even more painful to step on. He\'s very proud of this.', special: 'Cant be eaten' },
+            imitater: { description: 'Imitaters let you use two of the same plant during a level. Imitater is a bit of an identity crisis. He doesn\'t know who he is. He just knows he can be whoever you want him to be. It\'s existentially troubling, but he manages.', special: 'Copies plant' },
+            magnifyingGrass: { description: 'Magnifying Grass turns sun into damage. Magnifying Grass harnesses the power of the sun to burn zombies. He\'s basically a living death ray. He thinks that\'s pretty cool.', special: 'Click to shoot' },
+            aloe: { description: 'Aloe heals nearby plants. Aloe is a healer. She\'s gentle, caring, and always there when you need her. She\'s basically the plant equivalent of a warm hug.' },
+            peanut: { description: 'Peanuts can shoot peas and block zombies. Peanut is a dual-threat plant. He can shoot AND tank. He\'s like two plants in one. Which is good, because he\'s actually two peanuts in one shell.' },
+            blockoli: { description: 'Blockoli stuns zombies and acts as a shield. Blockoli is a defensive powerhouse. He\'s tough, he\'s stunning, and he\'s made of broccoli. Kids hate him. Zombies hate him more.' },
+            pumpkin: { description: 'Pumpkins protect plants that are inside them. Pumpkin is a team player. He doesn\'t seek glory for himself. He just wants to protect his friends. He\'s the ultimate defensive plant.', special: 'Can be planted on other plants' },
+            goldleaf: { description: 'Gold Leaf turns ordinary tiles into golden tiles that produce sun over time. Gold Leaf has the Midas touch. Everything he touches turns to gold. Well, not everything. Just the tile he\'s planted on. But still, pretty impressive.', special: 'Creates golden tiles' },
+            electricreed: { description: 'Lightning Reed shoots electric bolts that can hit multiple zombies. Lightning Reed is electric. Literally. He\'s constantly crackling with energy. He tried to get a job at the power company, but they said he was overqualified.', special: 'Hits multiple targets' },
+            laserbean: { description: 'Laser Bean shoots a powerful laser beam down the entire lane. Laser Bean is from the future. He doesn\'t talk about it much, but you can tell. He\'s got that futuristic vibe. Also, he shoots lasers.', special: 'Pierces all zombies' }
         };
 
         const almanacData = {
             normal: { name: 'Zombie', description: 'Just your standard, garden-variety, brain-eating zombie. A classic for a reason.' },
-            flag: { name: 'Flag Zombie', description: 'The Flag Zombie marks the arrival of a huge wave. He\'s no tougher than a regular zombie, but what he represents is.' },
-            cone: { name: 'Conehead Zombie', description: 'The traffic cone on his head provides more protection than you\'d think, almost tripling his toughness.' },
-            fast: { name: 'Pole Vault Zombie', description: 'Moves quickly and uses his pole to leap over the first plant he encounters, making him a tricky initial threat.', special: 'Cant leap at all...' },
-            newspaper: { name: 'Newspaper Zombie', description: 'He just wants to be left alone to read his paper. Destroy it, and he\'ll unleash a burst of speed and fury.', special: 'Enrages when newspaper is destroyed.' },
-            bucket: { name: 'Buckethead Zombie', description: 'The metal bucket on his head offers extreme protection, allowing him to absorb a massive amount of damage.' },
-            jackInTheBox: { name: 'Jack-in-the-Box Zombie', description: 'This zombie is a ticking time bomb. He\'ll randomly pop, destroying all plants and zombies in a wide area.', special: 'Explodes randomly.' },
-            balloon: { name: 'Balloon Zombie', description: 'The Balloon Zombie floats serenely over your defenses, immune to most attacks. Only sharp projectiles or a strong gust of wind can bring him down.', special: 'Floats over plants.' },
-            dancing: { name: 'Dancing Zombie', description: 'The life of the party, the Dancing Zombie moonwalks across the lawn, summoning a troupe of Backup Dancers to protect him.', special: 'Summons Backup Dancers.' },
-            backupDancer: { name: 'Backup Dancer', description: 'These zombies appear suddenly on the dance floor, ready to backup their leader.' },
-            football: { name: 'Football Zombie', description: 'Clad in full gear, the Football Zombie charges down the field with incredible speed and toughness. He\'s a one-zombie wrecking crew.' },
-            zomboni: { name: 'Zomboni', description: 'This ice-resurfacing machine will crush any plant in its path, leaving a trail of ice that cannot be planted on.', special: 'Crushes plants & leaves ice trail.' },
-            trashCanZombie: { name: 'Trash Can Zombie', description: 'His trash can acts as a shield, absorbing a lot of damage. While holding it, he\'s also immune to slowing and fire splash effects.', special: 'Unaffected by snow and fire while has a can' },
-            gargantuar: { name: 'Gargantuar', description: 'A colossal zombie that crushes your plants with a single smash. When badly wounded, he will hurl a small Imp deep into your defenses.', special: 'Crushes plants & throws an Imp.' },
-            imp: { name: 'Imp', description: 'Small, fast, and annoying. The Imp is often seen being hurled deep into your defenses by a Gargantuar.' },
-            octoZombie: { name: 'Octo Zombie', description: 'This deep-sea menace lobs octopuses at your plants, wrapping them up and completely disabling their abilities for a while.', special: 'Throws octopuses to disable plants.' },
-            peashooterZombie: { name: 'Peashooter Zombie', description: 'It seems some zombies have learned to fight back. This one uses its own Peashooter head to fire peas at your plants.', special: 'Shoots peas at your plants.' },
-            giga: { name: 'Giga-Gargantuar', description: 'If you thought the Gargantuar was bad, wait until you meet his bigger, meaner cousin. The Giga-Gargantuar is incredibly tough and just as destructive.', special: 'Crushes plants & throws an Imp.' },
-            wallnutZombie: { name: 'Wall-nut Zombie', description: 'This clever zombie uses a Wall-nut as a helmet, giving it a huge amount of health.' },
-            gatlingZombie: { name: 'Gatling Zombie', description: 'An upgraded version of the Peashooter Zombie, this one fires a rapid four-pea burst, quickly overwhelming single targets.', special: 'Shoots a burst of four peas.' },
-            tallnutZombie: { name: 'Tall-nut Zombie', description: 'Sporting a Tall-nut for a helmet, this zombie is extremely durable and is too tall for Pole Vaulting Zombies to jump over.' },
-            gigafootball: { name: 'Giga-Football Zombie', description: 'The all-star of the undead league. He\'s even faster and tougher than the regular Football Zombie, making him a high-priority threat.' },
-            rally: { name: 'Rally Zombie', description: 'A tougher version of the Flag Zombie, appearing only during the most intense final waves. He\'s faster, stronger, and signals a massive assault.' },
-            assassinZombie: { name: 'Assassin Zombie', description: 'Silent and deadly, the Assassin Zombie moves with incredible speed and can switch lanes to bypass your defenses.', special: 'Switches lanes periodically.' },
-            wizardZombie: { name: 'Wizard Zombie', description: 'The Wizard Zombie is a powerful magic user who turns your plants into harmless sheep.', special: 'Polymorphs plants.' },
-            zomboss: { name: 'Dr. Zomboss', description: 'The mastermind behind the invasion. Dr. Zomboss pilots a massive Zombot that can crush plants, summon zombies, and unleash devastating elemental attacks.', special: 'Summons zombies & attacks lanes.' }
+            flag: { name: 'Flag Zombie', description: 'Flag Zombie marks the arrival of a huge wave of zombies. He likes to lead from the front, but his flag doesn\'t make him any tougher.' },
+            cone: { name: 'Conehead Zombie', description: 'His traffic cone headpiece makes him twice as tough as normal zombies. Conehead Zombie wears his cone with pride. He wears it with honor. He\'ll never take it off. Never.' },
+            fast: { name: 'Pole Vault Zombie', description: 'Pole Vaulting Zombie uses a pole to vault over plants. After vaulting, he loses his pole and becomes a regular zombie. He was the star of the track team until he became a zombie.', special: 'Cant leap at all...' },
+            newspaper: { name: 'Newspaper Zombie', description: 'His newspaper provides limited protection. He gets very angry when his newspaper is destroyed. Newspaper Zombie is a passionate reader. He doesn\'t like it when someone interrupts his reading time.', special: 'Enrages when newspaper is destroyed.' },
+            bucket: { name: 'Buckethead Zombie', description: 'The bucket on his head makes him extremely resistant to damage. Buckethead Zombie wears a bucket. It\'s a good bucket. A really good bucket.' },
+            jackInTheBox: { name: 'Jack-in-the-Box Zombie', description: 'Jack-in-the-Box Zombie turns the crank on his jack-in-the-box. No one knows when it will pop, not even him. When it does, the explosion is devastating.', special: 'Explodes randomly.' },
+            balloon: { name: 'Balloon Zombie', description: 'The Balloon Zombie floats serenely over your defenses, immune to most attacks. Only sharp projectiles or a strong gust of wind can bring him down. He\'s afraid of heights, but he\'s more afraid of brains.', special: 'Floats over plants.' },
+            dancing: { name: 'Dancing Zombie', description: 'Dancing Zombie summons Backup Dancers from the ground. Any resemblance to persons living or dead is purely coincidental.', special: 'Summons Backup Dancers.' },
+            backupDancer: { name: 'Backup Dancer', description: 'Backup Dancers appear in groups of four, flanking the Dancing Zombie. They\'re not the stars of the show, but they\'re still dangerous.' },
+            football: { name: 'Football Zombie', description: 'Football Zombie is a fast, tough zombie. His football helmet and pads absorb massive damage. He played college ball, you know.' },
+            zomboni: { name: 'Zomboni', description: 'Zomboni crushes plants and leaves an ice trail that can\'t be planted on. The driver is just doing his job. He doesn\'t even like brains that much.', special: 'Crushes plants & leaves ice trail.' },
+            trashCanZombie: { name: 'Trash Can Zombie', description: 'His trash can shield absorbs a lot of damage and protects him from snow and fire effects. He found the can in an alley. Finders keepers.', special: 'Unaffected by snow and fire while has a can' },
+            gargantuar: { name: 'Gargantuar', description: 'Gargantuar is a huge zombie. He smashes plants with a telephone pole and throws Imps deep into your defenses when damaged. Extremely high toughness.', special: 'Crushes plants & throws an Imp.' },
+            imp: { name: 'Imp', description: 'Imp is a tiny zombie that gets thrown by Gargantuars. He\'s small, fast, and lands deep in your defenses. He may be small, but he\'s still a threat.' },
+            octoZombie: { name: 'Octo Zombie', description: 'Octo Zombie throws octopuses that bind plants, preventing them from attacking. He used to work at an aquarium. Now he works for the zombie horde.', special: 'Throws octopuses to disable plants.' },
+            peashooterZombie: { name: 'Peashooter Zombie', description: 'Peashooter Zombie has a Peashooter for a head. He shoots peas at your plants. Ironic, isn\'t it? He doesn\'t see the irony.', special: 'Shoots peas at your plants.' },
+            giga: { name: 'Giga-Gargantuar', description: 'Giga-Gargantuar makes a Gargantuar look small. He\'s even tougher, even meaner, and even more destructive. If you see him, you\'re in serious trouble.', special: 'Crushes plants & throws an Imp.' },
+            wallnutZombie: { name: 'Wall-nut Zombie', description: 'Wall-nut Zombie wears a Wall-nut as a helmet. It provides excellent protection. He found it lying around and thought, "This would make a great hat."' },
+            gatlingZombie: { name: 'Gatling Zombie', description: 'Gatling Zombie has a Gatling Pea for a head. He fires four peas in rapid succession. He\'s the Peashooter Zombie\'s overachieving cousin.', special: 'Shoots a burst of four peas.' },
+            tallnutZombie: { name: 'Tall-nut Zombie', description: 'Tall-nut Zombie wears a Tall-nut as a helmet. He\'s extremely durable and can\'t be vaulted over. He stands tall and proud. Very tall. Very proud.' },
+            gigafootball: { name: 'Giga-Football Zombie', description: 'Giga-Football Zombie is faster and tougher than Football Zombie. He\'s the MVP of the zombie league. He has a trophy case at home. It\'s full of brains.' },
+            rally: { name: 'Rally Zombie', description: 'Rally Zombie appears in the final waves. He\'s tougher and faster than Flag Zombie. When you see his flag, you know the end is near.' },
+            assassinZombie: { name: 'Assassin Zombie', description: 'Assassin Zombie moves with incredible speed and switches lanes to avoid your defenses. He trained in the ancient art of zombie ninjutsu. He\'s silent, deadly, and really wants your brains.', special: 'Switches lanes periodically.' },
+            wizardZombie: { name: 'Wizard Zombie', description: 'Wizard Zombie casts spells that turn your plants into sheep. He studied at Zombie Hogwarts. His favorite spell is "Plantus Sheepificus."', special: 'Polymorphs plants.' },
+            brickheadZombie: { name: 'Brickhead Zombie', description: 'Brickhead Zombie wears masonry on his head. He claims it\'s for safety compliance. The plants suspect he just got his head stuck in a wall. Either way, it\'s very protective.' },
+            excavatorZombie: { name: 'Excavator Zombie', description: 'Excavator Zombie uses his shovel to dig up plants and throw them behind him. He loves his job. He hates nature. It\'s a perfect match.', special: 'Digs up plants & throws them behind.' },
+            jesterZombie: { name: 'Jester Zombie', description: 'Jester Zombie spins and reflects projectiles back at your plants. He thinks it\'s the funniest thing ever. Your plants strongly disagree.', special: 'Reflects projectiles.' },
+            chickenWrangler: { name: 'Chicken Wrangler', description: 'Chicken Wrangler Zombie carries a cage full of zombie chickens. When the cage breaks, chickens scatter everywhere. He used to be a farmer. Now he\'s a zombie. The chickens don\'t mind.', special: 'Releases chickens.' },
+            chicken: { name: 'Zombie Chicken', description: 'Zombie Chicken is a chicken. That\'s also a zombie. It\'s small, fast, and surprisingly aggressive. It pecks plants with undead fury.' },
+            allstar: { name: 'All-Star Zombie', description: 'All-Star Zombie rushes at high speed and tackles the first plant he hits. After the tackle, he slows to normal speed. He was the star quarterback. Now he\'s the star brain-eater.', special: 'Tackles plant, then slows down.' },
+            zomboss: { name: 'Dr. Zomboss', description: 'Dr. Zomboss is the mastermind behind the zombie invasion. He pilots a massive Zombot that crushes plants and summons zombies. He has a PhD in Thanatology. He\'s very proud of it.', special: 'Summons zombies & attacks lanes.' }
         };
 
         function getHealthText(health) {
@@ -5448,7 +5471,7 @@ Copyright (c) 2025 Olexandr_43
             // Apply specific classes for sizing and styling
             if (typeKey === 'zomboni') zombieVisual.classList.add('zomboni');
             if (typeKey === 'gargantuar' || typeKey === 'giga') zombieVisual.classList.add('gargantuar');
-            if (typeKey === 'imp') zombieVisual.classList.add('imp');
+            if (typeKey === 'imp' || typeKey === 'chicken') zombieVisual.classList.add('imp');
 
             // These styles are for standalone display
             zombieVisual.style.position = 'relative';
@@ -7634,6 +7657,9 @@ Copyright (c) 2025 Olexandr_43
 
         // Spawn Projectile
         function spawnProjectile(plant, targetRow, ignoreTargetCheck = false) {
+            // Early return if plant has been destroyed
+            if (!plant.element) return;
+
             const plantType = plantTypes[plant.type];
             const cell = plant.element.parentElement;
             const rect = cell.getBoundingClientRect();
@@ -7970,6 +7996,31 @@ Copyright (c) 2025 Olexandr_43
                                 });
 
                             } else { // --- STANDARD/PIERCING DAMAGE LOGIC ---
+                                // --- JESTER ZOMBIE REFLECTION ---
+                                if (zombie.type === 'jesterZombie' && !proj.pierce && !zombie.isStunned && !zombie.isFrozen) {
+                                    proj.owner = 'zombie';
+                                    proj.speed *= -1;
+                                    proj.element.classList.add('reflected');
+                                    proj.element.style.transform = 'scaleX(-1)';
+
+                                    createParticleEffect(zombie.element, '✨');
+
+                                    if (!zombie.isSpinning) {
+                                        zombie.isSpinning = true;
+                                        zombie.element.style.transform = 'scaleX(-1) rotate(360deg)';
+                                        zombie.element.style.transition = 'transform 0.5s ease';
+                                        createTimer(500, () => {
+                                            if (zombie.element) {
+                                                zombie.element.style.transform = 'scaleX(-1)';
+                                                zombie.element.style.transition = '';
+                                                zombie.isSpinning = false;
+                                            }
+                                        }, false, 'jesterSpin', zombie.id);
+                                    }
+
+                                    return true;
+                                }
+
                                 applyDamageToZombie(zombie, proj.damage, proj.pierce);
                                 checkZombieStateChange(zombie);
                                 updateZombieHealth(zombie);
@@ -8133,6 +8184,38 @@ Copyright (c) 2025 Olexandr_43
 
                 if (zombie.type === 'newspaper') {
                     zombie.element.classList.add('enraged');
+                }
+
+                // --- CHICKEN WRANGLER ARMOR BREAK: SPAWN CHICKENS ---
+                if (zombieTypes[zombie.type].spawnsChickens) {
+                    const chickenCount = zombieTypes[zombie.type].chickenCount || 15;
+                    const zombieRow = zombie.row;
+                    const zombieCol = Math.floor(zombie.x / gameState.cellSize.width);
+
+                    // Collect valid spawn positions in 2x3 radius (on wrangler and behin)
+                    const spawnPositions = [];
+                    for (let rowOffset = -1; rowOffset <= 1; rowOffset++) {
+                        for (let colOffset = 0; colOffset <= 1; colOffset++) {
+                            const targetRow = zombieRow + rowOffset;
+
+                            if (targetRow >= 0 && targetRow < 5) {
+                                spawnPositions.push({
+                                    row: targetRow,
+                                    col: zombieCol + colOffset
+                                });
+                            }
+                        }
+                    }
+
+                    // Spawn chickens
+                    for (let i = 0; i < chickenCount; i++) {
+                        const randomIndex = Math.floor(Math.random() * spawnPositions.length);
+                        const position = spawnPositions[randomIndex];
+
+                        createTimer(i * 30, () => {
+                            spawnZombieAt(position.row, position.col, 'chicken');
+                        }, false, `chickenSpawn_${zombie.id}_${i}`);
+                    }
                 }
             }
         }
@@ -8312,7 +8395,7 @@ Copyright (c) 2025 Olexandr_43
                 }
 
                 // --- Assassin Zombie Lane Switching ---
-                if (zombie.type === 'assassinZombie' && !zombie.isFrozen && !zombie.isStunned && !zombie.isChangingLane && !zombie.attacking) {
+                if (zombie.type === 'f' && !zombie.isFrozen && !zombie.isStunned && !zombie.isChangingLane && !zombie.attacking) {
                     zombie.laneSwitchTimer -= adjustedDelta;
                     if (zombie.laneSwitchTimer <= 0) {
                         // Try to switch lanes
@@ -8433,6 +8516,9 @@ Copyright (c) 2025 Olexandr_43
                 if (!zombie.isChangingLane && !isAttacking && !zombie.isThrowingImp && !zombie.isThrowing) {
                     let baseSpeed = zombieTypes[zombie.type].speed;
 
+                    if (zombie.type === 'allstar' && !zombie.isRushing) {
+                        baseSpeed = zombieTypes['normal'].speed;
+                    }
                     if (zombie.type === 'newspaper' && zombie.armorBroken) {
                         baseSpeed *= zombieTypes.newspaper.rageSpeedMultiplier;
                     }
@@ -8496,6 +8582,105 @@ Copyright (c) 2025 Olexandr_43
                                 plant.health = 0; // Spikeweed is destroyed
                             }
                             createParticleEffect(plant.element, '💥');
+                        }
+                        // --- ALL-STAR ZOMBIE TACKLE ---
+                        else if (zombie.type === 'allstar' && zombie.isRushing) {
+                            plant.health -= 20;
+                            updatePlantHealth(plant);
+
+                            zombie.isRushing = false;
+
+                            createParticleEffect(zombie.element, '💥');
+                            zombie.element.classList.remove('rushing');
+
+                            if (plant.health <= 0) {
+                                plant.element.remove();
+                                plant.element = null;
+                            }
+
+                            return;
+                        }
+                        // --- EXCAVATOR ZOMBIE LOGIC ---
+                        else if (zombie.type === 'excavatorZombie' && !zombie.armorBroken) {
+                            if (isSpikePlant || plant.maxHealth === Infinity) {
+                                return;
+                            }
+
+                            zombie.attacking = true;
+
+                            if (zombie.attackCooldown <= 0) {
+                                if (plant.isBeingDug) {
+                                    zombie.attacking = false;
+                                    return;
+                                }
+
+                                zombie.attackCooldown = zombieTypeInfo.digCooldown;
+                                plant.isBeingDug = true;
+
+                                zombie.element.classList.add('eating'); // Reuse eating anim
+
+                                createTimer(1000, () => {
+                                    if (!zombie.element || !plant.element || zombie.armorBroken) {
+                                        if (plant) plant.isBeingDug = false;
+                                        return;
+                                    }
+
+                                    // Throw the plant 2 tiles back
+                                    const currentCol = plant.col;
+                                    const targetCol = currentCol + 2;
+
+                                    if (targetCol > 8) {
+                                        // Thrown off board - destroy
+                                        plant.health = 0;
+                                        if (plant.armingTimerId) clearTimer(plant.armingTimerId);
+                                        if (plant.graveBusterTimerId) clearTimer(plant.graveBusterTimerId);
+                                        createParticleEffect(plant.element, '💨');
+                                        plant.element.remove();
+                                        plant.element = null;
+                                    } else {
+                                        // Check if plant can be placed on target tile
+                                        const plantTypeInfo = plantTypes[plant.type];
+                                        const plantingCheck = canPlantOnCell(plant.row, targetCol, plantTypeInfo);
+
+                                        if (!plantingCheck.canPlant) {
+                                            // Cannot be planted there - destroy
+                                            plant.health = 0;
+                                            if (plant.armingTimerId) clearTimer(plant.armingTimerId);
+                                            if (plant.graveBusterTimerId) clearTimer(plant.graveBusterTimerId);
+                                            createParticleEffect(plant.element, '💨');
+                                            plant.element.remove();
+                                            plant.element = null;
+                                        } else {
+                                            plant.col = targetCol;
+
+                                            const newCell = document.querySelector(`.cell[data-row='${plant.row}'][data-col='${targetCol}']`);
+
+                                            if (newCell) {
+                                                newCell.appendChild(plant.element);
+
+                                                plant.element.style.transition = 'none';
+                                                plant.element.style.left = '';
+                                                plant.element.style.top = '';
+                                                plant.element.style.transform = '';
+
+                                                plant.element.dataset.col = targetCol;
+
+                                                createParticleEffect(plant.element, '💨');
+
+                                                plant.isBeingDug = false;
+                                            } else {
+                                                plant.health = 0;
+                                                plant.element.remove();
+                                                plant.element = null;
+                                            }
+                                        }
+                                    }
+
+                                    zombie.attacking = false;
+                                    zombie.element.classList.remove('eating');
+
+                                }, false, 'excavatorDig', zombie.id);
+                            }
                         }
                         // --- GARGANTUAR/GIGA CRUSHING INTERACTION ---
                         else if (zombie.type === 'gargantuar' || zombie.type === 'giga') {
@@ -8700,7 +8885,7 @@ Copyright (c) 2025 Olexandr_43
             if (typeKey === 'dancing') zombie.classList.add('dancing');
             if (typeKey === 'zomboni') zombie.classList.add('zomboni');
             if (typeKey === 'gargantuar' || typeKey === 'giga') zombie.classList.add('gargantuar');
-            if (typeKey === 'imp') zombie.classList.add('imp');
+            if (typeKey === 'imp' || typeKey === 'chicken') zombie.classList.add('imp');
             if (typeKey === 'jackInTheBox') zombie.classList.add('jackInTheBox');
 
             const armorBar = document.createElement('div');
@@ -8796,6 +8981,12 @@ Copyright (c) 2025 Olexandr_43
                 zombieObj.laneSwitchTimer = 2000 + Math.random() * 2000; // 2-4 seconds initial delay
             }
 
+            if (typeKey === 'allstar') {
+                zombieObj.isRushing = true;
+                zombieObj.speed = zombieType.speed; // Start at rushing speed
+                zombieObj.element.classList.add('rushing');
+            }
+
             gameState.zombies.push(zombieObj);
             updateZombieHealth(zombieObj); // Initialize health bars
             return zombieObj;
@@ -8843,7 +9034,7 @@ Copyright (c) 2025 Olexandr_43
             if (typeKey === 'dancing') zombie.classList.add('dancing');
             if (typeKey === 'zomboni') zombie.classList.add('zomboni');
             if (typeKey === 'gargantuar' || typeKey === 'giga') zombie.classList.add('gargantuar');
-            if (typeKey === 'imp') zombie.classList.add('imp');
+            if (typeKey === 'imp' || typeKey === 'chicken') zombie.classList.add('imp');
             if (typeKey === 'jackInTheBox') zombie.classList.add('jackInTheBox');
 
             const armorBar = document.createElement('div');
@@ -8921,6 +9112,16 @@ Copyright (c) 2025 Olexandr_43
 
             if (zombieType.isExplosive) {
                 startJackInTheBoxTimer(zombieObj);
+            }
+
+            if (typeKey === 'assassinZombie') {
+                zombieObj.laneSwitchTimer = 2000 + Math.random() * 2000; // 2-4 seconds initial delay
+            }
+
+            if (typeKey === 'allstar') {
+                zombieObj.isRushing = true;
+                zombieObj.speed = zombieType.speed; // Start at rushing speed
+                zombieObj.element.classList.add('rushing');
             }
 
             gameState.zombies.push(zombieObj);
@@ -9786,7 +9987,7 @@ Copyright (c) 2025 Olexandr_43
                         let targetPlant = null;
 
                         // Priority: Find a plant that is NOT already a sheep and NOT wrapped
-                        const availableTargets = gameState.plants.filter(p => !p.isWrapped && !p.isSheep);
+                        const availableTargets = gameState.plants.filter(p => !p.isWrapped && !p.isSheep && p.maxHealth !== Infinity);
 
                         if (availableTargets.length > 0) {
                             // Find the furthest column
@@ -9863,13 +10064,13 @@ Copyright (c) 2025 Olexandr_43
                         let targetPlant = null;
 
                         // Priority 1: Find the best target in the same row (front-most)
-                        const sameLaneTargets = gameState.plants.filter(p => p.row === zombie.row && !p.isWrapped);
+                        const sameLaneTargets = gameState.plants.filter(p => p.row === zombie.row && !p.isWrapped && !p.isSheep && p.maxHealth !== Infinity);
 
                         if (sameLaneTargets.length > 0) {
                             targetPlant = sameLaneTargets.reduce((closest, current) => (current.col > closest.col ? current : closest));
                         } else {
                             // Priority 2: If no valid target in the same lane, find the best target in ANY lane
-                            const allAvailableTargets = gameState.plants.filter(p => !p.isWrapped);
+                            const allAvailableTargets = gameState.plants.filter(p => !p.isWrapped && !p.isSheep && p.maxHealth !== Infinity);
 
                             if (allAvailableTargets.length > 0) {
                                 // First, find the furthest column that any available plant is in
