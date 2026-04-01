@@ -15,6 +15,10 @@ A lightweight, browser-based implementation of the classic lane defense game, Pl
 *   Iconic cartoon graphics 🎨
 *   Local Top 10 leaderboard with date/time badges 🏆
 
+## 🎮 Online Demo
+
+**[Play Now → https://olexandr43.github.io/PvZ-JS-2.0/](https://olexandr43.github.io/PvZ-JS-2.0/)**
+
 ## 🏡 Key Features of This Mod
 
 
